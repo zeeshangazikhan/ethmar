@@ -1,0 +1,511 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 40 20% 97%;
+    --foreground: 30 6% 10%;
+    --card: 40 20% 97%;
+    --card-foreground: 30 6% 10%;
+    --popover: 40 20% 97%;
+    --popover-foreground: 30 6% 10%;
+    --primary: 30 6% 10%;
+    --primary-foreground: 40 20% 97%;
+    --secondary: 36 18% 92%;
+    --secondary-foreground: 30 6% 10%;
+    --muted: 36 18% 92%;
+    --muted-foreground: 30 4% 38%;
+    --accent: 41 34% 58%;
+    --accent-foreground: 40 20% 97%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 40 20% 97%;
+    --border: 30 10% 84%;
+    --input: 30 10% 84%;
+    --ring: 41 34% 58%;
+
+    --radius: 0.75rem;
+
+    --ethmar-gold: #b69c6b;
+    --ethmar-ink: #191817;
+    --ethmar-cream: #dfd4bf;
+    --ethmar-gold-2: #927e58;
+    --ethmar-dark: #0b1320;
+    --font-optima: Optima, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html,
+  body {
+    height: 100%;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-optima);
+  }
+}
+
+@layer utilities {
+  .ethmar-container {
+    width: 100%;
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: 24px;
+  }
+
+  .ethmar-kicker {
+    font-family: var(--font-optima);
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    font-size: 12px;
+    color: var(--ethmar-ink);
+    opacity: 0.85;
+  }
+
+  .ethmar-title {
+    font-family: var(--font-marcellus);
+    color: var(--ethmar-ink);
+    letter-spacing: 0.02em;
+  }
+
+  .ethmar-h1 {
+    font-family: var(--font-marcellus);
+    font-weight: 400;
+    color: var(--ethmar-gold);
+    font-size: clamp(42px, 6vw, 82px);
+    line-height: 0.98;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  .ethmar-cta {
+    font-family: var(--font-marcellus);
+    font-size: clamp(16px, 2.2vw, 24px);
+    color: var(--ethmar-gold);
+    display: inline-flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .ethmar-cta-line {
+    height: 1px;
+    width: 56px;
+    background: linear-gradient(90deg, transparent, var(--ethmar-gold));
+    opacity: 0.9;
+  }
+
+  .ethmar-section {
+    padding-block: clamp(56px, 8vw, 110px);
+    background: transparent;
+  }
+
+  .ethmar-divider {
+    height: 1px;
+    width: 120px;
+    margin: 18px auto 0;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(25, 24, 23, 0.3),
+      transparent
+    );
+  }
+
+  .ethmar-card-shadow {
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.16);
+  }
+
+  .ethmar-hero {
+    position: relative;
+    min-height: 86vh;
+    background: radial-gradient(
+        1100px 500px at 25% 15%,
+        rgba(182, 156, 107, 0.25),
+        transparent 65%
+      ),
+      linear-gradient(
+        180deg,
+        rgba(8, 10, 14, 0.86) 0%,
+        rgba(8, 10, 14, 0.72) 40%,
+        rgba(8, 10, 14, 0.88) 100%
+      ),
+      url("/assets/hero.png");
+    background-size: cover;
+    background-position: center;
+  }
+
+  .ethmar-hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.35), transparent 35%),
+      linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.35),
+        transparent 40%,
+        rgba(0, 0, 0, 0.35)
+      );
+    pointer-events: none;
+  }
+
+  .ethmar-topbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    padding: 22px 0;
+  }
+
+  .ethmar-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: rgba(223, 212, 191, 0.9);
+    font-family: var(--font-optima);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .ethmar-brand {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  .ethmar-brand strong {
+    font-family: var(--font-marcellus);
+    font-weight: 400;
+    letter-spacing: 0.28em;
+    color: rgba(223, 212, 191, 0.92);
+  }
+
+  .ethmar-brand span {
+    opacity: 0.7;
+    letter-spacing: 0.32em;
+  }
+
+  .ethmar-hero-content {
+    position: relative;
+    z-index: 2;
+    padding-top: clamp(120px, 12vw, 170px);
+    padding-bottom: clamp(70px, 10vw, 140px);
+  }
+
+  .ethmar-hero-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 40px;
+    align-items: end;
+  }
+
+  @media (max-width: 900px) {
+    .ethmar-hero-grid {
+      grid-template-columns: 1fr;
+      gap: 22px;
+    }
+  }
+
+  .ethmar-hero-subtle {
+    color: rgba(223, 212, 191, 0.75);
+    font-family: var(--font-optima);
+    font-size: 12px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+  }
+
+  .ethmar-hero-cta-wrap {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  @media (max-width: 900px) {
+    .ethmar-hero-cta-wrap {
+      justify-content: flex-start;
+    }
+  }
+
+  .ethmar-media {
+    background: #fff;
+  }
+
+  .ethmar-media-frame {
+    background: #fff;
+    border-radius: 2px;
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(25, 24, 23, 0.08);
+  }
+
+  .ethmar-media-frame img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .ethmar-stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr 1fr;
+    gap: 22px;
+    align-items: stretch;
+  }
+
+  @media (max-width: 900px) {
+    .ethmar-stat-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .ethmar-stat {
+    background: #fff;
+    border: 1px solid rgba(25, 24, 23, 0.1);
+    padding: 26px 24px;
+    display: grid;
+    gap: 12px;
+    min-height: 140px;
+  }
+
+  .ethmar-stat-number {
+    font-family: var(--font-marcellus);
+    font-size: clamp(44px, 4vw, 64px);
+    color: var(--ethmar-ink);
+  }
+
+  .ethmar-stat-label {
+    font-family: var(--font-optima);
+    font-size: 12px;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: rgba(25, 24, 23, 0.75);
+  }
+
+  .ethmar-stat-center {
+    background: linear-gradient(180deg, #ffffff, #fbf8f2);
+    border: 1px solid rgba(25, 24, 23, 0.1);
+    padding: 26px 26px;
+    display: grid;
+    gap: 10px;
+  }
+
+  .ethmar-stat-center h3 {
+    font-family: var(--font-marcellus);
+    color: var(--ethmar-ink);
+    font-size: 18px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+
+  .ethmar-stat-center p {
+    font-family: var(--font-marcellus);
+    color: rgba(25, 24, 23, 0.78);
+    font-size: 18px;
+    line-height: 1.45;
+  }
+
+  .ethmar-sector-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 26px;
+    align-items: center;
+  }
+
+  @media (max-width: 900px) {
+    .ethmar-sector-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .ethmar-sector-visual {
+    border-radius: 2px;
+    overflow: hidden;
+    border: 1px solid rgba(25, 24, 23, 0.1);
+    background: #fff;
+  }
+
+  .ethmar-sector-visual img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .ethmar-sector-title {
+    font-family: var(--font-marcellus);
+    font-size: clamp(30px, 4vw, 56px);
+    color: var(--ethmar-ink);
+    line-height: 1.05;
+  }
+
+  .ethmar-link {
+    display: inline-flex;
+    gap: 10px;
+    align-items: center;
+    font-family: var(--font-marcellus);
+    font-size: 18px;
+    color: var(--ethmar-ink);
+  }
+
+  .ethmar-link .line {
+    height: 1px;
+    width: 46px;
+    background: linear-gradient(
+      90deg,
+      rgba(25, 24, 23, 0.15),
+      rgba(25, 24, 23, 0.6)
+    );
+  }
+
+  .ethmar-history {
+    background: linear-gradient(180deg, #ffffff, #fbf8f2);
+  }
+
+  .ethmar-partners {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 26px;
+    align-items: center;
+    justify-items: center;
+    padding-top: 26px;
+  }
+
+  @media (max-width: 900px) {
+    .ethmar-partners {
+      grid-template-columns: repeat(2, 1fr);
+      row-gap: 18px;
+    }
+  }
+
+  .ethmar-footer {
+    background: radial-gradient(
+        900px 380px at 70% 0%,
+        rgba(182, 156, 107, 0.18),
+        transparent 60%
+      ),
+      linear-gradient(180deg, #0b1320, #07101d);
+    color: rgba(223, 212, 191, 0.92);
+  }
+
+  .ethmar-footer a {
+    color: rgba(223, 212, 191, 0.92);
+    text-decoration: none;
+  }
+
+  .ethmar-footer a:hover {
+    color: #ffffff;
+  }
+
+  .ethmar-footer-top {
+    padding: 54px 0 26px;
+    border-bottom: 1px solid rgba(223, 212, 191, 0.12);
+  }
+
+  .ethmar-footer-nav {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    font-family: var(--font-marcellus);
+    font-size: 18px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ethmar-cream);
+  }
+
+  @media (max-width: 900px) {
+    .ethmar-footer-nav {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      row-gap: 12px;
+      font-size: 16px;
+    }
+  }
+
+  .ethmar-footer-bottom {
+    padding: 20px 0 44px;
+    display: grid;
+    gap: 14px;
+  }
+
+  .ethmar-footer-small {
+    font-size: 14px;
+    opacity: 0.8;
+    max-width: 820px;
+    line-height: 1.65;
+    font-family: var(--font-optima);
+  }
+
+  .ethmar-footer-legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    font-family: var(--font-marcellus);
+    font-weight: 700;
+    color: var(--ethmar-gold-2);
+    letter-spacing: 0.04em;
+  }
+
+  .ethmar-footer-legal a {
+    font-weight: 700;
+    color: var(--ethmar-gold-2);
+    font-size: 14px;
+  }
+
+  .ethmar-footer-copy {
+    font-family: var(--font-marcellus);
+    font-size: 18px;
+    color: var(--ethmar-cream);
+    letter-spacing: 0.06em;
+  }
+
+  .ethmar-logo-mark {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto;
+    border-radius: 999px;
+    border: 1px solid rgba(223, 212, 191, 0.18);
+    display: grid;
+    place-items: center;
+    font-family: var(--font-marcellus);
+    letter-spacing: 0.14em;
+    color: rgba(223, 212, 191, 0.9);
+  }
+
+  .ethmar-fade-in {
+    animation: ethmarFadeIn 900ms ease-out both;
+  }
+
+  @keyframes ethmarFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
