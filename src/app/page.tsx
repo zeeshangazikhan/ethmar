@@ -155,7 +155,7 @@ export default function Home() {
             WHERE LEGACY BECOMES PRESENCE
           </h2>
           <div className="relative mb-12">
-            <Image src="/assets/horse.jpg" className="w-full  object-cover rounded-none" alt="Horses" width={1440} height={420} />
+            <img src="/assets/horse.jpg" className="w-full object-cover rounded-none" alt="Horses" width={1440} height={420} />
           </div>
           <Link href="#" className="text-[#191817] font-serif font-bold text-[16px] md:text-[18px] inline-flex items-center gap-3 group uppercase tracking-[0.2em]">
             <span>Learn More</span>
