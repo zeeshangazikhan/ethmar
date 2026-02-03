@@ -151,7 +151,7 @@ export default function Home() {
       {/* LEGACY SECTION */}
       <section className="pt-24 sm:pt-32 md:pt-[320px] pb-12 sm:pb-16 md:pb-20 px-4 sm:px-8 md:px-16 bg-white">
         <div className="max-w-[1440px] mx-auto text-center">
-          <h2 className="text-[#191817] font-serif font-bold text-[16px] sm:text-[20px] md:text-[30px] uppercase tracking-[0.2em] sm:tracking-[0.4em] md:tracking-[0.6em] mb-10 sm:mb-14 md:mb-20 px-2">
+          <h2 className="text-[#191817] font-serif font-bold text-[16px] sm:text-[20px] md:text-[30px] uppercase tracking-[0.3em] mb-10 sm:mb-14 md:mb-20 px-2">
             WHERE LEGACY BECOMES PRESENCE
           </h2>
           <div className="relative mb-8 sm:mb-12">
@@ -168,7 +168,7 @@ export default function Home() {
       {/* GLOBAL PRESENCE SECTION */}
       <section className="pt-12 sm:pt-16 md:pt-20 pb-12 sm:pb-16 md:pb-20 px-0 md:px-0 bg-white">
         <div className="w-full">
-          <h2 className="text-[#191817] font-serif font-bold text-[14px] sm:text-[18px] md:text-[30px] uppercase tracking-[0.15em] sm:tracking-[0.3em] md:tracking-[0.6em] mb-10 sm:mb-14 md:mb-20 text-center px-4 sm:px-8 md:px-16 leading-relaxed">
+          <h2 className="text-[#191817] font-serif font-bold text-[14px] sm:text-[18px] md:text-[30px] uppercase tracking-[0.3em] mb-10 sm:mb-14 md:mb-20 text-center px-4 sm:px-8 md:px-16 leading-relaxed">
             A GLOBAL PRESENCE, QUIETLY POWERFUL
           </h2>
 
@@ -219,7 +219,7 @@ export default function Home() {
       {/* SECTORS SECTION */}
       <section className="pt-12 sm:pt-16 md:pt-20 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-8 md:px-16 bg-white">
         <div className="max-w-[1440px] mx-auto text-center">
-          <h2 className="text-[#191817] font-serif font-bold text-[14px] sm:text-[18px] md:text-[30px] uppercase tracking-[0.15em] sm:tracking-[0.3em] md:tracking-[0.6em] mb-10 sm:mb-14 md:mb-20 text-center px-2 sm:px-8 md:px-16 leading-relaxed">
+          <h2 className="text-[#191817] font-serif font-bold text-[14px] sm:text-[18px] md:text-[30px] uppercase tracking-[0.3em] mb-10 sm:mb-14 md:mb-20 text-center px-2 sm:px-8 md:px-16 leading-relaxed">
             THE SECTORS THAT SHAPE TOMORROW
           </h2>
           
@@ -243,7 +243,7 @@ export default function Home() {
       {/* SECTORS OF FOCUS */}
       <section className="pt-12 sm:pt-16 md:pt-20 pb-12 sm:pb-16 md:pb-20 px-0 md:px-0 bg-white">
         <div className="w-full">
-          <h2 className="text-[#191817] font-serif font-bold text-[16px] sm:text-[20px] md:text-[30px] uppercase tracking-[0.2em] sm:tracking-[0.4em] md:tracking-[0.6em] mb-10 sm:mb-14 md:mb-20 text-center px-4 sm:px-8 md:px-16">
+          <h2 className="text-[#191817] font-serif font-bold text-[16px] sm:text-[20px] md:text-[30px] uppercase tracking-[0.3em] mb-10 sm:mb-14 md:mb-20 text-center px-4 sm:px-8 md:px-16">
             SECTORS OF FOCUS
           </h2>
 
@@ -292,7 +292,7 @@ export default function Home() {
       {/* PARTNERSHIP SECTION */}
       <section className="pt-12 sm:pt-16 md:pt-20 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-8 md:px-16 bg-white">
         <div className="max-w-[1440px] mx-auto text-center">
-          <h2 className="text-[#191817] font-serif font-bold text-[14px] sm:text-[18px] md:text-[30px] uppercase tracking-[0.15em] sm:tracking-[0.3em] md:tracking-[0.6em] mb-10 sm:mb-14 md:mb-20 text-center px-2 sm:px-8 md:px-16 leading-relaxed">
+          <h2 className="text-[#191817] font-serif font-bold text-[14px] sm:text-[18px] md:text-[30px] uppercase tracking-[0.3em] mb-10 sm:mb-14 md:mb-20 text-center px-2 sm:px-8 md:px-16 leading-relaxed">
             A DIFFERENT KIND OF PARTNERSHIP
           </h2>
           
@@ -329,7 +329,7 @@ export default function Home() {
       {/* PARTNER WITH US */}
       <section className="pt-12 sm:pt-16 md:pt-20 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-8 md:px-16 bg-[#f2efe6]">
         <div className="max-w-[900px] mx-auto text-center">
-          <h2 className="text-[#191817] font-serif font-bold text-[16px] sm:text-[20px] md:text-[30px] uppercase tracking-[0.2em] sm:tracking-[0.4em] md:tracking-[0.6em] mb-10 sm:mb-14 md:mb-20 text-center px-2 sm:px-8 md:px-16">
+          <h2 className="text-[#191817] font-serif font-bold text-[16px] sm:text-[20px] md:text-[30px] uppercase tracking-[0.3em] mb-10 sm:mb-14 md:mb-20 text-center px-2 sm:px-8 md:px-16">
             PARTNER WITH US
           </h2>
           <p className="text-[#191817] font-serif text-[15px] sm:text-[17px] md:text-[20px] leading-[1.7] sm:leading-[1.8] mb-10 sm:mb-12 md:mb-14 opacity-80 px-2">
