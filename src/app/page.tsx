@@ -364,7 +364,7 @@ export default function Home() {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
              <div className="flex flex-col gap-3">
                <p className="text-[15px] md:text-[17px] tracking-[0.05em] opacity-90 uppercase">
-                 2025 ETHMAR INTERNATIONAL HOLDINGS <span className="mx-3 opacity-40">|</span> ALL RIGHTS RESERVED
+                 2026 ETHMAR INTERNATIONAL HOLDINGS <span className="mx-3 opacity-40">|</span> ALL RIGHTS RESERVED
                </p>
                <p className="text-[14px] md:text-[15px] opacity-60 max-w-[650px] leading-relaxed">
                  Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo
