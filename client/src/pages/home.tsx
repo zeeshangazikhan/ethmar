@@ -41,7 +41,7 @@ export default function Home() {
             </div>
             <div className="flex justify-start md:justify-end mt-12 md:mt-0">
               <a href="#" className="text-[#b69c6b] font-serif text-[18px] md:text-[24px] flex items-center gap-6 group">
-                Dive Deeper 
+                Dive Deepers
                 <span className="w-14 h-[1px] bg-gradient-to-r from-transparent to-[#b69c6b] group-hover:w-20 transition-all duration-500"></span>
               </a>
             </div>
