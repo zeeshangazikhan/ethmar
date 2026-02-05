@@ -271,11 +271,11 @@
   }
 
   .ethmar-media {
-    background: #fff;
+    background: #fffcf8;
   }
 
   .ethmar-media-frame {
-    background: #fff;
+    background: #fffcf8;
     border-radius: 2px;
     overflow: hidden;
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
@@ -302,7 +302,7 @@
   }
 
   .ethmar-stat {
-    background: #fff;
+    background: #fffcf8;
     border: 1px solid rgba(25, 24, 23, 0.1);
     padding: 26px 24px;
     display: grid;
@@ -325,7 +325,7 @@
   }
 
   .ethmar-stat-center {
-    background: linear-gradient(180deg, #ffffff, #fbf8f2);
+    background: linear-gradient(180deg, #fffcf8, #fbf8f2);
     border: 1px solid rgba(25, 24, 23, 0.1);
     padding: 26px 26px;
     display: grid;
@@ -364,7 +364,7 @@
     border-radius: 2px;
     overflow: hidden;
     border: 1px solid rgba(25, 24, 23, 0.1);
-    background: #fff;
+    background: #fffcf8;
   }
 
   .ethmar-sector-visual img {
@@ -400,7 +400,7 @@
   }
 
   .ethmar-history {
-    background: linear-gradient(180deg, #ffffff, #fbf8f2);
+    background: linear-gradient(180deg, #fffcf8, #fbf8f2);
   }
 
   .ethmar-partners {

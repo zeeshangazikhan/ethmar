@@ -15,6 +15,8 @@ export default function Home() {
   const [sectorsSelectedIndex, setSectorsSelectedIndex] = useState(0)
   const [menuOpen, setMenuOpen] = useState(false)
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null)
+  const [isDraggingProgress, setIsDraggingProgress] = useState(false)
+  const [isDraggingSectorsProgress, setIsDraggingSectorsProgress] = useState(false)
 
   // Scroll animation setup
   useEffect(() => {
@@ -142,11 +144,107 @@ export default function Home() {
     [sectorsEmblaApi]
   )
 
+  // Handle progress bar click for main carousel
+  const handleProgressBarClick = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (!emblaApi) return
+      const progressBar = e.currentTarget
+      const rect = progressBar.getBoundingClientRect()
+      const clickX = e.clientX - rect.left
+      const percentage = clickX / rect.width
+      const targetIndex = Math.round(percentage * (slides.length - 1))
+      scrollTo(targetIndex)
+    },
+    [emblaApi, scrollTo, slides.length]
+  )
+
+  // Handle progress bar mouse down for main carousel drag
+  const handleProgressBarMouseDown = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      setIsDraggingProgress(true)
+      if (!emblaApi) return
+      const progressBar = e.currentTarget
+      const rect = progressBar.getBoundingClientRect()
+      const clickX = e.clientX - rect.left
+      const percentage = Math.max(0, Math.min(1, clickX / rect.width))
+      const targetIndex = Math.round(percentage * (slides.length - 1))
+      scrollTo(targetIndex)
+    },
+    [emblaApi, scrollTo, slides.length]
+  )
+
+  // Handle mouse move for main carousel drag
+  const handleProgressBarMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (!isDraggingProgress || !emblaApi) return
+      const progressBar = e.currentTarget
+      const rect = progressBar.getBoundingClientRect()
+      const clickX = e.clientX - rect.left
+      const percentage = Math.max(0, Math.min(1, clickX / rect.width))
+      const targetIndex = Math.round(percentage * (slides.length - 1))
+      scrollTo(targetIndex)
+    },
+    [isDraggingProgress, emblaApi, scrollTo, slides.length]
+  )
+
+  // Handle sectors progress bar click
+  const handleSectorsProgressBarClick = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (!sectorsEmblaApi) return
+      const progressBar = e.currentTarget
+      const rect = progressBar.getBoundingClientRect()
+      const clickX = e.clientX - rect.left
+      const percentage = clickX / rect.width
+      const targetIndex = Math.round(percentage * (6 - 1))
+      scrollSectorsTo(targetIndex)
+    },
+    [sectorsEmblaApi, scrollSectorsTo]
+  )
+
+  // Handle sectors progress bar mouse down for drag
+  const handleSectorsProgressBarMouseDown = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      setIsDraggingSectorsProgress(true)
+      if (!sectorsEmblaApi) return
+      const progressBar = e.currentTarget
+      const rect = progressBar.getBoundingClientRect()
+      const clickX = e.clientX - rect.left
+      const percentage = Math.max(0, Math.min(1, clickX / rect.width))
+      const targetIndex = Math.round(percentage * (6 - 1))
+      scrollSectorsTo(targetIndex)
+    },
+    [sectorsEmblaApi, scrollSectorsTo]
+  )
+
+  // Handle mouse move for sectors drag
+  const handleSectorsProgressBarMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (!isDraggingSectorsProgress || !sectorsEmblaApi) return
+      const progressBar = e.currentTarget
+      const rect = progressBar.getBoundingClientRect()
+      const clickX = e.clientX - rect.left
+      const percentage = Math.max(0, Math.min(1, clickX / rect.width))
+      const targetIndex = Math.round(percentage * (6 - 1))
+      scrollSectorsTo(targetIndex)
+    },
+    [isDraggingSectorsProgress, sectorsEmblaApi, scrollSectorsTo]
+  )
+
+  // Handle mouse up to stop dragging
+  useEffect(() => {
+    const handleMouseUp = () => {
+      setIsDraggingProgress(false)
+      setIsDraggingSectorsProgress(false)
+    }
+    window.addEventListener('mouseup', handleMouseUp)
+    return () => window.removeEventListener('mouseup', handleMouseUp)
+  }, [])
+
   return (
-    <main data-testid="page-home" className="bg-[#fff] overflow-x-hidden">
+    <main data-testid="page-home" className="bg-[#fffcf8] overflow-x-hidden">
       {/* FULL SCREEN MENU OVERLAY */}
       <div 
-        className={`fixed inset-0 z-[100] bg-white transition-transform duration-500 ease-in-out ${
+        className={`fixed inset-0 z-[100] bg-[#fffcf8] transition-transform duration-500 ease-in-out ${
           menuOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
@@ -368,7 +466,7 @@ export default function Home() {
       </header>
 
       {/* LEGACY SECTION */}
-      <section className="pt-24 sm:pt-32 md:pt-[320px] pb-12 sm:pb-16 md:pb-20 px-4 sm:px-8 md:px-16 bg-white">
+      <section className="pt-24 sm:pt-32 md:pt-[320px] pb-12 sm:pb-16 md:pb-0 px-4 sm:px-8 md:px-16 bg-[#fffcf8]">
         <div className="max-w-[1440px] mx-auto text-center">
           <h2 className="text-[#191817] font-serif font-bold text-[16px] sm:text-[20px] md:text-[30px] uppercase tracking-[0.3em] mb-10 sm:mb-14 md:mb-20 px-2 leading-none md:leading-relaxed">
             <span className="block md:inline">WHERE LEGACY</span>
@@ -390,7 +488,7 @@ export default function Home() {
       </section>
 
       {/* GLOBAL PRESENCE SECTION */}
-      <section className="pt-24 sm:pt-32 md:pt-[320px] pb-12 sm:pb-16 md:pb-20 px-0 md:px-0 bg-white">
+      <section className="pt-24 sm:pt-32 md:pt-[320px] pb-12 sm:pb-16 md:pb-0 px-0 md:px-0 bg-[#fffcf8]">
         <div className="w-full">
           <h2 className="text-[#191817] font-serif font-bold text-[14px] sm:text-[18px] md:text-[30px] uppercase tracking-[0.3em] mb-10 sm:mb-14 md:mb-20 text-center px-4 sm:px-8 md:px-16 leading-none md:leading-relaxed">
             <span className="block md:inline">A GLOBAL PRESENCE</span>
@@ -427,7 +525,12 @@ export default function Home() {
           {/* Progress Indicator */}
           <div className="flex justify-center items-center mt-8 sm:mt-12 px-4 sm:px-8 md:px-16">
             <div className="w-full max-w-[1440px]">
-              <div className="w-full h-[2px] bg-[#e7e3d6] rounded-full relative">
+              <div 
+                className="w-full h-[2px] bg-[#e7e3d6] rounded-full relative cursor-pointer hover:h-[4px] transition-all select-none"
+                onClick={handleProgressBarClick}
+                onMouseDown={handleProgressBarMouseDown}
+                onMouseMove={handleProgressBarMouseMove}
+              >
                 <div
                   className="absolute h-[8px] bg-[#e7e3d6] rounded-full transition-all duration-300 -top-[3px]"
                   style={{
@@ -442,7 +545,7 @@ export default function Home() {
       </section>
 
       {/* SECTORS SECTION */}
-      <section className="pt-24 sm:pt-32 md:pt-[320px] pb-12 sm:pb-16 md:pb-20 px-4 sm:px-8 md:px-16 bg-white">
+            <section className="pt-24 sm:pt-32 md:pt-[320px] pb-12 sm:pb-16 md:pb-0 px-0 md:px-0 bg-[#fffcf8]">
         <div className="max-w-[1440px] mx-auto text-center">
           <h2 className="text-[#191817] font-serif font-bold text-[14px] sm:text-[18px] md:text-[30px] uppercase tracking-[0.3em] mb-10 sm:mb-14 md:mb-20 text-center px-2 sm:px-8 md:px-16 leading-none md:leading-relaxed">
             <span className="block md:inline">THE SECTORS THAT</span>
@@ -450,7 +553,7 @@ export default function Home() {
             <span className="block md:inline">SHAPE TOMORROW</span>
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 bg-[#f5f1e8] min-h-[500px] sm:min-h-[550px] md:min-h-[600px] rounded-lg sm:rounded-none overflow-hidden">
+          <div className="grid grid-cols-1 md:grid-cols-2 bg-[#f5f1e8] min-h-[650px] sm:min-h-[700px] md:min-h-[800px] rounded-none md:rounded-lg overflow-hidden">
              <div className="p-6 sm:p-10 md:p-16 lg:p-24 text-left flex flex-col justify-end order-1 md:order-1">
                 <h3 className="text-[#191817] font-serif font-normal text-[28px] sm:text-[36px] md:text-[52px] lg:text-[60px] leading-[1.1] mb-6 sm:mb-10 md:mb-12 uppercase">
                   PRIVATE EQUITY &<br />GROWTH
@@ -471,7 +574,7 @@ export default function Home() {
       </section>
 
       {/* SECTORS OF FOCUS */}
-      <section className="pt-12 sm:pt-16 md:pt-20 pb-12 sm:pb-16 md:pb-20 px-0 md:px-0 bg-white">
+            <section className="pt-24 sm:pt-32 md:pt-[320px] pb-12 sm:pb-16 md:pb-0 px-0 md:px-0 bg-[#fffcf8]">
         <div className="w-full">
           <h2 className="text-[#191817] font-serif font-bold text-[16px] sm:text-[20px] md:text-[30px] uppercase tracking-[0.3em] mb-10 sm:mb-14 md:mb-20 text-center px-4 sm:px-8 md:px-16">
             SECTORS OF FOCUS
@@ -489,7 +592,7 @@ export default function Home() {
                 { id: 6, img: '/assets/skyline.png', title: 'REAL ESTATE & LOGISTICS' },
               ].map((sector) => (
                 <div key={sector.id} className="flex-[0_0_78vw] sm:flex-[0_0_60vw] md:flex-[0_0_33.333vw] min-w-0 px-1 sm:px-1">
-                  <div className="relative h-[400px] sm:h-[500px] md:h-[750px] group overflow-hidden bg-[#0b1320] rounded-none md:rounded-lg">
+                  <div className="relative h-[520px] sm:h-[500px] md:h-[750px] group overflow-hidden bg-[#0b1320] rounded-none md:rounded-lg">
                     <Image src={sector.img} alt={sector.title} fill className="object-cover grayscale brightness-[0.7] group-hover:scale-110 transition-transform duration-1000" priority />
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all"></div>
                   </div>
@@ -504,7 +607,12 @@ export default function Home() {
           {/* Progress Indicator */}
           <div className="flex justify-center items-center mt-8 sm:mt-12 px-4 sm:px-8 md:px-16">
             <div className="w-full max-w-[1440px]">
-              <div className="w-full h-[2px] bg-[#e7e3d6] relative">
+              <div 
+                className="w-full h-[2px] bg-[#e7e3d6] relative cursor-pointer hover:h-[4px] transition-all select-none"
+                onClick={handleSectorsProgressBarClick}
+                onMouseDown={handleSectorsProgressBarMouseDown}
+                onMouseMove={handleSectorsProgressBarMouseMove}
+              >
                 <div
                   className="absolute h-[8px] bg-[#e7e3d6] transition-all duration-300 -top-[3px]"
                   style={{
@@ -519,13 +627,13 @@ export default function Home() {
       </section>
 
       {/* PARTNERSHIP SECTION */}
-      <section className="pt-12 sm:pt-16 md:pt-20 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-8 md:px-16 bg-white">
+            <section className="pt-24 sm:pt-32 md:pt-[320px] pb-12 sm:pb-16 md:pb-20 px-0 md:px-0 bg-[#fffcf8]">
         <div className="max-w-[1440px] mx-auto text-center">
           <h2 className="text-[#191817] font-serif font-bold text-[14px] sm:text-[18px] md:text-[30px] uppercase tracking-[0.3em] mb-10 sm:mb-14 md:mb-20 text-center px-2 sm:px-8 md:px-16 leading-relaxed">
             A DIFFERENT KIND OF PARTNERSHIP
           </h2>
           
-          <div className="grid grid-cols-2 md:flex md:flex-wrap justify-center items-center gap-4 sm:gap-0 mb-12 sm:mb-16 md:mb-20">
+          <div className="grid grid-cols-1 md:flex md:flex-wrap justify-center items-center gap-4 sm:gap-0 mb-12 sm:mb-16 md:mb-20">
              <div className="flex justify-center items-center py-6 sm:py-10 md:py-12 md:flex-1 md:border-r md:border-[#191817]/20 bg-[#f9f8f6] sm:bg-transparent rounded-lg sm:rounded-none">
                 <div className="relative w-28 sm:w-40 md:w-56 h-12 sm:h-16 md:h-20">
                    <Image src="/assets/gh-logo.png" alt="Guggenheim" fill className="object-contain" />
