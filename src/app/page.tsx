@@ -297,7 +297,7 @@ export default function Home() {
                       {nav.items.map((item, itemIndex) => (
                         <Link 
                           key={itemIndex}
-                          href="#"
+                          href={item === 'EIH Legacy / Who We Are' ? '/who-we-are' : '#'}
                           onClick={() => setMenuOpen(false)}
                           className="block font-serif text-[16px] sm:text-[18px] md:text-[20px] text-[#191817] hover:text-[#b69c6b] transition-colors"
                         >
@@ -690,7 +690,7 @@ export default function Home() {
         <div className="max-w-[1440px] mx-auto relative z-10">
           <div className="flex flex-col items-center text-center mb-16 sm:mb-24 md:mb-32">
              <div className="grid grid-cols-2 gap-6 sm:gap-10 md:grid-cols-4 md:gap-24 w-full max-w-[1200px] text-[14px] sm:text-[17px] md:text-[22px] tracking-[0.1em] sm:tracking-[0.15em] font-serif mb-16 sm:mb-24 md:mb-32">
-                <Link href="#" className="hover:opacity-80 transition-opacity uppercase py-2">ABOUT US</Link>
+                <Link href="/who-we-are" className="hover:opacity-80 transition-opacity uppercase py-2">ABOUT US</Link>
                 <Link href="#" className="hover:opacity-80 transition-opacity uppercase py-2">INVESTMENTS</Link>
                 <Link href="#" className="hover:opacity-80 transition-opacity uppercase py-2">CAREERS</Link>
                 <Link href="#" className="hover:opacity-80 transition-opacity uppercase py-2">CONTACT US</Link>
