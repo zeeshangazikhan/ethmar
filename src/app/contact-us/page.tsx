@@ -504,10 +504,10 @@ export default function ContactUs() {
               <div className="w-2 h-2 bg-[#b69c6b] rotate-45"></div>
               <div className="w-10 sm:w-14 md:w-20 h-[1px] bg-gradient-to-l from-transparent to-[#b69c6b]/40"></div>
             </div>
-            <h2 className="text-[#191817] font-serif font-bold text-[14px] sm:text-[18px] md:text-[30px] uppercase tracking-[0.3em] mb-4 sm:mb-6 leading-none md:leading-relaxed">
+            <h2 className="text-[#191817] font-serif font-bold text-[18px] sm:text-[24px] md:text-[36px] uppercase tracking-[0.3em] mb-4 sm:mb-6 leading-none md:leading-relaxed">
               HOW TO REACH US
             </h2>
-            <p className="text-[#191817]/50 font-serif text-[14px] sm:text-[16px] md:text-[18px] max-w-[600px] mx-auto italic">
+            <p className="text-[#191817]/70 font-serif text-[16px] sm:text-[18px] md:text-[20px] max-w-[600px] mx-auto italic">
               Multiple ways to connect with our team across the UAE
             </p>
           </div>
@@ -524,12 +524,12 @@ export default function ContactUs() {
                 <div className="w-12 h-12 rounded-full bg-[#b69c6b]/[0.1] flex items-center justify-center mb-7">
                   <Phone className="w-5 h-5 text-[#b69c6b]" />
                 </div>
-                <p className="text-white/35 font-serif text-[10px] sm:text-[11px] tracking-[0.35em] uppercase mb-3">Toll Free</p>
-                <a href="tel:6005233210" className="text-white font-serif text-[24px] sm:text-[28px] md:text-[32px] tracking-[0.04em] hover:text-[#b69c6b] transition-colors block leading-tight mb-4">
+                <p className="text-white/80 font-serif font-semibold text-[13px] sm:text-[14px] tracking-[0.35em] uppercase mb-3">Toll Free</p>
+                <a href="tel:6005233210" className="text-white font-serif text-[28px] sm:text-[32px] md:text-[36px] tracking-[0.04em] hover:text-[#b69c6b] transition-colors block leading-tight mb-4">
                   600 52 3321
                 </a>
                 <div className="w-10 h-[1px] bg-[#b69c6b]/20 mb-4"></div>
-                <p className="text-white/30 font-serif text-[12px] sm:text-[13px] leading-relaxed">
+                <p className="text-white/50 font-serif text-[14px] sm:text-[15px] leading-relaxed">
                   Mon – Sat, 9:00 AM – 6:00 PM (GST)
                 </p>
               </div>
@@ -542,15 +542,15 @@ export default function ContactUs() {
                 <div className="w-12 h-12 rounded-full bg-[#b69c6b]/[0.08] flex items-center justify-center mb-7">
                   <Mail className="w-5 h-5 text-[#b69c6b]" />
                 </div>
-                <p className="text-[#191817]/35 font-serif text-[10px] sm:text-[11px] tracking-[0.35em] uppercase mb-3">Email Us</p>
-                <a href="mailto:contact@ethmar.ae" className="text-[#191817] font-serif text-[17px] sm:text-[19px] md:text-[22px] hover:text-[#b69c6b] transition-colors block tracking-[0.01em] mb-2">
+                <p className="text-[#191817]/75 font-serif font-semibold text-[13px] sm:text-[14px] tracking-[0.35em] uppercase mb-3">Email Us</p>
+                <a href="mailto:contact@ethmar.ae" className="text-[#191817] font-serif text-[19px] sm:text-[21px] md:text-[24px] hover:text-[#b69c6b] transition-colors block tracking-[0.01em] mb-2">
                   contact@ethmar.ae
                 </a>
-                <a href="mailto:invest@ethmar.ae" className="text-[#191817]/45 font-serif text-[15px] sm:text-[16px] md:text-[18px] hover:text-[#b69c6b] transition-colors block tracking-[0.01em] mb-4">
+                <a href="mailto:invest@ethmar.ae" className="text-[#191817]/65 font-serif text-[17px] sm:text-[18px] md:text-[20px] hover:text-[#b69c6b] transition-colors block tracking-[0.01em] mb-4">
                   invest@ethmar.ae
                 </a>
                 <div className="w-10 h-[1px] bg-[#b69c6b]/20 mb-4"></div>
-                <p className="text-[#191817]/35 font-serif text-[12px] sm:text-[13px] leading-relaxed">
+                <p className="text-[#191817]/50 font-serif text-[14px] sm:text-[15px] leading-relaxed">
                   Response within 1–2 business days
                 </p>
               </div>
@@ -563,11 +563,11 @@ export default function ContactUs() {
                 <div className="w-12 h-12 rounded-full bg-[#b69c6b]/[0.08] flex items-center justify-center mb-7">
                   <MapPin className="w-5 h-5 text-[#b69c6b]" />
                 </div>
-                <p className="text-[#191817]/35 font-serif text-[10px] sm:text-[11px] tracking-[0.35em] uppercase mb-3">Head Office</p>
-                <p className="text-[#191817] font-serif text-[17px] sm:text-[19px] md:text-[22px] tracking-[0.01em] leading-[1.5] mb-2">
+                <p className="text-[#191817]/75 font-serif font-semibold text-[13px] sm:text-[14px] tracking-[0.35em] uppercase mb-3">Head Office</p>
+                <p className="text-[#191817] font-serif text-[19px] sm:text-[21px] md:text-[24px] tracking-[0.01em] leading-[1.5] mb-2">
                   Marina Mall, Corniche Road
                 </p>
-                <p className="text-[#191817]/45 font-serif text-[14px] sm:text-[15px] leading-relaxed mb-4">
+                <p className="text-[#191817]/65 font-serif text-[16px] sm:text-[17px] leading-relaxed mb-4">
                   Abu Dhabi, United Arab Emirates
                 </p>
                 <div className="w-10 h-[1px] bg-[#b69c6b]/20 mb-4"></div>
@@ -597,10 +597,10 @@ export default function ContactUs() {
               <div className="w-2 h-2 bg-[#b69c6b] rotate-45"></div>
               <div className="w-10 sm:w-14 md:w-20 h-[1px] bg-gradient-to-l from-transparent to-[#b69c6b]/40"></div>
             </div>
-            <h2 className="text-[#191817] font-serif font-bold text-[14px] sm:text-[18px] md:text-[30px] uppercase tracking-[0.3em] mb-4 sm:mb-6 leading-none md:leading-relaxed">
+            <h2 className="text-[#191817] font-serif font-bold text-[18px] sm:text-[24px] md:text-[36px] uppercase tracking-[0.3em] mb-4 sm:mb-6 leading-none md:leading-relaxed">
               SEND US A MESSAGE
             </h2>
-            <p className="text-[#191817]/50 font-serif text-[14px] sm:text-[16px] md:text-[18px] max-w-[550px] mx-auto italic">
+            <p className="text-[#191817]/70 font-serif text-[16px] sm:text-[18px] md:text-[20px] max-w-[550px] mx-auto italic">
               Fill in your details and our team will respond within 1–2 business days
             </p>
           </div>
@@ -609,26 +609,26 @@ export default function ContactUs() {
           <form onSubmit={handleSubmit} className="space-y-8 sm:space-y-10">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
               <div>
-                <label className="block font-serif text-[11px] sm:text-[12px] tracking-[0.25em] uppercase text-[#191817]/45 mb-3">First Name *</label>
+                <label className="block font-serif text-[12px] sm:text-[13px] tracking-[0.25em] uppercase text-[#191817]/60 mb-3">First Name *</label>
                 <input
                   type="text"
                   name="firstName"
                   value={formData.firstName}
                   onChange={handleInputChange}
                   required
-                  className="w-full bg-transparent border-b border-[#191817]/15 focus:border-[#b69c6b] py-3.5 font-serif text-[15px] sm:text-[16px] text-[#191817] outline-none transition-colors placeholder:text-[#191817]/25"
+                  className="w-full bg-transparent border-b-2 border-[#191817]/25 focus:border-[#b69c6b] py-3.5 font-serif text-[16px] sm:text-[18px] text-[#191817] outline-none transition-colors placeholder:text-[#191817]/40"
                   placeholder="Enter your first name"
                 />
               </div>
               <div>
-                <label className="block font-serif text-[11px] sm:text-[12px] tracking-[0.25em] uppercase text-[#191817]/45 mb-3">Last Name *</label>
+                <label className="block font-serif text-[12px] sm:text-[13px] tracking-[0.25em] uppercase text-[#191817]/60 mb-3">Last Name *</label>
                 <input
                   type="text"
                   name="lastName"
                   value={formData.lastName}
                   onChange={handleInputChange}
                   required
-                  className="w-full bg-transparent border-b border-[#191817]/15 focus:border-[#b69c6b] py-3.5 font-serif text-[15px] sm:text-[16px] text-[#191817] outline-none transition-colors placeholder:text-[#191817]/25"
+                  className="w-full bg-transparent border-b-2 border-[#191817]/25 focus:border-[#b69c6b] py-3.5 font-serif text-[16px] sm:text-[18px] text-[#191817] outline-none transition-colors placeholder:text-[#191817]/40"
                   placeholder="Enter your last name"
                 />
               </div>
@@ -636,46 +636,46 @@ export default function ContactUs() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
               <div>
-                <label className="block font-serif text-[11px] sm:text-[12px] tracking-[0.25em] uppercase text-[#191817]/45 mb-3">Email Address *</label>
+                <label className="block font-serif text-[12px] sm:text-[13px] tracking-[0.25em] uppercase text-[#191817]/60 mb-3">Email Address *</label>
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
                   required
-                  className="w-full bg-transparent border-b border-[#191817]/15 focus:border-[#b69c6b] py-3.5 font-serif text-[15px] sm:text-[16px] text-[#191817] outline-none transition-colors placeholder:text-[#191817]/25"
+                  className="w-full bg-transparent border-b-2 border-[#191817]/25 focus:border-[#b69c6b] py-3.5 font-serif text-[16px] sm:text-[18px] text-[#191817] outline-none transition-colors placeholder:text-[#191817]/40"
                   placeholder="Enter your email"
                 />
               </div>
               <div>
-                <label className="block font-serif text-[11px] sm:text-[12px] tracking-[0.25em] uppercase text-[#191817]/45 mb-3">Mobile Number</label>
+                <label className="block font-serif text-[12px] sm:text-[13px] tracking-[0.25em] uppercase text-[#191817]/60 mb-3">Mobile Number</label>
                 <input
                   type="tel"
                   name="mobile"
                   value={formData.mobile}
                   onChange={handleInputChange}
-                  className="w-full bg-transparent border-b border-[#191817]/15 focus:border-[#b69c6b] py-3.5 font-serif text-[15px] sm:text-[16px] text-[#191817] outline-none transition-colors placeholder:text-[#191817]/25"
+                  className="w-full bg-transparent border-b-2 border-[#191817]/25 focus:border-[#b69c6b] py-3.5 font-serif text-[16px] sm:text-[18px] text-[#191817] outline-none transition-colors placeholder:text-[#191817]/40"
                   placeholder="+971 XX XXX XXXX"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block font-serif text-[11px] sm:text-[12px] tracking-[0.25em] uppercase text-[#191817]/45 mb-3">Inquiry Details *</label>
+              <label className="block font-serif text-[12px] sm:text-[13px] tracking-[0.25em] uppercase text-[#191817]/60 mb-3">Inquiry Details *</label>
               <textarea
                 name="inquiry"
                 value={formData.inquiry}
                 onChange={handleInputChange}
                 required
                 rows={6}
-                className="w-full bg-[#f9f7f4] border border-[#191817]/[0.07] focus:border-[#b69c6b]/50 p-5 font-serif text-[15px] sm:text-[16px] text-[#191817] outline-none transition-colors resize-none placeholder:text-[#191817]/25"
+                className="w-full bg-[#fdfbf8] border-2 border-[#191817]/15 focus:border-[#b69c6b] p-5 font-serif text-[16px] sm:text-[18px] text-[#191817] outline-none transition-colors resize-none placeholder:text-[#191817]/40"
                 placeholder="Tell us about your inquiry..."
               />
             </div>
 
             {/* Preferred Contact Method */}
             <div>
-              <label className="block font-serif text-[11px] sm:text-[12px] tracking-[0.25em] uppercase text-[#191817]/45 mb-5">Preferred Contact Method</label>
+              <label className="block font-serif text-[12px] sm:text-[13px] tracking-[0.25em] uppercase text-[#191817]/60 mb-5">Preferred Contact Method</label>
               <div className="flex gap-8 sm:gap-10">
                 <label className="flex items-center gap-3 cursor-pointer group">
                   <div className="relative">
@@ -684,7 +684,7 @@ export default function ContactUs() {
                       {formData.preferredContact === 'callback' && <div className="w-2 h-2 rounded-full bg-[#b69c6b]"></div>}
                     </div>
                   </div>
-                  <span className="font-serif text-[14px] sm:text-[15px] text-[#191817]/70">Request a Callback</span>
+                  <span className="font-serif text-[15px] sm:text-[16px] text-[#191817]">Request a Callback</span>
                 </label>
                 <label className="flex items-center gap-3 cursor-pointer group">
                   <div className="relative">
@@ -693,7 +693,7 @@ export default function ContactUs() {
                       {formData.preferredContact === 'email' && <div className="w-2 h-2 rounded-full bg-[#b69c6b]"></div>}
                     </div>
                   </div>
-                  <span className="font-serif text-[14px] sm:text-[15px] text-[#191817]/70">Email Response</span>
+                  <span className="font-serif text-[15px] sm:text-[16px] text-[#191817]">Email Response</span>
                 </label>
               </div>
             </div>
@@ -711,7 +711,7 @@ export default function ContactUs() {
                     )}
                   </div>
                 </div>
-                <span className="font-serif text-[13px] sm:text-[14px] text-[#191817]/55 leading-relaxed">
+                <span className="font-serif text-[14px] sm:text-[15px] text-[#191817]/70 leading-relaxed">
                   I consent to receiving communications from Ethmar International Holding regarding my inquiry and related services.
                 </span>
               </label>
@@ -726,7 +726,7 @@ export default function ContactUs() {
                     )}
                   </div>
                 </div>
-                <span className="font-serif text-[13px] sm:text-[14px] text-[#191817]/55 leading-relaxed">
+                <span className="font-serif text-[14px] sm:text-[15px] text-[#191817]/70 leading-relaxed">
                   I have read and agree to the <Link href="#" className="text-[#b69c6b] hover:text-[#191817] transition-colors">Privacy Policy</Link> *
                 </span>
               </label>
