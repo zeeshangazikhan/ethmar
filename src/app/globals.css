@@ -543,4 +543,55 @@
       transform: translateY(0);
     }
   }
+
+  /* Article Content Styles - Premium News Typography */
+  .article-content {
+    font-family: Georgia, 'Times New Roman', serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .article-content ol {
+    counter-reset: item;
+  }
+
+  .article-content ol li {
+    counter-increment: item;
+  }
+
+  /* Drop Cap for first paragraph */
+  .article-content p:first-of-type::first-letter {
+    float: left;
+    font-size: 4.5rem;
+    line-height: 0.8;
+    padding-right: 0.75rem;
+    padding-top: 0.25rem;
+    font-weight: 700;
+    color: #b69c6b;
+    font-family: Georgia, serif;
+  }
+
+  .article-content p:first-of-type {
+    margin-bottom: 1.75rem;
+  }
+
+  .article-content h2 {
+    color: #1a1815;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    font-size: 14px;
+  }
+
+  .article-content h2 + p {
+    margin-top: 1rem;
+  }
+
+  .article-content blockquote p {
+    margin: 0;
+    font-size: inherit;
+  }
+
+  .article-content li strong {
+    color: #b69c6b;
+  }
 }
