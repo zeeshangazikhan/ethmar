@@ -175,7 +175,7 @@ export default function WhoWeAre() {
                       {nav.items.map((item, itemIndex) => (
                         <Link 
                           key={itemIndex}
-                          href={item === 'EIH Legacy / Who We Are' ? '/who-we-are' : '#'}
+                          href={item === 'EIH Legacy / Who We Are' ? '/who-we-are' : item === 'Blogs' ? '/blog' : '#'}
                           onClick={() => setMenuOpen(false)}
                           className="block font-serif text-[16px] sm:text-[18px] md:text-[20px] text-[#191817] hover:text-[#b69c6b] transition-colors"
                         >
@@ -190,7 +190,7 @@ export default function WhoWeAre() {
               {/* Contact Us - Direct Link */}
               <div className="border-b border-[#191817]/10">
                 <Link
-                  href="#"
+                  href="/contact-us"
                   onClick={() => setMenuOpen(false)}
                   className="w-full py-4 sm:py-6 flex justify-between items-center group"
                 >
@@ -682,7 +682,7 @@ export default function WhoWeAre() {
                 <Link href="/who-we-are" className="hover:opacity-80 transition-opacity uppercase py-2">ABOUT US</Link>
                 <Link href="#" className="hover:opacity-80 transition-opacity uppercase py-2">INVESTMENTS</Link>
                 <Link href="#" className="hover:opacity-80 transition-opacity uppercase py-2">CAREERS</Link>
-                <Link href="#" className="hover:opacity-80 transition-opacity uppercase py-2">CONTACT US</Link>
+                <Link href="/contact-us" className="hover:opacity-80 transition-opacity uppercase py-2">CONTACT US</Link>
              </div>
 
              <div className="flex justify-end w-full mb-8 sm:mb-12">
