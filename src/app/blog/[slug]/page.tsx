@@ -4,6 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { ChevronDown, ArrowRight, ArrowLeft, Calendar, Clock, User, Share2, Facebook, Linkedin, Twitter } from "lucide-react"
 import { useEffect, useState } from "react"
+import { NavLangToggle, SidebarLangToggle } from '@/components/LanguageToggle'
 
 // Sample blog posts data
 const blogPosts: Record<string, {
@@ -492,13 +493,7 @@ export default function BlogDetail({ params }: { params: { slug: string } }) {
                 </div>
 
                 {/* Language Toggle */}
-                <div className="pt-8 border-t border-[#191817]/10">
-                  <div className="flex gap-4">
-                    <button className="font-serif text-[16px] sm:text-[18px] text-[#191817] font-medium">EN</button>
-                    <span className="text-[#191817]/30">|</span>
-                    <button className="font-serif text-[16px] sm:text-[18px] text-[#191817]/50 hover:text-[#191817] transition-colors">AR</button>
-                  </div>
-                </div>
+                <SidebarLangToggle />
               </div>
             </div>
           </div>
@@ -533,9 +528,7 @@ export default function BlogDetail({ params }: { params: { slug: string } }) {
 
             <Link href="/" className="font-serif text-[18px] sm:text-[20px] tracking-[0.15em]">EIH</Link>
 
-            <div>
-              <span className="cursor-pointer font-arabic text-[14px] leading-none">ع</span>
-            </div>
+            <NavLangToggle className="text-[14px]" />
           </nav>
 
           {/* Desktop header */}
@@ -555,7 +548,7 @@ export default function BlogDetail({ params }: { params: { slug: string } }) {
                  <span className="block w-6 sm:w-8 md:w-9 h-[2px] bg-white"></span>
                  <span className="block w-6 sm:w-8 md:w-9 h-[2px] bg-white"></span>
               </button>
-              <span className="cursor-pointer font-arabic text-[14px] md:text-[16px] leading-none">ع</span>
+              <NavLangToggle className="text-[14px] md:text-[16px]" />
             </div>
           </nav>
         </div>

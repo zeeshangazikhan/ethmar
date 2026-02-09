@@ -4,9 +4,12 @@ import Image from "next/image"
 import Link from "next/link"
 import { ChevronDown, ArrowRight, Calendar, Clock, User } from "lucide-react"
 import { useCallback, useEffect, useRef, useState } from "react"
+import { NavLangToggle, SidebarLangToggle } from '@/components/LanguageToggle'
+import { useLanguage } from '@/components/LanguageProvider'
 import EmblaCarousel from 'embla-carousel'
 
 export default function Blog() {
+  const { isArabic } = useLanguage()
   const [menuOpen, setMenuOpen] = useState(false)
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null)
   const [activeCategory, setActiveCategory] = useState<'all' | 'news' | 'press'>('all')
@@ -225,7 +228,8 @@ export default function Blog() {
       loop: true,
       align: 'center',
       skipSnaps: false,
-      containScroll: false
+      containScroll: false,
+      direction: isArabic ? 'rtl' : 'ltr'
     })
 
     setFeaturedEmblaApi(embla)
@@ -240,7 +244,7 @@ export default function Blog() {
     return () => {
       embla.destroy()
     }
-  }, [])
+  }, [isArabic])
 
   const scrollFeaturedTo = useCallback(
     (index: number) => {
@@ -255,12 +259,12 @@ export default function Blog() {
       if (!featuredEmblaApi) return
       const progressBar = e.currentTarget
       const rect = progressBar.getBoundingClientRect()
-      const clickX = e.clientX - rect.left
+      const clickX = isArabic ? rect.right - e.clientX : e.clientX - rect.left
       const percentage = clickX / rect.width
       const targetIndex = Math.round(percentage * (featuredPosts.length - 1))
       scrollFeaturedTo(targetIndex)
     },
-    [featuredEmblaApi, scrollFeaturedTo, featuredPosts.length]
+    [featuredEmblaApi, scrollFeaturedTo, featuredPosts.length, isArabic]
   )
 
   // Handle progress bar mouse down for featured carousel drag
@@ -270,12 +274,12 @@ export default function Blog() {
       if (!featuredEmblaApi) return
       const progressBar = e.currentTarget
       const rect = progressBar.getBoundingClientRect()
-      const clickX = e.clientX - rect.left
+      const clickX = isArabic ? rect.right - e.clientX : e.clientX - rect.left
       const percentage = Math.max(0, Math.min(1, clickX / rect.width))
       const targetIndex = Math.round(percentage * (featuredPosts.length - 1))
       scrollFeaturedTo(targetIndex)
     },
-    [featuredEmblaApi, scrollFeaturedTo, featuredPosts.length]
+    [featuredEmblaApi, scrollFeaturedTo, featuredPosts.length, isArabic]
   )
 
   // Handle mouse move for featured carousel drag
@@ -284,12 +288,12 @@ export default function Blog() {
       if (!isDraggingFeaturedProgress || !featuredEmblaApi) return
       const progressBar = e.currentTarget
       const rect = progressBar.getBoundingClientRect()
-      const clickX = e.clientX - rect.left
+      const clickX = isArabic ? rect.right - e.clientX : e.clientX - rect.left
       const percentage = Math.max(0, Math.min(1, clickX / rect.width))
       const targetIndex = Math.round(percentage * (featuredPosts.length - 1))
       scrollFeaturedTo(targetIndex)
     },
-    [isDraggingFeaturedProgress, featuredEmblaApi, scrollFeaturedTo, featuredPosts.length]
+    [isDraggingFeaturedProgress, featuredEmblaApi, scrollFeaturedTo, featuredPosts.length, isArabic]
   )
 
   // Handle mouse up to stop dragging
@@ -431,13 +435,7 @@ export default function Blog() {
                 </div>
 
                 {/* Language Toggle */}
-                <div className="pt-8 border-t border-[#191817]/10">
-                  <div className="flex gap-4">
-                    <button className="font-serif text-[16px] sm:text-[18px] text-[#191817] font-medium">EN</button>
-                    <span className="text-[#191817]/30">|</span>
-                    <button className="font-serif text-[16px] sm:text-[18px] text-[#191817]/50 hover:text-[#191817] transition-colors">AR</button>
-                  </div>
-                </div>
+                <SidebarLangToggle />
               </div>
             </div>
           </div>
@@ -472,9 +470,7 @@ export default function Blog() {
 
             <Link href="/" className="font-serif text-[18px] sm:text-[20px] tracking-[0.15em]">EIH</Link>
 
-            <div>
-              <span className="cursor-pointer font-arabic text-[14px] leading-none">ع</span>
-            </div>
+            <NavLangToggle className="text-[14px]" />
           </nav>
 
           {/* Desktop header */}
@@ -494,7 +490,7 @@ export default function Blog() {
                  <span className="block w-6 sm:w-8 md:w-9 h-[2px] bg-white"></span>
                  <span className="block w-6 sm:w-8 md:w-9 h-[2px] bg-white"></span>
               </button>
-              <span className="cursor-pointer font-arabic text-[14px] md:text-[16px] leading-none">ع</span>
+              <NavLangToggle className="text-[14px] md:text-[16px]" />
             </div>
           </nav>
         </div>
@@ -534,7 +530,7 @@ export default function Blog() {
       </header>
 
       {/* FEATURED POSTS SECTION */}
-      <section className="pt-24 sm:pt-32 md:pt-40 pb-12 sm:pb-16 md:pb-20 px-0 bg-[#fffcf8]" data-scroll-animate>
+      <section className="pt-24 sm:pt-32 md:pt-[320px] pb-12 sm:pb-16 md:pb-20 px-4 sm:px-8 md:px-16 bg-[#fffcf8]" data-scroll-animate>
         <div className="w-full">
           {/* Section Header */}
           <div className="text-center mb-12 sm:mb-16 md:mb-20 px-4 sm:px-8 md:px-16">
@@ -611,7 +607,9 @@ export default function Blog() {
                   className="absolute h-[8px] bg-[#e7e3d6] rounded-full transition-all duration-300 -top-[3px]"
                   style={{
                     width: `${(1 / featuredPosts.length) * 100}%`,
-                    left: `${(featuredSelectedIndex / featuredPosts.length) * 100}%`,
+                    ...(isArabic
+                      ? { right: `${(featuredSelectedIndex / featuredPosts.length) * 100}%`, left: 'auto' }
+                      : { left: `${(featuredSelectedIndex / featuredPosts.length) * 100}%` }),
                   }}
                 />
               </div>
@@ -621,7 +619,7 @@ export default function Blog() {
       </section>
 
       {/* CATEGORY FILTER & BLOG GRID */}
-      <section className="pt-16 sm:pt-20 md:pt-24 pb-24 sm:pb-32 md:pb-40 px-4 sm:px-8 md:px-16 bg-[#f2efe6] relative overflow-hidden" data-scroll-animate>
+      <section className="pt-24 sm:pt-32 md:pt-[320px] pb-12 sm:pb-16 md:pb-20 px-4 sm:px-8 md:px-16 bg-[#f2efe6] relative overflow-hidden" data-scroll-animate>
         <div className="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')]"></div>
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#b69c6b]/[0.04] rounded-full blur-3xl pointer-events-none -translate-y-1/3 translate-x-1/4"></div>
         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#b69c6b]/[0.03] rounded-full blur-3xl pointer-events-none translate-y-1/3 -translate-x-1/4"></div>
@@ -671,7 +669,7 @@ export default function Blog() {
                 Press Releases
               </button>
             </div>
-          </div>
+          </div>``
 
           {/* Blog Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
@@ -679,7 +677,7 @@ export default function Blog() {
               <Link key={post.id} href={`/blog/${post.slug}`} className="group">
                 <article className="bg-white border border-[#191817]/[0.06] overflow-hidden h-full flex flex-col">
                   {/* Image */}
-                  <div className="relative h-[220px] sm:h-[260px] overflow-hidden">
+                  <div className="relative h-[300px] sm:h-[340px] md:h-[380px] overflow-hidden">
                     <Image 
                       src={post.image} 
                       alt={post.title} 
@@ -737,35 +735,7 @@ export default function Blog() {
         </div>
       </section>
 
-      {/* NEWSLETTER SECTION */}
-      <section className="py-20 sm:py-28 md:py-32 px-4 sm:px-8 md:px-16 bg-[#0b1320] relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')]"></div>
-        <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-[#b69c6b]/[0.05] rounded-full blur-3xl pointer-events-none"></div>
-
-        <div className="max-w-[800px] mx-auto relative z-10 text-center">
-          <div className="flex items-center justify-center gap-4 mb-6 sm:mb-8">
-            <div className="w-10 sm:w-14 md:w-20 h-[1px] bg-gradient-to-r from-transparent to-[#b69c6b]/40"></div>
-            <div className="w-2 h-2 bg-[#b69c6b] rotate-45"></div>
-            <div className="w-10 sm:w-14 md:w-20 h-[1px] bg-gradient-to-l from-transparent to-[#b69c6b]/40"></div>
-          </div>
-          <h2 className="text-white font-serif font-bold text-[14px] sm:text-[18px] md:text-[30px] uppercase tracking-[0.3em] mb-4 sm:mb-6 leading-none md:leading-relaxed">
-            STAY INFORMED
-          </h2>
-          <p className="text-white/50 font-serif text-[14px] sm:text-[16px] md:text-[18px] mb-10 sm:mb-12 italic">
-            Subscribe to receive the latest insights and updates directly to your inbox
-          </p>
-          <form className="flex flex-col sm:flex-row gap-4 max-w-[560px] mx-auto">
-            <input
-              type="email"
-              placeholder="Enter your email address"
-              className="flex-1 bg-white/[0.08] border border-white/10 px-6 py-4 font-serif text-[14px] text-white placeholder:text-white/30 outline-none focus:border-[#b69c6b]/50 transition-colors"
-            />
-            <button type="submit" className="px-8 py-4 bg-[#b69c6b] text-white font-serif text-[12px] tracking-[0.2em] uppercase hover:bg-[#a08b5e] transition-colors whitespace-nowrap">
-              Subscribe
-            </button>
-          </form>
-        </div>
-      </section>
+      
 
       {/* FOOTER */}
       <footer className="text-[#dfd4bf] pt-16 sm:pt-24 md:pt-40 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-8 md:px-16 relative overflow-hidden" style={{ backgroundImage: "url('/assets/footer-bg.jpg')", backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>

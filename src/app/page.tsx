@@ -4,9 +4,12 @@ import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight, ChevronDown } from "lucide-react"
 import { useCallback, useEffect, useRef, useState } from "react"
+import { NavLangToggle, SidebarLangToggle } from '@/components/LanguageToggle'
+import { useLanguage } from '@/components/LanguageProvider'
 import EmblaCarousel from 'embla-carousel'
 
 export default function Home() {
+  const { isArabic } = useLanguage()
   const emblaRef = useRef<HTMLDivElement>(null)
   const sectorsEmblaRef = useRef<HTMLDivElement>(null)
   const [emblaApi, setEmblaApi] = useState<ReturnType<typeof EmblaCarousel> | null>(null)
@@ -90,7 +93,8 @@ export default function Home() {
       loop: true, 
       align: 'center',
       skipSnaps: false,
-      containScroll: false
+      containScroll: false,
+      direction: isArabic ? 'rtl' : 'ltr'
     })
     
     setEmblaApi(embla)
@@ -105,7 +109,7 @@ export default function Home() {
     return () => {
       embla.destroy()
     }
-  }, [])
+  }, [isArabic])
 
   useEffect(() => {
     if (!sectorsEmblaRef.current) return
@@ -114,7 +118,8 @@ export default function Home() {
       loop: true, 
       align: 'center',
       skipSnaps: false,
-      containScroll: false
+      containScroll: false,
+      direction: isArabic ? 'rtl' : 'ltr'
     })
     
     setSectorsEmblaApi(embla)
@@ -128,7 +133,7 @@ export default function Home() {
     return () => {
       embla.destroy()
     }
-  }, [])
+  }, [isArabic])
 
   const scrollTo = useCallback(
     (index: number) => {
@@ -150,12 +155,12 @@ export default function Home() {
       if (!emblaApi) return
       const progressBar = e.currentTarget
       const rect = progressBar.getBoundingClientRect()
-      const clickX = e.clientX - rect.left
+      const clickX = isArabic ? rect.right - e.clientX : e.clientX - rect.left
       const percentage = clickX / rect.width
       const targetIndex = Math.round(percentage * (slides.length - 1))
       scrollTo(targetIndex)
     },
-    [emblaApi, scrollTo, slides.length]
+    [emblaApi, scrollTo, slides.length, isArabic]
   )
 
   // Handle progress bar mouse down for main carousel drag
@@ -165,12 +170,12 @@ export default function Home() {
       if (!emblaApi) return
       const progressBar = e.currentTarget
       const rect = progressBar.getBoundingClientRect()
-      const clickX = e.clientX - rect.left
+      const clickX = isArabic ? rect.right - e.clientX : e.clientX - rect.left
       const percentage = Math.max(0, Math.min(1, clickX / rect.width))
       const targetIndex = Math.round(percentage * (slides.length - 1))
       scrollTo(targetIndex)
     },
-    [emblaApi, scrollTo, slides.length]
+    [emblaApi, scrollTo, slides.length, isArabic]
   )
 
   // Handle mouse move for main carousel drag
@@ -179,12 +184,12 @@ export default function Home() {
       if (!isDraggingProgress || !emblaApi) return
       const progressBar = e.currentTarget
       const rect = progressBar.getBoundingClientRect()
-      const clickX = e.clientX - rect.left
+      const clickX = isArabic ? rect.right - e.clientX : e.clientX - rect.left
       const percentage = Math.max(0, Math.min(1, clickX / rect.width))
       const targetIndex = Math.round(percentage * (slides.length - 1))
       scrollTo(targetIndex)
     },
-    [isDraggingProgress, emblaApi, scrollTo, slides.length]
+    [isDraggingProgress, emblaApi, scrollTo, slides.length, isArabic]
   )
 
   // Handle sectors progress bar click
@@ -193,12 +198,12 @@ export default function Home() {
       if (!sectorsEmblaApi) return
       const progressBar = e.currentTarget
       const rect = progressBar.getBoundingClientRect()
-      const clickX = e.clientX - rect.left
+      const clickX = isArabic ? rect.right - e.clientX : e.clientX - rect.left
       const percentage = clickX / rect.width
       const targetIndex = Math.round(percentage * (6 - 1))
       scrollSectorsTo(targetIndex)
     },
-    [sectorsEmblaApi, scrollSectorsTo]
+    [sectorsEmblaApi, scrollSectorsTo, isArabic]
   )
 
   // Handle sectors progress bar mouse down for drag
@@ -208,12 +213,12 @@ export default function Home() {
       if (!sectorsEmblaApi) return
       const progressBar = e.currentTarget
       const rect = progressBar.getBoundingClientRect()
-      const clickX = e.clientX - rect.left
+      const clickX = isArabic ? rect.right - e.clientX : e.clientX - rect.left
       const percentage = Math.max(0, Math.min(1, clickX / rect.width))
       const targetIndex = Math.round(percentage * (6 - 1))
       scrollSectorsTo(targetIndex)
     },
-    [sectorsEmblaApi, scrollSectorsTo]
+    [sectorsEmblaApi, scrollSectorsTo, isArabic]
   )
 
   // Handle mouse move for sectors drag
@@ -222,12 +227,12 @@ export default function Home() {
       if (!isDraggingSectorsProgress || !sectorsEmblaApi) return
       const progressBar = e.currentTarget
       const rect = progressBar.getBoundingClientRect()
-      const clickX = e.clientX - rect.left
+      const clickX = isArabic ? rect.right - e.clientX : e.clientX - rect.left
       const percentage = Math.max(0, Math.min(1, clickX / rect.width))
       const targetIndex = Math.round(percentage * (6 - 1))
       scrollSectorsTo(targetIndex)
     },
-    [isDraggingSectorsProgress, sectorsEmblaApi, scrollSectorsTo]
+    [isDraggingSectorsProgress, sectorsEmblaApi, scrollSectorsTo, isArabic]
   )
 
   // Handle mouse up to stop dragging
@@ -370,13 +375,7 @@ export default function Home() {
                 </div>
 
                 {/* Language Toggle */}
-                <div className="pt-8 border-t border-[#191817]/10">
-                  <div className="flex gap-4">
-                    <button className="font-serif text-[16px] sm:text-[18px] text-[#191817] font-medium">EN</button>
-                    <span className="text-[#191817]/30">|</span>
-                    <button className="font-serif text-[16px] sm:text-[18px] text-[#191817]/50 hover:text-[#191817] transition-colors">AR</button>
-                  </div>
-                </div>
+                <SidebarLangToggle />
               </div>
             </div>
           </div>
@@ -411,9 +410,7 @@ export default function Home() {
 
             <div className="font-serif text-[18px] sm:text-[20px] tracking-[0.15em]">EIH</div>
 
-            <div>
-              <span className="cursor-pointer font-arabic text-[14px] leading-none">ع</span>
-            </div>
+            <NavLangToggle className="text-[14px]" />
           </nav>
 
           {/* Desktop header (keeps original layout) */}
@@ -434,7 +431,7 @@ export default function Home() {
                  <span className="block w-6 sm:w-8 md:w-9 h-[2px] bg-white"></span>
                  <span className="block w-6 sm:w-8 md:w-9 h-[2px] bg-white"></span>
               </button>
-              <span className="cursor-pointer font-arabic text-[14px] md:text-[16px] leading-none">ع</span>
+              <NavLangToggle className="text-[14px] md:text-[16px]" />
             </div>
           </nav>
         </div>
@@ -471,7 +468,7 @@ export default function Home() {
           <h2 className="text-[#191817] font-serif font-bold text-[16px] sm:text-[20px] md:text-[30px] uppercase tracking-[0.3em] mb-10 sm:mb-14 md:mb-20 px-2 leading-none md:leading-relaxed">
             <span className="block md:inline">WHERE LEGACY</span>
             <br className="md:hidden" />
-            <span className="block md:inline">BECOMES PRESENCE</span>
+            <span className="block md:inline"> BECOMES PRESENCE</span>
           </h2>
           <div className="relative mb-8 sm:mb-12">
             <img src="/assets/horse.jpg" className="w-full object-cover rounded-none h-[420px] sm:h-[560px] md:h-[700px]" alt="Horses" width={1440} height={700} />
@@ -493,7 +490,7 @@ export default function Home() {
           <h2 className="text-[#191817] font-serif font-bold text-[14px] sm:text-[18px] md:text-[30px] uppercase tracking-[0.3em] mb-10 sm:mb-14 md:mb-20 text-center px-4 sm:px-8 md:px-16 leading-none md:leading-relaxed">
             <span className="block md:inline">A GLOBAL PRESENCE</span>
             <br className="md:hidden" />
-            <span className="block md:inline">QUIETLY POWERFUL</span>
+            <span className="block md:inline"> QUIETLY POWERFUL</span>
           </h2>
 
           {/* Carousel Container - Full Width */}
@@ -535,7 +532,9 @@ export default function Home() {
                   className="absolute h-[8px] bg-[#e7e3d6] rounded-full transition-all duration-300 -top-[3px]"
                   style={{
                     width: `${(1 / slides.length) * 100}%`,
-                    left: `${(selectedIndex / slides.length) * 100}%`,
+                    ...(isArabic
+                      ? { right: `${(selectedIndex / slides.length) * 100}%`, left: 'auto' }
+                      : { left: `${(selectedIndex / slides.length) * 100}%` }),
                   }}
                 />
               </div>
@@ -550,10 +549,10 @@ export default function Home() {
           <h2 className="text-[#191817] font-serif font-bold text-[14px] sm:text-[18px] md:text-[30px] uppercase tracking-[0.3em] mb-10 sm:mb-14 md:mb-20 text-center px-2 sm:px-8 md:px-16 leading-none md:leading-relaxed">
             <span className="block md:inline">THE SECTORS THAT</span>
             <br className="md:hidden" />
-            <span className="block md:inline">SHAPE TOMORROW</span>
+            <span className="block md:inline"> SHAPE TOMORROW</span>
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 bg-[#f5f1e8] min-h-[650px] sm:min-h-[700px] md:min-h-[800px] rounded-none md:rounded-lg overflow-hidden">
+          <div className="grid grid-cols-1 md:grid-cols-2 bg-[#f5f1e8] min-h-[650px] sm:min-h-[700px] md:min-h-[800px] rounded-none overflow-hidden">
              <div className="p-6 sm:p-10 md:p-16 lg:p-24 text-left flex flex-col justify-end order-1 md:order-1">
                 <h3 className="text-[#191817] font-serif font-normal text-[28px] sm:text-[36px] md:text-[52px] lg:text-[60px] leading-[1.1] mb-6 sm:mb-10 md:mb-12 uppercase">
                   PRIVATE EQUITY &<br />GROWTH
@@ -592,7 +591,7 @@ export default function Home() {
                 { id: 6, img: '/assets/skyline.png', title: 'REAL ESTATE & LOGISTICS' },
               ].map((sector) => (
                 <div key={sector.id} className="flex-[0_0_78vw] sm:flex-[0_0_60vw] md:flex-[0_0_33.333vw] min-w-0 px-1 sm:px-1">
-                  <div className="relative h-[520px] sm:h-[500px] md:h-[750px] group overflow-hidden bg-[#0b1320] rounded-none md:rounded-lg">
+                  <div className="relative h-[520px] sm:h-[500px] md:h-[750px] group overflow-hidden bg-[#0b1320] rounded-none">
                     <Image src={sector.img} alt={sector.title} fill className="object-cover grayscale brightness-[0.7] group-hover:scale-110 transition-transform duration-1000" priority />
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all"></div>
                   </div>
@@ -617,7 +616,9 @@ export default function Home() {
                   className="absolute h-[8px] bg-[#e7e3d6] transition-all duration-300 -top-[3px]"
                   style={{
                     width: `${(1 / 6) * 100}%`,
-                    left: `${(sectorsSelectedIndex / 6) * 100}%`,
+                    ...(isArabic
+                      ? { right: `${(sectorsSelectedIndex / 6) * 100}%`, left: 'auto' }
+                      : { left: `${(sectorsSelectedIndex / 6) * 100}%` }),
                   }}
                 />
               </div>

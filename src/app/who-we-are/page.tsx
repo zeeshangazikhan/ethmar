@@ -4,6 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { ChevronDown, ArrowRight } from "lucide-react"
 import { useCallback, useEffect, useState } from "react"
+import { NavLangToggle, SidebarLangToggle } from '@/components/LanguageToggle'
 
 export default function WhoWeAre() {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -248,13 +249,7 @@ export default function WhoWeAre() {
                 </div>
 
                 {/* Language Toggle */}
-                <div className="pt-8 border-t border-[#191817]/10">
-                  <div className="flex gap-4">
-                    <button className="font-serif text-[16px] sm:text-[18px] text-[#191817] font-medium">EN</button>
-                    <span className="text-[#191817]/30">|</span>
-                    <button className="font-serif text-[16px] sm:text-[18px] text-[#191817]/50 hover:text-[#191817] transition-colors">AR</button>
-                  </div>
-                </div>
+                <SidebarLangToggle />
               </div>
             </div>
           </div>
@@ -289,9 +284,7 @@ export default function WhoWeAre() {
 
             <Link href="/" className="font-serif text-[18px] sm:text-[20px] tracking-[0.15em]">EIH</Link>
 
-            <div>
-              <span className="cursor-pointer font-arabic text-[14px] leading-none">ع</span>
-            </div>
+            <NavLangToggle className="text-[14px]" />
           </nav>
 
           {/* Desktop header */}
@@ -311,7 +304,7 @@ export default function WhoWeAre() {
                  <span className="block w-6 sm:w-8 md:w-9 h-[2px] bg-white"></span>
                  <span className="block w-6 sm:w-8 md:w-9 h-[2px] bg-white"></span>
               </button>
-              <span className="cursor-pointer font-arabic text-[14px] md:text-[16px] leading-none">ع</span>
+              <NavLangToggle className="text-[14px] md:text-[16px]" />
             </div>
           </nav>
         </div>
@@ -351,7 +344,7 @@ export default function WhoWeAre() {
       </header>
 
       {/* ABOUT INTRO SECTION */}
-      <section className="pt-24 sm:pt-32 md:pt-40 lg:pt-48 pb-16 sm:pb-24 md:pb-32 px-4 sm:px-8 md:px-16 bg-[#fffcf8] relative" data-scroll-animate>
+      <section className="pt-24 sm:pt-32 md:pt-[320px] pb-12 sm:pb-16 md:pb-20 px-4 sm:px-8 md:px-16 bg-[#fffcf8] relative" data-scroll-animate>
         <div className="max-w-[1400px] mx-auto relative">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
             <div className="order-2 lg:order-1">
@@ -466,7 +459,7 @@ export default function WhoWeAre() {
       </section>
 
       {/* VISION & MISSION SECTION */}
-      <section className="pt-24 sm:pt-32 md:pt-40 lg:pt-48 pb-16 sm:pb-24 md:pb-32 px-4 sm:px-8 md:px-16 bg-[#fffcf8]" data-scroll-animate>
+      <section className="pt-24 sm:pt-32 md:pt-[320px] pb-12 sm:pb-16 md:pb-0 px-4 sm:px-8 md:px-16 bg-[#fffcf8]" data-scroll-animate>
         <div className="max-w-[1400px] mx-auto">
           <div className="text-center mb-16 sm:mb-20 md:mb-28">
             <div className="flex items-center justify-center gap-4 mb-4">
@@ -535,7 +528,7 @@ export default function WhoWeAre() {
       </section>
 
       {/* CORE VALUES SECTION */}
-      <section className="pt-16 sm:pt-24 md:pt-32 pb-24 sm:pb-32 md:pb-40 lg:pb-48 px-4 sm:px-8 md:px-16 bg-[#f9f7f4]" data-scroll-animate>
+      <section className="pt-24 sm:pt-32 md:pt-[320px] pb-12 sm:pb-16 md:pb-0 px-4 sm:px-8 md:px-16 bg-[#f9f7f4]" data-scroll-animate>
         <div className="max-w-[1400px] mx-auto">
           <div className="text-center mb-16 sm:mb-20 md:mb-28">
             <div className="flex items-center justify-center gap-4 mb-4">
@@ -577,7 +570,7 @@ export default function WhoWeAre() {
       </section>
 
       {/* JOURNEY TIMELINE SECTION */}
-      <section className="py-24 sm:py-32 md:py-40 lg:py-48 px-4 sm:px-8 md:px-16 bg-[#fffcf8] relative overflow-hidden" data-scroll-animate>
+      <section className="pt-24 sm:pt-32 md:pt-[320px] pb-12 sm:pb-16 md:pb-20 px-4 sm:px-8 md:px-16 bg-[#fffcf8] relative overflow-hidden" data-scroll-animate>
         {/* Background decorative elements */}
         <div className="absolute top-20 left-10 w-32 h-32 border border-[#b69c6b]/10 rotate-45"></div>
         <div className="absolute bottom-20 right-10 w-48 h-48 border border-[#b69c6b]/5 rotate-12"></div>
@@ -633,7 +626,7 @@ export default function WhoWeAre() {
       </section>
 
       {/* CTA SECTION */}
-      <section className="py-20 sm:py-28 md:py-36 lg:py-44 px-4 sm:px-8 md:px-16 bg-[#0b1320] relative overflow-hidden">
+      <section className="py-20 sm:py-28 md:py-36 px-4 sm:px-8 md:px-16 bg-[#0b1320] relative overflow-hidden">
         {/* Background elements */}
         <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-[#b69c6b]/5 rounded-full blur-[150px]"></div>
         <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-[#b69c6b]/5 rounded-full blur-[100px]"></div>

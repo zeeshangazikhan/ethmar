@@ -1,8 +1,10 @@
 import type { Metadata } from "next"
 import { Inter, Marcellus, Noto_Kufi_Arabic } from "next/font/google"
+import Script from "next/script"
 import "./globals.css"
 import { Toaster } from "@/components/ui/toaster"
 import { TooltipProvider } from "@/components/ui/tooltip"
+import { LanguageProvider } from "@/components/LanguageProvider"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -44,10 +46,20 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${marcellus.variable} ${notokufi.variable} antialiased`}>
-        <TooltipProvider>
-          <Toaster />
-          {children}
-        </TooltipProvider>
+        <Script id="google-translate-init" strategy="beforeInteractive">
+          {`(function(){if(document.cookie.indexOf('googtrans=/en/ar')!==-1){document.documentElement.dir='rtl';document.documentElement.lang='ar';document.documentElement.classList.add('translated-rtl')}})();function googleTranslateElementInit(){new google.translate.TranslateElement({pageLanguage:'en',includedLanguages:'ar',autoDisplay:false},'google_translate_element')}`}
+        </Script>
+        <Script
+          src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+          strategy="afterInteractive"
+        />
+        <div id="google_translate_element" style={{ display: 'none' }} />
+        <LanguageProvider>
+          <TooltipProvider>
+            <Toaster />
+            {children}
+          </TooltipProvider>
+        </LanguageProvider>
       </body>
     </html>
   )

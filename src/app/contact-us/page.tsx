@@ -4,9 +4,12 @@ import Image from "next/image"
 import Link from "next/link"
 import { ChevronDown, ArrowRight, Phone, Mail, MapPin, Clock } from "lucide-react"
 import { useCallback, useEffect, useRef, useState } from "react"
+import { NavLangToggle, SidebarLangToggle } from '@/components/LanguageToggle'
+import { useLanguage } from '@/components/LanguageProvider'
 import EmblaCarousel from 'embla-carousel'
 
 export default function ContactUs() {
+  const { isArabic } = useLanguage()
   const [menuOpen, setMenuOpen] = useState(false)
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null)
   const [activeFaq, setActiveFaq] = useState<number | null>(null)
@@ -164,7 +167,8 @@ export default function ContactUs() {
       loop: true,
       align: 'center',
       skipSnaps: false,
-      containScroll: false
+      containScroll: false,
+      direction: isArabic ? 'rtl' : 'ltr'
     })
 
     setOfficeEmblaApi(embla)
@@ -179,7 +183,7 @@ export default function ContactUs() {
     return () => {
       embla.destroy()
     }
-  }, [])
+  }, [isArabic])
 
   const scrollOfficeTo = useCallback(
     (index: number) => {
@@ -194,12 +198,12 @@ export default function ContactUs() {
       if (!officeEmblaApi) return
       const progressBar = e.currentTarget
       const rect = progressBar.getBoundingClientRect()
-      const clickX = e.clientX - rect.left
+      const clickX = isArabic ? rect.right - e.clientX : e.clientX - rect.left
       const percentage = clickX / rect.width
       const targetIndex = Math.round(percentage * (offices.length - 1))
       scrollOfficeTo(targetIndex)
     },
-    [officeEmblaApi, scrollOfficeTo, offices.length]
+    [officeEmblaApi, scrollOfficeTo, offices.length, isArabic]
   )
 
   // Handle progress bar mouse down for office carousel drag
@@ -209,12 +213,12 @@ export default function ContactUs() {
       if (!officeEmblaApi) return
       const progressBar = e.currentTarget
       const rect = progressBar.getBoundingClientRect()
-      const clickX = e.clientX - rect.left
+      const clickX = isArabic ? rect.right - e.clientX : e.clientX - rect.left
       const percentage = Math.max(0, Math.min(1, clickX / rect.width))
       const targetIndex = Math.round(percentage * (offices.length - 1))
       scrollOfficeTo(targetIndex)
     },
-    [officeEmblaApi, scrollOfficeTo, offices.length]
+    [officeEmblaApi, scrollOfficeTo, offices.length, isArabic]
   )
 
   // Handle mouse move for office carousel drag
@@ -223,12 +227,12 @@ export default function ContactUs() {
       if (!isDraggingOfficeProgress || !officeEmblaApi) return
       const progressBar = e.currentTarget
       const rect = progressBar.getBoundingClientRect()
-      const clickX = e.clientX - rect.left
+      const clickX = isArabic ? rect.right - e.clientX : e.clientX - rect.left
       const percentage = Math.max(0, Math.min(1, clickX / rect.width))
       const targetIndex = Math.round(percentage * (offices.length - 1))
       scrollOfficeTo(targetIndex)
     },
-    [isDraggingOfficeProgress, officeEmblaApi, scrollOfficeTo, offices.length]
+    [isDraggingOfficeProgress, officeEmblaApi, scrollOfficeTo, offices.length, isArabic]
   )
 
   // Handle mouse up to stop dragging
@@ -386,13 +390,7 @@ export default function ContactUs() {
                 </div>
 
                 {/* Language Toggle */}
-                <div className="pt-8 border-t border-[#191817]/10">
-                  <div className="flex gap-4">
-                    <button className="font-serif text-[16px] sm:text-[18px] text-[#191817] font-medium">EN</button>
-                    <span className="text-[#191817]/30">|</span>
-                    <button className="font-serif text-[16px] sm:text-[18px] text-[#191817]/50 hover:text-[#191817] transition-colors">AR</button>
-                  </div>
-                </div>
+                <SidebarLangToggle />
               </div>
             </div>
           </div>
@@ -429,9 +427,7 @@ export default function ContactUs() {
 
             <Link href="/" className="font-serif text-[18px] sm:text-[20px] tracking-[0.15em]">EIH</Link>
 
-            <div>
-              <span className="cursor-pointer font-arabic text-[14px] leading-none">ع</span>
-            </div>
+            <NavLangToggle className="text-[14px]" />
           </nav>
 
           {/* Desktop header */}
@@ -451,7 +447,7 @@ export default function ContactUs() {
                  <span className="block w-6 sm:w-8 md:w-9 h-[2px] bg-white"></span>
                  <span className="block w-6 sm:w-8 md:w-9 h-[2px] bg-white"></span>
               </button>
-              <span className="cursor-pointer font-arabic text-[14px] md:text-[16px] leading-none">ع</span>
+              <NavLangToggle className="text-[14px] md:text-[16px]" />
             </div>
           </nav>
         </div>
@@ -491,7 +487,7 @@ export default function ContactUs() {
       </header>
 
       {/* CONTACT DETAILS SECTION */}
-      <section className="pt-24 sm:pt-32 md:pt-40 pb-24 sm:pb-32 md:pb-40 px-4 sm:px-8 md:px-16 bg-[#f2efe6] relative overflow-hidden" data-scroll-animate>
+      <section className="pt-24 sm:pt-32 md:pt-[320px] pb-12 sm:pb-16 md:pb-20 px-4 sm:px-8 md:px-16 bg-[#f2efe6] relative overflow-hidden" data-scroll-animate>
         <div className="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')]"></div>
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#b69c6b]/[0.04] rounded-full blur-3xl pointer-events-none -translate-y-1/3 translate-x-1/4"></div>
         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#b69c6b]/[0.03] rounded-full blur-3xl pointer-events-none translate-y-1/3 -translate-x-1/4"></div>
@@ -585,7 +581,7 @@ export default function ContactUs() {
       </section>
 
       {/* CONTACT FORM SECTION */}
-      <section className="pt-24 sm:pt-32 md:pt-40 pb-24 sm:pb-32 md:pb-40 px-4 sm:px-8 md:px-16 bg-[#fffcf8] relative" data-scroll-animate>
+      <section className="pt-24 sm:pt-32 md:pt-[320px] pb-12 sm:pb-16 md:pb-20 px-4 sm:px-8 md:px-16 bg-[#fffcf8] relative" data-scroll-animate>
         <div className="absolute top-20 right-0 w-72 h-72 bg-[#b69c6b]/[0.03] rounded-full blur-3xl pointer-events-none"></div>
         <div className="absolute bottom-20 left-0 w-96 h-96 bg-[#b69c6b]/[0.02] rounded-full blur-3xl pointer-events-none"></div>
 
@@ -750,7 +746,7 @@ export default function ContactUs() {
       </section>
 
       {/* OFFICES SLIDER SECTION */}
-      <section className="pt-16 sm:pt-24 md:pt-32 pb-16 sm:pb-24 md:pb-32 px-0 bg-[#0b1320] relative overflow-hidden" data-scroll-animate>
+      <section className="pt-24 sm:pt-32 md:pt-[320px] pb-12 sm:pb-16 md:pb-20 px-4 sm:px-8 md:px-16 bg-[#0b1320] relative overflow-hidden" data-scroll-animate>
         {/* Subtle background pattern */}
         <div className="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')]"></div>
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#b69c6b]/[0.03] rounded-full blur-3xl pointer-events-none"></div>
@@ -859,7 +855,9 @@ export default function ContactUs() {
                   className="absolute h-[8px] bg-white/25 rounded-full transition-all duration-300 -top-[3px]"
                   style={{
                     width: `${(1 / offices.length) * 100}%`,
-                    left: `${(officeSelectedIndex / offices.length) * 100}%`,
+                    ...(isArabic
+                      ? { right: `${(officeSelectedIndex / offices.length) * 100}%`, left: 'auto' }
+                      : { left: `${(officeSelectedIndex / offices.length) * 100}%` }),
                   }}
                 />
               </div>
@@ -869,7 +867,7 @@ export default function ContactUs() {
       </section>
 
       {/* FAQ SECTION */}
-      <section className="pt-24 sm:pt-32 md:pt-40 pb-24 sm:pb-32 md:pb-40 px-4 sm:px-8 md:px-16 bg-[#fffcf8] relative" data-scroll-animate>
+      <section className="pt-24 sm:pt-32 md:pt-[320px] pb-12 sm:pb-16 md:pb-20 px-4 sm:px-8 md:px-16 bg-[#fffcf8] relative" data-scroll-animate>
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-[#b69c6b]/[0.02] rounded-full blur-3xl pointer-events-none"></div>
         
         <div className="max-w-[900px] mx-auto relative z-10">
@@ -926,7 +924,7 @@ export default function ContactUs() {
       </section>
 
       {/* CTA SECTION */}
-      <section className="py-16 sm:py-24 md:py-32 px-4 sm:px-8 md:px-16 bg-[#f2efe6] relative overflow-hidden" data-scroll-animate>
+      <section className="pt-12 sm:pt-16 md:pt-20 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-8 md:px-16 bg-[#f2efe6] relative overflow-hidden" data-scroll-animate>
         <div className="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')]"></div>
         <div className="max-w-[900px] mx-auto text-center relative z-10">
           <div className="flex items-center justify-center gap-4 mb-6 sm:mb-8">
