@@ -445,17 +445,16 @@ export default function Blog() {
       </div>
 
       {/* HERO SECTION */}
-      <header className="relative min-h-[70vh] md:min-h-[80vh] flex flex-col bg-[#0b1320]">
+      <header className="relative min-h-[85vh] md:min-h-[90vh] flex flex-col bg-[#0b1320]">
         <div className="absolute inset-0 z-0">
           <Image 
             src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1600&q=80" 
-            className="w-full h-full object-cover grayscale brightness-[0.25] contrast-[1.1]"
+            className="w-full h-full object-cover grayscale brightness-[0.4]"
             alt="News & Insights Background"
             fill
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0b1320]/80 via-black/30 to-[#0b1320]"></div>
-          <div className="absolute inset-0 bg-[#0b1320]/15"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-[#0b1320]"></div>
         </div>
 
         {/* Navigation */}
@@ -520,6 +519,16 @@ export default function Blog() {
             <div className="mt-10 sm:mt-14 flex justify-center">
               <div className="w-[1px] h-16 sm:h-20 bg-gradient-to-b from-[#b69c6b]/60 to-transparent"></div>
             </div>
+          </div>
+        </div>
+
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-10 sm:bottom-12 left-1/2 transform -translate-x-1/2 z-10">
+          <div className="flex flex-col items-center gap-3 text-white/50 animate-bounce">
+            <span className="text-[10px] sm:text-[11px] tracking-[0.3em] uppercase font-light">Explore</span>
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
           </div>
         </div>
       </header>
