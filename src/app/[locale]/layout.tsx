@@ -1,5 +1,4 @@
 import { Inter, Marcellus, Noto_Kufi_Arabic } from "next/font/google"
-import "../globals.css"
 import { Toaster } from "@/components/ui/toaster"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { LanguageProvider } from "@/components/LanguageProvider"
@@ -44,15 +43,13 @@ export default async function LocaleLayout({
   // The middleware will handle redirects based on the URL locale.
 
   return (
-    <html lang={locale} dir={dir}>
-      <body className={`${inter.variable} ${marcellus.variable} ${notokufi.variable} antialiased`}>
-        <LanguageProvider locale={locale}>
-          <TooltipProvider>
-            <Toaster />
-            {children}
-          </TooltipProvider>
-        </LanguageProvider>
-      </body>
-    </html>
+    <div className={`${inter.variable} ${marcellus.variable} ${notokufi.variable} antialiased`} dir={dir} lang={locale}>
+      <LanguageProvider locale={locale}>
+        <TooltipProvider>
+          <Toaster />
+          {children}
+        </TooltipProvider>
+      </LanguageProvider>
+    </div>
   )
 }
