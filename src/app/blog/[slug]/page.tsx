@@ -673,13 +673,13 @@ export default function BlogDetail({ params }: { params: { slug: string } }) {
       </article>
 
       {/* RELATED ARTICLES */}
-      <section className="py-20 sm:py-28 md:py-32 px-4 sm:px-8 md:px-16 bg-[#f2efe6] relative overflow-hidden" data-scroll-animate>
+      <section className="pt-24 sm:pt-32 md:pt-[320px] pb-12 sm:pb-16 md:pb-20 px-4 sm:px-8 md:px-16 bg-[#f2efe6] relative overflow-hidden" data-scroll-animate>
         <div className="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')]"></div>
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#b69c6b]/[0.04] rounded-full blur-3xl pointer-events-none -translate-y-1/3 translate-x-1/4"></div>
 
         <div className="max-w-[1440px] mx-auto relative z-10">
           {/* Section Header */}
-          <div className="text-center mb-12 sm:mb-16 md:mb-20">
+          <div className="text-center mb-10 sm:mb-14 md:mb-16">
             <div className="flex items-center justify-center gap-4 mb-6 sm:mb-8">
               <div className="w-10 sm:w-14 md:w-20 h-[1px] bg-gradient-to-r from-transparent to-[#b69c6b]/40"></div>
               <div className="w-2 h-2 bg-[#b69c6b] rotate-45"></div>
@@ -691,12 +691,12 @@ export default function BlogDetail({ params }: { params: { slug: string } }) {
           </div>
 
           {/* Related Articles Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {relatedPosts.map((relatedPost) => (
               <Link key={relatedPost.id} href={`/blog/${relatedPost.slug}`} className="group">
                 <article className="bg-white border border-[#191817]/[0.06] overflow-hidden h-full flex flex-col">
                   {/* Image */}
-                  <div className="relative h-[200px] sm:h-[220px] overflow-hidden">
+                  <div className="relative h-[300px] sm:h-[340px] md:h-[380px] overflow-hidden">
                     <Image 
                       src={relatedPost.image} 
                       alt={relatedPost.title} 
@@ -726,13 +726,16 @@ export default function BlogDetail({ params }: { params: { slug: string } }) {
                       </span>
                     </div>
                     {/* Title */}
-                    <h3 className="text-[#191817] font-serif text-[17px] sm:text-[19px] leading-[1.3] mb-3 group-hover:text-[#b69c6b] transition-colors flex-1">
+                    <h3 className="text-[#191817] font-serif text-[18px] sm:text-[20px] leading-[1.3] mb-3 group-hover:text-[#b69c6b] transition-colors flex-1">
                       {relatedPost.title}
                     </h3>
                     {/* Read More */}
-                    <span className="inline-flex items-center gap-2 text-[#b69c6b] font-serif text-[12px] tracking-[0.15em] uppercase group-hover:gap-3 transition-all">
+                    <span className="inline-flex items-center gap-2 text-[#191817] group-hover:text-[#b69c6b] font-serif text-[12px] tracking-[0.15em] uppercase group-hover:gap-3 transition-all">
                       Read More
-                      <ArrowRight className="w-4 h-4" />
+                      <svg className="w-10 sm:w-10 h-5 sm:h-6 transition-transform group-hover:translate-x-1" viewBox="0 0 40 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <line x1="2" y1="10" x2="35" y2="10" stroke="currentColor" strokeWidth="1" />
+                        <path d="M32 6L38 10L32 14" stroke="currentColor" strokeWidth="1" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
                     </span>
                   </div>
                 </article>
@@ -741,7 +744,7 @@ export default function BlogDetail({ params }: { params: { slug: string } }) {
           </div>
 
           {/* View All Button */}
-          <div className="flex justify-center mt-12 sm:mt-16">
+          <div className="flex justify-center mt-12 sm:mt-16 md:mt-20">
             <Link href="/blog" className="group inline-flex items-center gap-3 px-8 sm:px-12 py-4 bg-[#0b1320] text-white font-serif text-[12px] sm:text-[13px] tracking-[0.2em] uppercase hover:bg-[#191817] transition-colors">
               View All Articles
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

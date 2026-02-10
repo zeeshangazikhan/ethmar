@@ -450,7 +450,7 @@ export default function Home() {
               </h1>
               <Link href="#" className="mt-4 sm:mt-6 inline-flex items-center gap-3 sm:gap-4 text-white font-serif text-[16px] sm:text-[20px] md:text-[24px] tracking-[0.15em] sm:tracking-[0.2em] group">
                 <span className="leading-none">Dive Deeper</span>
-                <svg className="w-10 sm:w-12 h-5 sm:h-6 transition-transform group-hover:translate-x-1" viewBox="0 0 40 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg className="w-8 sm:w-10 h-5 sm:h-6 transition-transform group-hover:translate-x-1" viewBox="0 0 40 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <line x1="2" y1="10" x2="35" y2="10" stroke="white" strokeWidth="1"/>
                   <path d="M32 6L38 10L32 14" stroke="white" strokeWidth="1" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>

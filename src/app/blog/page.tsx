@@ -534,11 +534,11 @@ export default function Blog() {
         <div className="w-full">
           {/* Section Header */}
           <div className="text-center mb-12 sm:mb-16 md:mb-20 px-4 sm:px-8 md:px-16">
-            <div className="flex items-center justify-center gap-4 mb-6 sm:mb-8">
+            {/* <div className="flex items-center justify-center gap-4 mb-6 sm:mb-8">
               <div className="w-10 sm:w-14 md:w-20 h-[1px] bg-gradient-to-r from-transparent to-[#b69c6b]/40"></div>
               <div className="w-2 h-2 bg-[#b69c6b] rotate-45"></div>
               <div className="w-10 sm:w-14 md:w-20 h-[1px] bg-gradient-to-l from-transparent to-[#b69c6b]/40"></div>
-            </div>
+            </div> */}
             <h2 className="text-[#191817] font-serif font-bold text-[14px] sm:text-[18px] md:text-[30px] uppercase tracking-[0.3em] leading-none md:leading-relaxed">
               FEATURED STORIES
             </h2>
@@ -578,11 +578,11 @@ export default function Blog() {
                           <p className="text-[#191817]/70 font-serif text-[14px] sm:text-[16px] md:text-[18px] leading-[1.6] mb-6 sm:mb-8">
                             {post.excerpt}
                           </p>
-                          <span className="inline-flex items-center gap-3 text-[#b69c6b] font-serif text-[13px] sm:text-[14px] tracking-[0.15em] uppercase group-hover:gap-4 transition-all">
+                          <span className="inline-flex items-center gap-3 text-[#191817] group-hover:text-[#b69c6b] font-serif text-[13px] sm:text-[14px] tracking-[0.15em] uppercase group-hover:gap-4 transition-all">
                             Read Article
-                            <svg className="w-8 h-4" viewBox="0 0 32 16" fill="none">
-                              <line x1="0" y1="8" x2="25" y2="8" stroke="currentColor" strokeWidth="1"/>
-                              <path d="M22 4L28 8L22 12" stroke="currentColor" strokeWidth="1" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+                            <svg className="w-10 sm:w-10 h-5 sm:h-6 transition-transform group-hover:translate-x-1" viewBox="0 0 40 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                              <line x1="2" y1="10" x2="35" y2="10" stroke="currentColor" strokeWidth="1" />
+                              <path d="M32 6L38 10L32 14" stroke="currentColor" strokeWidth="1" fill="none" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                           </span>
                         </div>
@@ -630,7 +630,7 @@ export default function Blog() {
             <h2 className="text-[#191817] font-serif font-bold text-[14px] sm:text-[18px] md:text-[30px] uppercase tracking-[0.3em] mb-4 sm:mb-6 leading-none md:leading-relaxed">
               ALL ARTICLES
             </h2>
-            <p className="text-[#191817]/50 font-serif text-[14px] sm:text-[16px] md:text-[18px] max-w-[600px] mx-auto italic">
+            <p className="text-[#191817] font-serif text-[15px] sm:text-[17px] md:text-[20px] leading-[1.7] sm:leading-[1.8] mb-10 sm:mb-12 md:mb-14 opacity-80 px-2 ">
               Explore our latest news, insights, and press releases
             </p>
           </div>
@@ -715,9 +715,12 @@ export default function Blog() {
                       {post.excerpt}
                     </p>
                     {/* Read More */}
-                    <span className="inline-flex items-center gap-2 text-[#b69c6b] font-serif text-[12px] tracking-[0.15em] uppercase group-hover:gap-3 transition-all">
+                    <span className="inline-flex items-center gap-2 text-[#191817] group-hover:text-[#b69c6b] font-serif text-[12px] tracking-[0.15em] uppercase group-hover:gap-3 transition-all">
                       Read More
-                      <ArrowRight className="w-4 h-4" />
+                      <svg className="w-10 sm:w-8 h-5 sm:h-6 transition-transform group-hover:translate-x-1" viewBox="0 0 40 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <line x1="2" y1="10" x2="35" y2="10" stroke="currentColor" strokeWidth="1" />
+                        <path d="M32 6L38 10L32 14" stroke="currentColor" strokeWidth="1" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
                     </span>
                   </div>
                 </article>
