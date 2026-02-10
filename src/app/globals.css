@@ -2,92 +2,46 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ── Google Translate: hide default toolbar / banner ── */
-.goog-te-banner-frame,
-.skiptranslate,
-#goog-gt-tt,
-.goog-te-balloon-frame,
-.goog-tooltip,
-.goog-tooltip:hover,
-.goog-te-gadget {
-  display: none !important;
-}
-body {
-  top: 0 !important;
-}
+/* ── RTL support (dir="rtl" on <html>) ── */
 
-/* RTL helper class applied by language provider */
-html.translated-rtl {
-  direction: rtl;
-}
-
-/* ── RTL global style overrides ── */
-html.translated-rtl body {
+/* RTL global style overrides */
+html[dir="rtl"] body {
   text-align: right;
 }
 
-/* Flip all inline SVG arrows and Lucide arrow icons */
-html.translated-rtl .rtl-flip,
-html.translated-rtl svg.lucide-arrow-right,
-html.translated-rtl svg.lucide-arrow-left,
-html.translated-rtl svg.lucide-chevron-down {
-  /* chevron-down stays; arrows flip */
-}
-html.translated-rtl svg.lucide-arrow-right,
-html.translated-rtl svg.lucide-arrow-left {
+/* Flip all inline SVG arrows and Lucide arrow icons in RTL */
+html[dir="rtl"] svg.lucide-arrow-right,
+html[dir="rtl"] svg.lucide-arrow-left {
   transform: scaleX(-1);
 }
 
-/* Flip custom SVG line arrows (the long "Get in touch" type arrows) */
-html.translated-rtl .arrow-link svg,
-html.translated-rtl .group svg[viewBox="0 0 40 20"] {
+/* Flip custom SVG line arrows (the long "Get in touch" / "Dive Deeper" type arrows) */
+html[dir="rtl"] .group svg[viewBox="0 0 40 20"] {
   transform: scaleX(-1);
 }
 
 /* Hover translate direction: flip from translate-x to -translate-x */
-html.translated-rtl .group:hover .group-hover\:translate-x-1 {
+html[dir="rtl"] .group:hover .group-hover\:translate-x-1 {
   --tw-translate-x: -0.25rem !important;
 }
-html.translated-rtl .group:hover .group-hover\:translate-x-2 {
+html[dir="rtl"] .group:hover .group-hover\:translate-x-2 {
   --tw-translate-x: -0.5rem !important;
 }
 
-/* Flex row direction is auto-flipped by dir=rtl, but some explicit
-   LTR spacings need mirroring. Use logical properties where possible. */
-html.translated-rtl .text-left {
-  text-align: right;
+/* Hamburger menu overlay: slide from left in RTL, from right in LTR */
+/* LTR default is translate-x-full (off right). RTL should be -translate-x-full (off left) */
+html[dir="rtl"] .menu-overlay-slide {
+  transform: translateX(-100%) !important;
 }
-html.translated-rtl .text-right {
-  text-align: left;
+html[dir="rtl"] .menu-overlay-slide.menu-open {
+  transform: translateX(0) !important;
 }
 
 /* Drop-cap in article float direction */
-html.translated-rtl .article-content p:first-of-type::first-letter {
+html[dir="rtl"] .article-content p:first-of-type::first-letter {
   float: right;
   padding-right: 0;
   padding-left: 0.75rem;
-}
-
-/* Decorative corner accents in office cards – mirror positions */
-html.translated-rtl .border-l {
-  border-left: 0;
-  border-right: 1px solid;
-}
-html.translated-rtl .border-r {
-  border-right: 0;
-  border-left: 1px solid;
-}
-
-/* Keep the translate toolbar element hidden in RTL too */
-html.translated-rtl .skiptranslate {
-  display: none !important;
-}
-
-/* Ensure slider containers stay LTR internally so Embla works,
-   but card content is RTL */
-html.translated-rtl .embla-slide-content {
-  direction: rtl;
-  text-align: right;
 }
 
 @layer base {

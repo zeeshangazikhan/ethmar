@@ -27,7 +27,13 @@ export function middleware(request: NextRequest) {
   // Check if path already has a locale
   const pathLocale = getLocaleFromPath(pathname);
   if (pathLocale) {
-    return NextResponse.next();
+    // Set cookie to remember user's locale preference
+    const response = NextResponse.next();
+    response.cookies.set('NEXT_LOCALE', pathLocale, {
+      maxAge: 60 * 60 * 24 * 365, // 1 year
+      path: '/',
+    });
+    return response;
   }
 
   // Try to detect preferred locale from cookie or Accept-Language header

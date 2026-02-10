@@ -1,0 +1,34 @@
+'use client'
+
+import Link from "next/link"
+import { Card, CardContent } from "@/components/ui/card"
+import { AlertCircle } from "lucide-react"
+import { useLanguage } from '@/components/LanguageProvider'
+
+export default function NotFound() {
+  const { t, locale } = useLanguage()
+
+  return (
+    <div className="min-h-screen w-full flex items-center justify-center bg-[#fffcf8]">
+      <Card className="w-full max-w-md mx-4">
+        <CardContent className="pt-6">
+          <div className="flex mb-4 gap-2">
+            <AlertCircle className="h-8 w-8 text-red-500" />
+            <h1 className="text-2xl font-bold text-gray-900">{t('notFound.title')}</h1>
+          </div>
+
+          <p className="mt-4 text-sm text-gray-600">
+            {t('notFound.description')}
+          </p>
+
+          <Link 
+            href={`/${locale}`} 
+            className="mt-6 inline-block text-sm text-blue-600 hover:text-blue-800 underline"
+          >
+            {t('notFound.goHome')}
+          </Link>
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
