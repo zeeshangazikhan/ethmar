@@ -528,7 +528,7 @@ export default function WhoWeAre() {
       </section>
 
       {/* CORE VALUES SECTION */}
-      <section className="pt-24 sm:pt-32 md:pt-[320px] pb-12 sm:pb-16 md:pb-0 px-4 sm:px-8 md:px-16 bg-[#f9f7f4]" data-scroll-animate>
+      <section className="pt-24 sm:pt-32 md:pt-[320px] pb-12 sm:pb-16 md:pb-20 px-4 sm:px-8 md:px-16 bg-[#f9f7f4]" data-scroll-animate>
         <div className="max-w-[1400px] mx-auto">
           <div className="text-center mb-16 sm:mb-20 md:mb-28">
             <div className="flex items-center justify-center gap-4 mb-4">

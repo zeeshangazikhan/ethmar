@@ -574,7 +574,7 @@ export default function ContactUs() {
                 <div className="w-10 h-[1px] bg-[#b69c6b]/20 mb-4"></div>
                 <a href="#" className="inline-flex items-center gap-3 text-[#b69c6b] font-serif text-[11px] sm:text-[12px] tracking-[0.2em] uppercase hover:text-[#191817] transition-colors group/link">
                   <span>{t('common.getDirections')}</span>
-                  <svg className="w-8 h-3 transition-transform group-hover/link:translate-x-1" viewBox="0 0 32 12" fill="none">
+                  <svg className={`transform w-8 h-3 transition-transform ${isArabic ? 'rotate-180 group-hover/link:-translate-x-1' : 'group-hover/link:translate-x-1'}`} viewBox="0 0 32 12" fill="none">
                     <line x1="0" y1="6" x2="25" y2="6" stroke="currentColor" strokeWidth="1"/>
                     <path d="M22 3L28 6L22 9" stroke="currentColor" strokeWidth="1" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
@@ -743,7 +743,7 @@ export default function ContactUs() {
                 className="group relative inline-flex items-center gap-4 bg-[#0b1320] hover:bg-[#b69c6b] text-white font-serif text-[13px] sm:text-[14px] tracking-[0.25em] uppercase px-12 sm:px-16 py-4.5 sm:py-5 transition-all duration-500"
               >
                 <span className="relative z-10">{t('common.submitInquiry')}</span>
-                <ArrowRight className="w-4 h-4 relative z-10 transition-transform group-hover:translate-x-1" />
+                <ArrowRight className={`w-4 h-4 relative z-10 transition-transform ${isArabic ? 'rotate-180 group-hover:-translate-x-1' : 'group-hover:translate-x-1'}`} />
               </button>
             </div>
           </form>
@@ -833,7 +833,7 @@ export default function ContactUs() {
                         <div className="mt-8 sm:mt-10 pt-6 sm:pt-8 border-t border-[#191817]/[0.06]">
                           <a href={office.mapLink} className="inline-flex items-center gap-3 text-[#b69c6b] font-serif text-[12px] sm:text-[13px] tracking-[0.2em] uppercase hover:text-[#191817] transition-colors group/dir">
                             <span>{t('common.getDirections')}</span>
-                            <svg className="w-10 sm:w-12 h-4 transition-transform group-hover/dir:translate-x-1" viewBox="0 0 40 16" fill="none">
+                            <svg className={`transform w-10 sm:w-12 h-4 transition-transform ${isArabic ? 'rotate-180 group-hover/dir:-translate-x-1' : 'group-hover/dir:translate-x-1'}`} viewBox="0 0 40 16" fill="none">
                               <line x1="0" y1="8" x2="32" y2="8" stroke="currentColor" strokeWidth="1"/>
                               <path d="M29 4L35 8L29 12" stroke="currentColor" strokeWidth="1" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
@@ -945,7 +945,7 @@ export default function ContactUs() {
           </p>
           <Link href={`/${locale}/who-we-are`} className="group inline-flex items-center gap-3 sm:gap-4 justify-center text-[#191817] font-serif text-[16px] sm:text-[18px] md:text-[20px] tracking-normal">
             <span>{t('contactUs.partnerCta')}</span>
-            <svg className="w-10 sm:w-12 h-5 sm:h-6 text-[#191817] transition-transform group-hover:translate-x-2" viewBox="0 0 40 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <svg className={`w-10 sm:w-12 h-5 sm:h-6 text-[#191817] transition-transform ${isArabic ? 'rotate-180 group-hover:-translate-x-2' : 'group-hover:translate-x-2'}`} viewBox="0 0 40 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <line x1="2" y1="10" x2="35" y2="10" stroke="currentColor" strokeWidth="1"/>
               <path d="M32 6L38 10L32 14" stroke="currentColor" strokeWidth="1" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
