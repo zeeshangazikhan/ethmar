@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_home_partner_logos",
+  "info": {
+    "displayName": "Partner Logo Item",
+    "description": "One logo in partnership logos row"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "defaultImage": {
+      "type": "string",
+      "required": true,
+      "default": "/assets/gh-logo.png"
+    },
+    "websiteUrl": {
+      "type": "string",
+      "required": false
+    }
+  }
+}

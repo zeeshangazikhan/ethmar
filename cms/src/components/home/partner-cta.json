@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_home_partner_ctas",
+  "info": {
+    "displayName": "Final CTA Block",
+    "description": "Final partner call-to-action text and button"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "buttonLabel": {
+      "type": "string",
+      "required": true,
+      "default": "Get in Touch"
+    },
+    "buttonUrl": {
+      "type": "string",
+      "required": true,
+      "default": "/contact-us"
+    }
+  }
+}

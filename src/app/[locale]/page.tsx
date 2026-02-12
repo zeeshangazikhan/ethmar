@@ -7,6 +7,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { NavLangToggle, SidebarLangToggle } from '@/components/LanguageToggle'
 import { useLanguage } from '@/components/LanguageProvider'
 import EmblaCarousel from 'embla-carousel'
+import { fetchHomepageCms, type HomepageCmsData } from '@/lib/homepage-cms'
 
 export default function Home() {
   const { isArabic, t, locale } = useLanguage()
@@ -20,6 +21,38 @@ export default function Home() {
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null)
   const [isDraggingProgress, setIsDraggingProgress] = useState(false)
   const [isDraggingSectorsProgress, setIsDraggingSectorsProgress] = useState(false)
+  const [homepageData, setHomepageData] = useState<HomepageCmsData | null>(null)
+  const [homepageLocale, setHomepageLocale] = useState<string | null>(null)
+  const [isCmsLoading, setIsCmsLoading] = useState(true)
+  const [cmsError, setCmsError] = useState<string | null>(null)
+
+  useEffect(() => {
+    let active = true
+
+    const loadHomepage = async () => {
+      try {
+        setIsCmsLoading(true)
+        setCmsError(null)
+        const data = await fetchHomepageCms(locale)
+        if (!active) return
+        setHomepageData(data)
+        setHomepageLocale(locale)
+      } catch (error) {
+        if (!active) return
+        setCmsError(error instanceof Error ? error.message : 'Failed to load homepage content')
+        setHomepageLocale(null)
+      } finally {
+        if (!active) return
+        setIsCmsLoading(false)
+      }
+    }
+
+    loadHomepage()
+
+    return () => {
+      active = false
+    }
+  }, [locale])
 
   // Scroll animation setup
   useEffect(() => {
@@ -84,6 +117,80 @@ export default function Home() {
     }
   ]
 
+  const heroContent = homepageData?.hero ?? {
+    titleLine1: t('home.heroTitle1'),
+    titleLine2: t('home.heroTitle2'),
+    titleLine3: t('home.heroTitle3'),
+    ctaLabel: t('home.heroCta'),
+    ctaUrl: '#',
+    image: '/assets/hero.jpg',
+    alt: t('home.heroAlt'),
+  }
+
+  const legacyContent = homepageData?.legacySection ?? {
+    headingLine1: t('home.legacyHeading1'),
+    headingLine2: t('home.legacyHeading2'),
+    description: '',
+    image: '/assets/horse.jpg',
+    alt: t('home.legacyAlt'),
+    ctaLabel: t('common.learnMore'),
+    ctaUrl: '#',
+  }
+
+  const slides = homepageData?.globalSlides ?? [
+    { id: 1, img: '/assets/45.jpg', title: t('home.slides.usa'), description: t('home.carouselDescription'), alt: t('home.slides.usa') },
+    { id: 2, img: '/assets/20.jpg', title: t('home.slides.region2'), description: t('home.carouselDescription'), alt: t('home.slides.region2') },
+    { id: 3, img: '/assets/20.jpg', title: t('home.slides.region3'), description: t('home.carouselDescription'), alt: t('home.slides.region3') },
+    { id: 4, img: '/assets/20.jpg', title: t('home.slides.region4'), description: t('home.carouselDescription'), alt: t('home.slides.region4') },
+    { id: 5, img: '/assets/20.jpg', title: t('home.slides.region5'), description: t('home.carouselDescription'), alt: t('home.slides.region5') },
+    { id: 6, img: '/assets/20.jpg', title: t('home.slides.region6'), description: t('home.carouselDescription'), alt: t('home.slides.region6') },
+    { id: 7, img: '/assets/20.jpg', title: t('home.slides.region7'), description: t('home.carouselDescription'), alt: t('home.slides.region7') },
+  ]
+
+  const featuredSector = homepageData?.featuredSector ?? {
+    title: t('home.privateEquityGrowth'),
+    description: '',
+    image: '/assets/private-equity.png',
+    alt: t('home.privateEquityGrowth'),
+    ctaLabel: t('common.readMore'),
+    ctaUrl: '#',
+  }
+
+  const sectors = homepageData?.sectorsOfFocusItems ?? [
+    { id: 1, img: '/assets/skyline.png', title: t('home.technologyAi'), alt: t('home.technologyAi') },
+    { id: 2, img: '/assets/skyline.png', title: t('home.financialServices'), alt: t('home.financialServices') },
+    { id: 3, img: '/assets/skyline.png', title: t('home.infrastructure'), alt: t('home.infrastructure') },
+    { id: 4, img: '/assets/skyline.png', title: t('home.healthcareBiotech'), alt: t('home.healthcareBiotech') },
+    { id: 5, img: '/assets/skyline.png', title: t('home.energySustainability'), alt: t('home.energySustainability') },
+    { id: 6, img: '/assets/skyline.png', title: t('home.realEstateLogistics'), alt: t('home.realEstateLogistics') },
+  ]
+
+  const partnerLogos = homepageData?.partnerLogos ?? [
+    { id: 1, name: t('home.partnerAltGuggenheim'), logo: '/assets/gh-logo.png', websiteUrl: '#' },
+    { id: 2, name: t('home.partnerAltSpacex'), logo: '/assets/spacex-logo.png', websiteUrl: '#' },
+    { id: 3, name: t('home.partnerAltOpenai'), logo: '/assets/openai-logo.png', websiteUrl: '#' },
+    { id: 4, name: t('home.partnerAltLambda'), logo: '/assets/lambda-logo.png', websiteUrl: '#' },
+  ]
+
+  const partnerCta = homepageData?.partnerCta ?? {
+    title: t('home.partnerWithUs'),
+    description: t('home.partnerDescription'),
+    buttonLabel: t('common.getInTouch'),
+    buttonUrl: `/${locale}/contact-us`,
+  }
+
+  const globalHeadingLine1 = homepageData?.globalHeadingLine1 || t('home.globalHeading1')
+  const globalHeadingLine2 = homepageData?.globalHeadingLine2 || t('home.globalHeading2')
+  const sectorsHeadingLine1 = homepageData?.sectorsHeadingLine1 || t('home.sectorsHeading1')
+  const sectorsHeadingLine2 = homepageData?.sectorsHeadingLine2 || t('home.sectorsHeading2')
+  const sectorsOfFocusHeading = homepageData?.sectorsOfFocusHeading || t('home.sectorsOfFocus')
+  const partnershipHeading = homepageData?.partnershipHeading || t('home.partnershipHeading')
+  const slideCount = Math.max(slides.length, 1)
+  const sectorCount = Math.max(sectors.length, 1)
+  const currentSlideIndex = Math.min(selectedIndex, slideCount - 1)
+  const currentSectorIndex = Math.min(sectorsSelectedIndex, sectorCount - 1)
+  const isCurrentLocaleReady = homepageData !== null && homepageLocale === locale
+
   // Prevent body scroll when menu is open
   useEffect(() => {
     if (menuOpen) {
@@ -96,26 +203,11 @@ export default function Home() {
     }
   }, [menuOpen])
 
-  const slides = [
-    { id: 1, img: '/assets/45.jpg', title: t('home.slides.usa') },
-    { id: 2, img: '/assets/20.jpg', title: t('home.slides.region2') },
-    { id: 3, img: '/assets/20.jpg', title: t('home.slides.region3') },
-    { id: 4, img: '/assets/20.jpg', title: t('home.slides.region4') },
-    { id: 5, img: '/assets/20.jpg', title: t('home.slides.region5') },
-    { id: 6, img: '/assets/20.jpg', title: t('home.slides.region6') },
-    { id: 7, img: '/assets/20.jpg', title: t('home.slides.region7') },
-  ]
-
-  const sectors = [
-    { id: 1, img: '/assets/skyline.png', title: t('home.technologyAi') },
-    { id: 2, img: '/assets/skyline.png', title: t('home.financialServices') },
-    { id: 3, img: '/assets/skyline.png', title: t('home.infrastructure') },
-    { id: 4, img: '/assets/skyline.png', title: t('home.healthcareBiotech') },
-    { id: 5, img: '/assets/skyline.png', title: t('home.energySustainability') },
-    { id: 6, img: '/assets/skyline.png', title: t('home.realEstateLogistics') },
-  ]
-
   useEffect(() => {
+    if (!isCurrentLocaleReady) {
+      setEmblaApi(null)
+      return
+    }
     if (!emblaRef.current) return
 
     const embla = EmblaCarousel(emblaRef.current, { 
@@ -138,9 +230,13 @@ export default function Home() {
     return () => {
       embla.destroy()
     }
-  }, [isArabic])
+  }, [isArabic, slideCount, isCurrentLocaleReady])
 
   useEffect(() => {
+    if (!isCurrentLocaleReady) {
+      setSectorsEmblaApi(null)
+      return
+    }
     if (!sectorsEmblaRef.current) return
 
     const embla = EmblaCarousel(sectorsEmblaRef.current, { 
@@ -162,7 +258,7 @@ export default function Home() {
     return () => {
       embla.destroy()
     }
-  }, [isArabic])
+  }, [isArabic, sectorCount, isCurrentLocaleReady])
 
   const scrollTo = useCallback(
     (index: number) => {
@@ -185,10 +281,10 @@ export default function Home() {
       const rect = progressBar.getBoundingClientRect()
       const clickX = isArabic ? rect.right - e.clientX : e.clientX - rect.left
       const percentage = clickX / rect.width
-      const targetIndex = Math.round(percentage * (slides.length - 1))
+      const targetIndex = Math.round(percentage * (slideCount - 1))
       scrollTo(targetIndex)
     },
-    [emblaApi, scrollTo, slides.length, isArabic]
+    [emblaApi, scrollTo, slideCount, isArabic]
   )
 
   const handleProgressBarMouseDown = useCallback(
@@ -199,10 +295,10 @@ export default function Home() {
       const rect = progressBar.getBoundingClientRect()
       const clickX = isArabic ? rect.right - e.clientX : e.clientX - rect.left
       const percentage = Math.max(0, Math.min(1, clickX / rect.width))
-      const targetIndex = Math.round(percentage * (slides.length - 1))
+      const targetIndex = Math.round(percentage * (slideCount - 1))
       scrollTo(targetIndex)
     },
-    [emblaApi, scrollTo, slides.length, isArabic]
+    [emblaApi, scrollTo, slideCount, isArabic]
   )
 
   const handleProgressBarMouseMove = useCallback(
@@ -212,10 +308,10 @@ export default function Home() {
       const rect = progressBar.getBoundingClientRect()
       const clickX = isArabic ? rect.right - e.clientX : e.clientX - rect.left
       const percentage = Math.max(0, Math.min(1, clickX / rect.width))
-      const targetIndex = Math.round(percentage * (slides.length - 1))
+      const targetIndex = Math.round(percentage * (slideCount - 1))
       scrollTo(targetIndex)
     },
-    [isDraggingProgress, emblaApi, scrollTo, slides.length, isArabic]
+    [isDraggingProgress, emblaApi, scrollTo, slideCount, isArabic]
   )
 
   const handleSectorsProgressBarClick = useCallback(
@@ -225,10 +321,10 @@ export default function Home() {
       const rect = progressBar.getBoundingClientRect()
       const clickX = isArabic ? rect.right - e.clientX : e.clientX - rect.left
       const percentage = clickX / rect.width
-      const targetIndex = Math.round(percentage * (sectors.length - 1))
+      const targetIndex = Math.round(percentage * (sectorCount - 1))
       scrollSectorsTo(targetIndex)
     },
-    [sectorsEmblaApi, scrollSectorsTo, sectors.length, isArabic]
+    [sectorsEmblaApi, scrollSectorsTo, sectorCount, isArabic]
   )
 
   const handleSectorsProgressBarMouseDown = useCallback(
@@ -239,10 +335,10 @@ export default function Home() {
       const rect = progressBar.getBoundingClientRect()
       const clickX = isArabic ? rect.right - e.clientX : e.clientX - rect.left
       const percentage = Math.max(0, Math.min(1, clickX / rect.width))
-      const targetIndex = Math.round(percentage * (sectors.length - 1))
+      const targetIndex = Math.round(percentage * (sectorCount - 1))
       scrollSectorsTo(targetIndex)
     },
-    [sectorsEmblaApi, scrollSectorsTo, sectors.length, isArabic]
+    [sectorsEmblaApi, scrollSectorsTo, sectorCount, isArabic]
   )
 
   const handleSectorsProgressBarMouseMove = useCallback(
@@ -252,10 +348,10 @@ export default function Home() {
       const rect = progressBar.getBoundingClientRect()
       const clickX = isArabic ? rect.right - e.clientX : e.clientX - rect.left
       const percentage = Math.max(0, Math.min(1, clickX / rect.width))
-      const targetIndex = Math.round(percentage * (sectors.length - 1))
+      const targetIndex = Math.round(percentage * (sectorCount - 1))
       scrollSectorsTo(targetIndex)
     },
-    [isDraggingSectorsProgress, sectorsEmblaApi, scrollSectorsTo, sectors.length, isArabic]
+    [isDraggingSectorsProgress, sectorsEmblaApi, scrollSectorsTo, sectorCount, isArabic]
   )
 
   useEffect(() => {
@@ -267,14 +363,39 @@ export default function Home() {
     return () => window.removeEventListener('mouseup', handleMouseUp)
   }, [])
 
+  if (!isCmsLoading && !isCurrentLocaleReady && cmsError) {
+    return (
+      <main className="min-h-screen bg-[#fffcf8] flex items-center justify-center px-6">
+        <div className="text-center max-w-[560px]">
+          <h2 className="font-serif text-[#191817] text-[24px] uppercase tracking-[0.08em]">CMS content unavailable</h2>
+          <p className="mt-3 text-[#191817]/75 font-serif text-[16px]">{cmsError}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-8 inline-flex items-center justify-center border border-[#191817]/20 px-6 py-3 text-[#191817] font-serif uppercase tracking-[0.1em] hover:border-[#b69c6b] hover:text-[#b69c6b] transition-colors"
+          >
+            Retry
+          </button>
+        </div>
+      </main>
+    )
+  }
+
+  if (isCmsLoading || !isCurrentLocaleReady) {
+    return (
+      <main className="min-h-screen bg-[#fffcf8] flex items-center justify-center px-6">
+        <div className="text-center">
+          <div className="w-14 h-14 mx-auto rounded-full border-2 border-[#d8ccb8] border-t-[#b69c6b] animate-spin" />
+          <p className="mt-6 text-[#191817] font-serif tracking-[0.14em] uppercase text-[12px]">Loading homepage content...</p>
+        </div>
+      </main>
+    )
+  }
+
   return (
     <main data-testid="page-home" className="bg-[#fffcf8] overflow-x-hidden">
       {/* FULL SCREEN MENU OVERLAY */}
-      <div 
-        className={`fixed inset-0 z-[100] bg-[#fffcf8] transition-transform duration-500 ease-in-out ${
-          menuOpen ? 'translate-x-0' : (isArabic ? '-translate-x-full' : 'translate-x-full')
-        }`}
-      >
+      {menuOpen && (
+      <div className="fixed inset-0 z-[100] bg-[#fffcf8]">
         {/* Menu Header */}
         <div className="py-6 sm:py-10 px-4 sm:px-8 md:px-16">
           <div className="flex justify-between items-center">
@@ -402,14 +523,15 @@ export default function Home() {
           </div>
         </div>
       </div>
+      )}
 
       {/* HERO SECTION */}
       <header className="relative h-screen flex flex-col bg-[#0b1320]">
         <div className="absolute inset-0 z-0">
           <Image 
-            src="/assets/hero.jpg" 
+            src={heroContent.image}
             className="w-full h-full object-cover grayscale brightness-50"
-            alt={t('home.heroAlt')}
+            alt={heroContent.alt}
             fill
             priority
             style={{ transform: 'scaleX(-1)' }}
@@ -459,17 +581,17 @@ export default function Home() {
         <div className="relative z-10 flex-1 flex flex-col justify-end md:justify-center py-16 sm:py-20 md:py-32 px-4 sm:px-8 md:px-16">
           <div className="max-w-[1440px] mx-auto w-full grid grid-cols-1 md:grid-cols-2 items-end">
             <div>
-              <h1 className={`text-[#b69c6b] font-serif text-[44px] sm:text-[56px] md:text-[82px] leading-[0.88] sm:leading-[0.94] md:leading-[1] uppercase tracking-[0.02em] mb-4 sm:mb-6 ${isArabic ? 'text-right' : 'text-left'}`}>
-                <span className="block lg:whitespace-nowrap">
-                  <strong className="font-bold">{t('home.heroTitle1')}</strong>
-                  <span className="hidden lg:inline"> {t('home.heroTitle2')}</span>
+                <h1 className={`text-[#b69c6b] font-serif text-[44px] sm:text-[56px] md:text-[82px] leading-[0.88] sm:leading-[0.94] md:leading-[1] uppercase tracking-[0.02em] mb-4 sm:mb-6 ${isArabic ? 'text-right' : 'text-left'}`}>
+                  <span className="block lg:whitespace-nowrap">
+                  <strong className="font-bold">{heroContent.titleLine1}</strong>
+                  <span className="hidden lg:inline"> {heroContent.titleLine2}</span>
                   <br className="lg:hidden" />
-                  <span className="lg:hidden">{t('home.heroTitle2')}</span>
+                  <span className="lg:hidden">{heroContent.titleLine2}</span>
                 </span>
-                <span className="block">{t('home.heroTitle3')}</span>
+                <span className="block">{heroContent.titleLine3}</span>
               </h1>
-              <Link href="#" className={`mt-4 sm:mt-6 inline-flex items-center gap-3 sm:gap-4 text-white font-serif text-[16px] sm:text-[20px] md:text-[24px] tracking-[0.15em] sm:tracking-[0.2em] group`}>
-                <span className="leading-none">{t('home.heroCta')}</span>
+              <Link href={heroContent.ctaUrl || '#'} className={`mt-4 sm:mt-6 inline-flex items-center gap-3 sm:gap-4 text-white font-serif text-[16px] sm:text-[20px] md:text-[24px] tracking-[0.15em] sm:tracking-[0.2em] group`}>
+                <span className="leading-none">{heroContent.ctaLabel}</span>
                 <svg className={`w-8 sm:w-10 h-5 sm:h-6 transition-transform ${isArabic ? 'rotate-180 group-hover:-translate-x-1' : 'group-hover:translate-x-1'}`} viewBox="0 0 40 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <line x1="2" y1="10" x2="35" y2="10" stroke="white" strokeWidth="1"/>
                   <path d="M32 6L38 10L32 14" stroke="white" strokeWidth="1" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
@@ -486,15 +608,15 @@ export default function Home() {
       <section className="pt-24 sm:pt-32 md:pt-[320px] pb-12 sm:pb-16 md:pb-0 px-4 sm:px-8 md:px-16 bg-[#fffcf8]">
         <div className="max-w-[1440px] mx-auto text-center">
           <h2 className="text-[#191817] font-serif font-bold text-[16px] sm:text-[20px] md:text-[30px] uppercase tracking-[0.3em] mb-10 sm:mb-14 md:mb-20 px-2 leading-none md:leading-relaxed">
-            <span className="block md:inline">{t('home.legacyHeading1')}</span>
+            <span className="block md:inline">{legacyContent.headingLine1}</span>
             <br className="md:hidden" />
-            <span className="block md:inline"> {t('home.legacyHeading2')}</span>
+            <span className="block md:inline"> {legacyContent.headingLine2}</span>
           </h2>
           <div className="relative mb-8 sm:mb-12">
-            <img src="/assets/horse.jpg" className="w-full object-cover rounded-none h-[420px] sm:h-[560px] md:h-[700px]" alt={t('home.legacyAlt')} width={1440} height={700} />
+            <img src={legacyContent.image} className="w-full object-cover rounded-none h-[420px] sm:h-[560px] md:h-[700px]" alt={legacyContent.alt} width={1440} height={700} />
           </div>
-          <Link href="#" className="text-[#191817] font-serif font-bold text-[14px] sm:text-[16px] md:text-[18px] inline-flex items-center gap-2 sm:gap-3 group normal-case tracking-[0.15em] sm:tracking-[0.2em]">
-            <span>{t('common.learnMore')}</span>
+          <Link href={legacyContent.ctaUrl || '#'} className="text-[#191817] font-serif font-bold text-[14px] sm:text-[16px] md:text-[18px] inline-flex items-center gap-2 sm:gap-3 group normal-case tracking-[0.15em] sm:tracking-[0.2em]">
+            <span>{legacyContent.ctaLabel || t('common.learnMore')}</span>
             <svg className={`w-10 sm:w-12 h-5 sm:h-6 text-[#191817] transition-transform ${isArabic ? 'rotate-180 group-hover:-translate-x-1' : 'group-hover:translate-x-1'}`} viewBox="0 0 40 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <line x1="2" y1="10" x2="35" y2="10" stroke="currentColor" strokeWidth="1"/>
               <path d="M32 6L38 10L32 14" stroke="currentColor" strokeWidth="1" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
@@ -507,9 +629,9 @@ export default function Home() {
       <section className="pt-24 sm:pt-32 md:pt-[320px] pb-12 sm:pb-16 md:pb-0 px-0 md:px-0 bg-[#fffcf8]">
         <div className="w-full">
           <h2 className="text-[#191817] font-serif font-bold text-[14px] sm:text-[18px] md:text-[30px] uppercase tracking-[0.3em] mb-10 sm:mb-14 md:mb-20 text-center px-4 sm:px-8 md:px-16 leading-none md:leading-relaxed">
-            <span className="block md:inline">{t('home.globalHeading1')}</span>
+            <span className="block md:inline">{globalHeadingLine1}</span>
             <br className="md:hidden" />
-            <span className="block md:inline"> {t('home.globalHeading2')}</span>
+            <span className="block md:inline"> {globalHeadingLine2}</span>
           </h2>
 
           {/* Carousel Container */}
@@ -519,18 +641,16 @@ export default function Home() {
                 <div key={slide.id} className="flex-[0_0_92vw] sm:flex-[0_0_85vw] md:flex-[0_0_70vw] min-w-0 px-2 sm:px-4">
                   <div className="grid grid-cols-1 md:grid-cols-[390px_1fr] items-stretch min-h-[450px] sm:min-h-[500px] md:min-h-[550px]">
                     <div className="bg-[#0b1320] flex items-stretch justify-center text-center relative overflow-hidden min-h-[200px] sm:min-h-[250px] md:min-h-0">
-                      <Image src={slide.img} alt={slide.title} fill className="object-cover object-center transform scale-110 sm:scale-125 md:scale-150" priority />
+                      <Image src={slide.img} alt={slide.alt || slide.title} fill className="object-cover object-center transform scale-110 sm:scale-125 md:scale-150" priority />
                       <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/dark-leather.png')]"></div>
                     </div>
                     <div className="bg-[#f2efe6] px-4 sm:px-8 md:px-16 py-8 sm:py-10 md:py-12 flex flex-col justify-center items-center border-black/5">
                        <div className="max-w-[520px] text-center">
                          <h3 className="text-[#191817] font-serif font-medium text-[18px] sm:text-[22px] md:text-[32px] tracking-[0.05em] mb-4 sm:mb-6 uppercase">{slide.title}</h3>
-                         <p className="text-[#191817] font-serif text-[14px] sm:text-[16px] md:text-[18px] opacity-80 leading-[1.5] sm:leading-[1.4]">
-                           {t('home.carouselDescription')}
-                         </p>
-                       </div>
-                    </div>
-                  </div>
+                          <p className="text-[#191817] font-serif text-[14px] sm:text-[16px] md:text-[18px] opacity-80 leading-[1.5] sm:leading-[1.4]">{slide.description}</p>
+                        </div>
+                     </div>
+                   </div>
                 </div>
               ))}
             </div>
@@ -548,10 +668,10 @@ export default function Home() {
                 <div
                   className="absolute h-[8px] bg-[#e7e3d6] rounded-full transition-all duration-300 -top-[3px]"
                   style={{
-                    width: `${(1 / slides.length) * 100}%`,
+                    width: `${(1 / slideCount) * 100}%`,
                     ...(isArabic
-                      ? { right: `${(selectedIndex / slides.length) * 100}%`, left: 'auto' }
-                      : { left: `${(selectedIndex / slides.length) * 100}%` }),
+                      ? { right: `${(currentSlideIndex / slideCount) * 100}%`, left: 'auto' }
+                      : { left: `${(currentSlideIndex / slideCount) * 100}%` }),
                   }}
                 />
               </div>
@@ -564,18 +684,18 @@ export default function Home() {
       <section className="pt-24 sm:pt-32 md:pt-[320px] pb-12 sm:pb-16 md:pb-0 px-0 md:px-0 bg-[#fffcf8]">
         <div className="max-w-[1440px] mx-auto text-center">
           <h2 className="text-[#191817] font-serif font-bold text-[14px] sm:text-[18px] md:text-[30px] uppercase tracking-[0.3em] mb-10 sm:mb-14 md:mb-20 text-center px-2 sm:px-8 md:px-16 leading-none md:leading-relaxed">
-            <span className="block md:inline">{t('home.sectorsHeading1')}</span>
+            <span className="block md:inline">{sectorsHeadingLine1}</span>
             <br className="md:hidden" />
-            <span className="block md:inline"> {t('home.sectorsHeading2')}</span>
+            <span className="block md:inline"> {sectorsHeadingLine2}</span>
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 bg-[#f5f1e8] min-h-[650px] sm:min-h-[700px] md:min-h-[800px] rounded-none overflow-hidden">
              <div className={`p-6 sm:p-10 md:p-16 lg:p-24 ${isArabic ? 'text-right' : 'text-left'} flex flex-col justify-end order-1 md:order-1`}>
                 <h3 className="text-[#191817] font-serif font-normal text-[28px] sm:text-[36px] md:text-[52px] lg:text-[60px] leading-[1.1] mb-6 sm:mb-10 md:mb-12 uppercase whitespace-pre-line">
-                  {t('home.privateEquityGrowth')}
+                  {featuredSector.title}
                 </h3>
-                <Link href="#" className="text-[#191817] font-serif text-[13px] sm:text-[14px] md:text-[16px] flex items-center gap-2 sm:gap-3 group uppercase tracking-[0.1em] sm:tracking-[0.15em]">
-                  {t('common.readMore')}
+                <Link href={featuredSector.ctaUrl || '#'} className="text-[#191817] font-serif text-[13px] sm:text-[14px] md:text-[16px] flex items-center gap-2 sm:gap-3 group uppercase tracking-[0.1em] sm:tracking-[0.15em]">
+                  {featuredSector.ctaLabel || t('common.readMore')}
                   <svg className={`w-10 sm:w-12 h-5 sm:h-6 text-[#191817] transition-transform ${isArabic ? 'rotate-180 group-hover:-translate-x-1' : 'group-hover:translate-x-1'}`} viewBox="0 0 40 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                     <line x1="2" y1="10" x2="35" y2="10" stroke="currentColor" strokeWidth="1"/>
                     <path d="M32 6L38 10L32 14" stroke="currentColor" strokeWidth="1" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
@@ -583,7 +703,7 @@ export default function Home() {
                 </Link>
              </div>
              <div className="relative min-h-[280px] sm:min-h-[400px] md:min-h-[700px] order-2 md:order-2 mt-6 md:mt-0">
-                <Image src="/assets/private-equity.png" className="object-contain object-bottom scale-100" alt={t('home.privateEquityGrowth')} fill priority />
+                <Image src={featuredSector.image} className="object-contain object-bottom scale-100" alt={featuredSector.alt} fill priority />
              </div>
           </div>
         </div>
@@ -593,7 +713,7 @@ export default function Home() {
       <section className="pt-24 sm:pt-32 md:pt-[320px] pb-12 sm:pb-16 md:pb-0 px-0 md:px-0 bg-[#fffcf8]">
         <div className="w-full">
           <h2 className="text-[#191817] font-serif font-bold text-[16px] sm:text-[20px] md:text-[30px] uppercase tracking-[0.3em] mb-10 sm:mb-14 md:mb-20 text-center px-4 sm:px-8 md:px-16">
-            {t('home.sectorsOfFocus')}
+            {sectorsOfFocusHeading}
           </h2>
 
           <div className="overflow-hidden w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] cursor-grab active:cursor-grabbing" ref={sectorsEmblaRef}>
@@ -601,7 +721,7 @@ export default function Home() {
               {sectors.map((sector) => (
                 <div key={sector.id} className="flex-[0_0_78vw] sm:flex-[0_0_60vw] md:flex-[0_0_33.333vw] min-w-0 px-1 sm:px-1">
                   <div className="relative h-[520px] sm:h-[500px] md:h-[750px] group overflow-hidden bg-[#0b1320] rounded-none">
-                    <Image src={sector.img} alt={sector.title} fill className="object-cover grayscale brightness-[0.7] group-hover:scale-110 transition-transform duration-1000" priority />
+                    <Image src={sector.img} alt={sector.alt || sector.title} fill className="object-cover grayscale brightness-[0.7] group-hover:scale-110 transition-transform duration-1000" priority />
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all"></div>
                   </div>
                   <div className="mt-4 sm:mt-6 px-2 sm:px-4">
@@ -624,10 +744,10 @@ export default function Home() {
                 <div
                   className="absolute h-[8px] bg-[#e7e3d6] transition-all duration-300 -top-[3px]"
                   style={{
-                    width: `${(1 / sectors.length) * 100}%`,
+                    width: `${(1 / sectorCount) * 100}%`,
                     ...(isArabic
-                      ? { right: `${(sectorsSelectedIndex / sectors.length) * 100}%`, left: 'auto' }
-                      : { left: `${(sectorsSelectedIndex / sectors.length) * 100}%` }),
+                      ? { right: `${(currentSectorIndex / sectorCount) * 100}%`, left: 'auto' }
+                      : { left: `${(currentSectorIndex / sectorCount) * 100}%` }),
                   }}
                 />
               </div>
@@ -640,30 +760,20 @@ export default function Home() {
       <section className="pt-24 sm:pt-32 md:pt-[320px] pb-12 sm:pb-16 md:pb-20 px-0 md:px-0 bg-[#fffcf8]">
         <div className="max-w-[1440px] mx-auto text-center">
           <h2 className="text-[#191817] font-serif font-bold text-[14px] sm:text-[18px] md:text-[30px] uppercase tracking-[0.3em] mb-10 sm:mb-14 md:mb-20 text-center px-2 sm:px-8 md:px-16 leading-relaxed">
-            {t('home.partnershipHeading')}
+            {partnershipHeading}
           </h2>
           
           <div className="grid grid-cols-1 md:flex md:flex-wrap justify-center items-center gap-4 sm:gap-0 mb-12 sm:mb-16 md:mb-20">
-             <div className="flex justify-center items-center py-6 sm:py-10 md:py-12 md:flex-1 md:border-r md:border-[#191817]/20 bg-[#f9f8f6] sm:bg-transparent rounded-lg sm:rounded-none">
+            {partnerLogos.map((partnerLogo, index) => (
+              <div
+                key={partnerLogo.id}
+                className={`flex justify-center items-center py-6 sm:py-10 md:py-12 md:flex-1 ${index < partnerLogos.length - 1 ? 'md:border-r md:border-[#191817]/20' : ''} bg-[#f9f8f6] sm:bg-transparent rounded-lg sm:rounded-none`}
+              >
                 <div className="relative w-28 sm:w-40 md:w-56 h-12 sm:h-16 md:h-20">
-                   <Image src="/assets/gh-logo.png" alt={t('home.partnerAltGuggenheim')} fill className="object-contain" />
+                  <Image src={partnerLogo.logo} alt={partnerLogo.name} fill className="object-contain" />
                 </div>
-             </div>
-             <div className="flex justify-center items-center py-6 sm:py-10 md:py-12 md:flex-1 md:border-r md:border-[#191817]/20 bg-[#f9f8f6] sm:bg-transparent rounded-lg sm:rounded-none">
-                <div className="relative w-28 sm:w-40 md:w-56 h-12 sm:h-16 md:h-20">
-                   <Image src="/assets/spacex-logo.png" alt={t('home.partnerAltSpacex')} fill className="object-contain" />
-                </div>
-             </div>
-             <div className="flex justify-center items-center py-6 sm:py-10 md:py-12 md:flex-1 md:border-r md:border-[#191817]/20 bg-[#f9f8f6] sm:bg-transparent rounded-lg sm:rounded-none">
-                <div className="relative w-28 sm:w-40 md:w-56 h-12 sm:h-16 md:h-20">
-                   <Image src="/assets/openai-logo.png" alt={t('home.partnerAltOpenai')} fill className="object-contain" />
-                </div>
-             </div>
-             <div className="flex justify-center items-center py-6 sm:py-10 md:py-12 md:flex-1 bg-[#f9f8f6] sm:bg-transparent rounded-lg sm:rounded-none">
-                <div className="relative w-28 sm:w-40 md:w-56 h-12 sm:h-16 md:h-20">
-                   <Image src="/assets/lambda-logo.png" alt={t('home.partnerAltLambda')} fill className="object-contain" />
-                </div>
-             </div>
+              </div>
+            ))}
           </div>
 
           <Link href="#" className="text-[#191817] font-serif text-[14px] sm:text-[16px] md:text-[18px] flex flex-col justify-center items-center gap-2 group normal-case tracking-[0.15em] sm:tracking-[0.2em]">
@@ -677,13 +787,13 @@ export default function Home() {
       <section className="pt-12 sm:pt-16 md:pt-20 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-8 md:px-16 bg-[#f2efe6]">
         <div className="max-w-[900px] mx-auto text-center">
           <h2 className="text-[#191817] font-serif font-bold text-[16px] sm:text-[20px] md:text-[30px] uppercase tracking-[0.3em] mb-10 sm:mb-14 md:mb-20 text-center px-2 sm:px-8 md:px-16">
-            {t('home.partnerWithUs')}
+            {partnerCta.title}
           </h2>
           <p className="text-[#191817] font-serif text-[15px] sm:text-[17px] md:text-[20px] leading-[1.7] sm:leading-[1.8] mb-10 sm:mb-12 md:mb-14 opacity-80 px-2">
-            {t('home.partnerDescription')}
+            {partnerCta.description}
           </p>
-          <Link href={`/${locale}/contact-us`} className="group inline-flex items-center gap-3 sm:gap-4 justify-center text-[#191817] font-serif text-[16px] sm:text-[18px] md:text-[20px] tracking-normal">
-            <span>{t('common.getInTouch')}</span>
+          <Link href={partnerCta.buttonUrl || `/${locale}/contact-us`} className="group inline-flex items-center gap-3 sm:gap-4 justify-center text-[#191817] font-serif text-[16px] sm:text-[18px] md:text-[20px] tracking-normal">
+            <span>{partnerCta.buttonLabel || t('common.getInTouch')}</span>
             <svg className={`w-10 sm:w-12 h-5 sm:h-6 text-[#191817] transition-transform ${isArabic ? 'rotate-180 group-hover:-translate-x-2' : 'group-hover:translate-x-2'}`} viewBox="0 0 40 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <line x1="2" y1="10" x2="35" y2="10" stroke="currentColor" strokeWidth="1"/>
               <path d="M32 6L38 10L32 14" stroke="currentColor" strokeWidth="1" fill="none" strokeLinecap="round" strokeLinejoin="round"/>

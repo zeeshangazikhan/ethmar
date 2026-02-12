@@ -12,11 +12,11 @@ export default function WhoWeAre() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null)
 
-  // Scroll animation setup - zig-zag reveal
+  // Scroll animation setup
   useEffect(() => {
     const observerOptions = {
-      threshold: 0.15,
-      rootMargin: '0px 0px -50px 0px'
+      threshold: 0.1,
+      rootMargin: '0px 0px -100px 0px'
     }
 
     const observer = new IntersectionObserver((entries) => {
@@ -366,35 +366,35 @@ export default function WhoWeAre() {
       </header>
 
       {/* WHO WE ARE INTRO SECTION */}
-      <section className="pt-20 sm:pt-28 md:pt-36 pb-20 sm:pb-28 md:pb-36 px-4 sm:px-8 md:px-16 bg-[#f1ebe1]" data-scroll-animate>
+      <section className="pt-20 sm:pt-28 md:pt-36 pb-20 sm:pb-28 md:pb-36 px-4 sm:px-8 md:px-16 bg-[#f5f0eb]" data-scroll-animate>
         <div className="max-w-[1400px] mx-auto">
           {/* Section kicker */}
           <div className="flex items-center gap-3 mb-6 sm:mb-8 justify-center">
-            <p className="text-[#b69c6b] font-serif text-[14px] sm:text-[16px] tracking-[0.4em] uppercase">{t('whoWeAre.introKicker')}</p>
+            <p className="text-[#b69c6b] font-serif text-[11px] sm:text-[12px] tracking-[0.4em] uppercase">{t('whoWeAre.introKicker')}</p>
           </div>
 
           {/* Main heading */}
-          <h2 className="text-center text-[#191817] font-serif font-bold text-[16px] sm:text-[22px] md:text-[36px] mb-8 sm:mb-10 uppercase tracking-[0.3em]">
+          <h2 className="text-center text-[#191817] font-serif font-bold text-[14px] sm:text-[18px] md:text-[30px] mb-8 sm:mb-10 uppercase tracking-[0.3em]">
             {t('whoWeAre.introTitle')}
           </h2>
 
           {/* Content paragraphs */}
           <div className="space-y-6 sm:space-y-8 md:space-y-10">
-            <p className="text-center text-[#191817]/85 font-serif text-[18px] sm:text-[20px] md:text-[22px] leading-[1.9] max-w-[1100px] mx-auto">
+            <p className="text-center text-[#191817]/85 font-serif text-[16px] sm:text-[17px] md:text-[18px] leading-[1.85] max-w-[1100px] mx-auto">
               {t('whoWeAre.introP1')}
             </p>
-            <p className="text-center text-[#191817]/85 font-serif text-[18px] sm:text-[20px] md:text-[22px] leading-[1.9] max-w-[1100px] mx-auto">
+            <p className="text-center text-[#191817]/85 font-serif text-[16px] sm:text-[17px] md:text-[18px] leading-[1.85] max-w-[1100px] mx-auto">
               {t('whoWeAre.introP2')}
             </p>
-              <p className="text-center text-[#191817]/85 font-serif text-[18px] sm:text-[20px] md:text-[22px] leading-[1.9] max-w-[1100px] mx-auto">
-                {t('whoWeAre.introP3')}
-              </p>
+            <p className="text-center text-[#191817]/85 font-serif text-[16px] sm:text-[17px] md:text-[18px] leading-[1.85] max-w-[1100px] mx-auto">
+              {t('whoWeAre.introP3')}
+            </p>
           </div>
         </div>
       </section>
 
       {/* PURPOSE SECTION */}
-      <section className="py-20 sm:py-28 md:py-36 px-4 sm:px-8 md:px-16 bg-[#efe6d8]" data-scroll-animate>
+      <section className="py-20 sm:py-28 md:py-36 px-4 sm:px-8 md:px-16 bg-[#f1ebe1]" data-scroll-animate>
         <div className="max-w-[1400px] mx-auto">
           {/* Decorative icon (from assets) */}
           <div className="flex justify-center mb-8 sm:mb-10">
@@ -408,10 +408,10 @@ export default function WhoWeAre() {
 
           {/* Paragraphs */}
           <div className="space-y-6 sm:space-y-8 md:space-y-10">
-            <p className="text-center text-[#191817]/85 font-serif text-[18px] sm:text-[20px] md:text-[22px] leading-[1.9] max-w-[1100px] mx-auto">
+            <p className="text-center text-[#191817]/85 font-serif text-[16px] sm:text-[17px] md:text-[18px] leading-[1.85] max-w-[1100px] mx-auto">
               {t('whoWeAre.purposeP1')}
             </p>
-            <p className="text-center text-[#191817]/85 font-serif text-[18px] sm:text-[20px] md:text-[22px] leading-[1.9] max-w-[1100px] mx-auto">
+            <p className="text-center text-[#191817]/85 font-serif text-[16px] sm:text-[17px] md:text-[18px] leading-[1.85] max-w-[1100px] mx-auto">
               {t('whoWeAre.purposeP2')}
             </p>
           </div>
@@ -419,7 +419,7 @@ export default function WhoWeAre() {
       </section>
 
       {/* PROMISE SECTION */}
-      <section className="py-20 sm:py-28 md:py-36 px-4 sm:px-8 md:px-16 bg-[#f1ebe1]" data-scroll-animate>
+      <section className="py-20 sm:py-28 md:py-36 px-4 sm:px-8 md:px-16 bg-[#efe6d8]" data-scroll-animate>
         <div className="max-w-[1400px] mx-auto">
           {/* Top icon */}
           <div className="flex justify-center mb-8 sm:mb-10">
@@ -447,7 +447,7 @@ export default function WhoWeAre() {
           </h2>
 
           {/* Description */}
-          <p className="text-center text-[#191817]/85 font-serif text-[18px] sm:text-[20px] md:text-[22px] leading-[1.9] max-w-[1100px] mx-auto">
+          <p className="text-center text-[#191817]/85 font-serif text-[16px] sm:text-[17px] md:text-[18px] leading-[1.85] max-w-[1100px] mx-auto">
             {t('whoWeAre.promiseDescription')}
           </p>
         </div>
@@ -483,7 +483,7 @@ export default function WhoWeAre() {
               <span className="block whitespace-nowrap">{believeHeadingFirst}</span>
               <span className="block">{believeHeadingLast}</span>
             </h3>
-            <p className="text-white/70 font-serif text-[18px] sm:text-[20px] md:text-[22px] leading-[1.9]">
+            <p className="text-white/70 font-serif text-[14px] sm:text-[15px] md:text-[16px] leading-[1.85]">
               {t('whoWeAre.believeDescription')}
             </p>
           </div>
@@ -531,9 +531,327 @@ export default function WhoWeAre() {
         </div>
       </section>
 
+      {/* ABOUT INTRO SECTION */}
+      <section className="pt-24 sm:pt-32 md:pt-[320px] pb-12 sm:pb-16 md:pb-20 px-4 sm:px-8 md:px-16 bg-[#fffcf8] relative" data-scroll-animate>
+        <div className="max-w-[1400px] mx-auto relative">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
+            <div className="order-2 lg:order-1">
+              {/* Section label with line */}
+              <div className="flex items-center gap-4 mb-6 sm:mb-8">
+                <div className="w-10 sm:w-14 h-[1px] bg-[#b69c6b]"></div>
+                <p className="text-[#b69c6b] font-serif text-[11px] sm:text-[12px] tracking-[0.4em] uppercase">{t('whoWeAre.storyKicker')}</p>
+              </div>
+              <h2 className="text-[#191817] font-serif font-bold text-[14px] sm:text-[18px] md:text-[30px] mb-8 sm:mb-10 uppercase tracking-[0.3em]">
+                {t('whoWeAre.storyTitle')}
+              </h2>
+              <div className="space-y-5 sm:space-y-7">
+                <p className="text-[#191817]/80 font-serif text-[15px] sm:text-[17px] md:text-[18px] leading-[1.9]">
+                  {t('whoWeAre.storyP1')}
+                </p>
+                <p className="text-[#191817]/80 font-serif text-[15px] sm:text-[17px] md:text-[18px] leading-[1.9]">
+                  {t('whoWeAre.storyP2')}
+                </p>
+              </div>
+              {/* Quote block */}
+              <div className="mt-8 sm:mt-12 pl-6 border-l-2 border-[#b69c6b]/40">
+                <p className="text-[#191817]/60 font-serif text-[16px] sm:text-[18px] md:text-[20px] italic leading-[1.7]">
+                  {t('whoWeAre.storyQuote')}
+                </p>
+              </div>
+              <Link href="#" className="mt-10 sm:mt-14 inline-flex items-center gap-4 text-[#191817] font-serif text-[14px] sm:text-[16px] tracking-[0.15em] group uppercase border-b border-[#191817]/20 pb-2 hover:border-[#b69c6b] transition-colors">
+                <span>{t('whoWeAre.storyCta')}</span>
+                <svg className="w-10 sm:w-12 h-5 sm:h-6 transition-transform group-hover:translate-x-2" viewBox="0 0 40 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <line x1="2" y1="10" x2="35" y2="10" stroke="currentColor" strokeWidth="1"/>
+                  <path d="M32 6L38 10L32 14" stroke="currentColor" strokeWidth="1" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </Link>
+            </div>
+            <div className="order-1 lg:order-2 relative">
+              {/* Image with premium frame */}
+              <div className="relative">
+                <div className="relative h-[400px] sm:h-[500px] md:h-[600px] lg:h-[650px] overflow-hidden">
+                  <Image 
+                    src="/assets/horse.jpg" 
+                    alt={t('whoWeAre.storyAlt')} 
+                    fill 
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
+                </div>
+                {/* Decorative frame elements */}
+                <div className="absolute -bottom-4 -left-4 sm:-bottom-6 sm:-left-6 w-28 h-28 sm:w-40 sm:h-40 border border-[#b69c6b]/40 -z-10"></div>
+                <div className="absolute -top-4 -right-4 sm:-top-6 sm:-right-6 w-20 h-20 sm:w-28 sm:h-28 border border-[#b69c6b]/20 -z-10"></div>
+                {/* Experience badge */}
+                <div className="absolute bottom-6 right-6 sm:bottom-10 sm:right-10 bg-[#0b1320]/95 backdrop-blur-sm px-6 sm:px-8 py-4 sm:py-6">
+                  <p className="text-[#b69c6b] font-serif text-[36px] sm:text-[48px] md:text-[56px] font-light leading-none">{t('whoWeAre.storyYears')}</p>
+                  <p className="text-white/70 font-serif text-[11px] sm:text-[12px] tracking-[0.2em] uppercase mt-1">{t('whoWeAre.storyYearsLabel')}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
+      {/* STATS SECTION */}
+      <section className="py-20 sm:py-28 md:py-36 px-4 sm:px-8 md:px-16 bg-[#0b1320] relative overflow-hidden" data-scroll-animate>
+        {/* Decorative elements */}
+        <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-[#b69c6b]/5 rounded-full blur-[120px]"></div>
+        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#b69c6b]/5 rounded-full blur-[100px]"></div>
+        
+        <div className="max-w-[1400px] mx-auto relative z-10">
+          {/* Section header */}
+          <div className="text-center mb-14 sm:mb-20 md:mb-24">
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <div className="w-8 sm:w-12 h-[1px] bg-[#b69c6b]/50"></div>
+              <div className="w-1.5 h-1.5 bg-[#b69c6b] rotate-45"></div>
+              <div className="w-8 sm:w-12 h-[1px] bg-[#b69c6b]/50"></div>
+            </div>
+            <p className="text-[#b69c6b] font-serif text-[11px] sm:text-[12px] tracking-[0.4em] uppercase">{t('whoWeAre.impactKicker')}</p>
+          </div>
+          
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12 lg:gap-16">
+            <div className="text-center relative group">
+              <div className="absolute inset-0 border border-[#b69c6b]/10 group-hover:border-[#b69c6b]/30 transition-colors duration-500"></div>
+              <div className="py-8 sm:py-12 md:py-16 px-4">
+                <p className="text-[#b69c6b] font-serif text-[48px] sm:text-[64px] md:text-[80px] lg:text-[96px] font-extralight leading-none mb-3 sm:mb-5">{t('whoWeAre.impactYears')}</p>
+                <div className="w-12 h-[1px] bg-[#b69c6b]/40 mx-auto mb-3 sm:mb-4"></div>
+                <p className="text-white/50 font-serif text-[11px] sm:text-[12px] md:text-[13px] tracking-[0.25em] uppercase">{t('whoWeAre.impactYearsLabel')}</p>
+              </div>
+            </div>
+            <div className="text-center relative group">
+              <div className="absolute inset-0 border border-[#b69c6b]/10 group-hover:border-[#b69c6b]/30 transition-colors duration-500"></div>
+              <div className="py-8 sm:py-12 md:py-16 px-4">
+                <p className="text-[#b69c6b] font-serif text-[48px] sm:text-[64px] md:text-[80px] lg:text-[96px] font-extralight leading-none mb-3 sm:mb-5">{t('whoWeAre.impactAssets')}</p>
+                <div className="w-12 h-[1px] bg-[#b69c6b]/40 mx-auto mb-3 sm:mb-4"></div>
+                <p className="text-white/50 font-serif text-[11px] sm:text-[12px] md:text-[13px] tracking-[0.25em] uppercase">{t('whoWeAre.impactAssetsLabel')}</p>
+              </div>
+            </div>
+            <div className="text-center relative group">
+              <div className="absolute inset-0 border border-[#b69c6b]/10 group-hover:border-[#b69c6b]/30 transition-colors duration-500"></div>
+              <div className="py-8 sm:py-12 md:py-16 px-4">
+                <p className="text-[#b69c6b] font-serif text-[48px] sm:text-[64px] md:text-[80px] lg:text-[96px] font-extralight leading-none mb-3 sm:mb-5">{t('whoWeAre.impactMarkets')}</p>
+                <div className="w-12 h-[1px] bg-[#b69c6b]/40 mx-auto mb-3 sm:mb-4"></div>
+                <p className="text-white/50 font-serif text-[11px] sm:text-[12px] md:text-[13px] tracking-[0.25em] uppercase">{t('whoWeAre.impactMarketsLabel')}</p>
+              </div>
+            </div>
+            <div className="text-center relative group">
+              <div className="absolute inset-0 border border-[#b69c6b]/10 group-hover:border-[#b69c6b]/30 transition-colors duration-500"></div>
+              <div className="py-8 sm:py-12 md:py-16 px-4">
+                <p className="text-[#b69c6b] font-serif text-[48px] sm:text-[64px] md:text-[80px] lg:text-[96px] font-extralight leading-none mb-3 sm:mb-5">{t('whoWeAre.impactCompanies')}</p>
+                <div className="w-12 h-[1px] bg-[#b69c6b]/40 mx-auto mb-3 sm:mb-4"></div>
+                <p className="text-white/50 font-serif text-[11px] sm:text-[12px] md:text-[13px] tracking-[0.25em] uppercase">{t('whoWeAre.impactCompaniesLabel')}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
+      {/* VISION & MISSION SECTION */}
+      <section className="pt-24 sm:pt-32 md:pt-[320px] pb-12 sm:pb-16 md:pb-0 px-4 sm:px-8 md:px-16 bg-[#fffcf8]" data-scroll-animate>
+        <div className="max-w-[1400px] mx-auto">
+          <div className="text-center mb-16 sm:mb-20 md:mb-28">
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <div className="w-8 sm:w-12 h-[1px] bg-[#b69c6b]/50"></div>
+              <div className="w-1.5 h-1.5 bg-[#b69c6b] rotate-45"></div>
+              <div className="w-8 sm:w-12 h-[1px] bg-[#b69c6b]/50"></div>
+            </div>
+            <p className="text-[#b69c6b] font-serif text-[11px] sm:text-[12px] tracking-[0.4em] uppercase mb-4 sm:mb-6">{t('whoWeAre.principlesKicker')}</p>
+            <h2 className="text-[#191817] font-serif font-bold text-[14px] sm:text-[18px] md:text-[30px] uppercase tracking-[0.3em]">
+              {t('whoWeAre.principlesTitle')}
+            </h2>
+          </div>
 
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 md:gap-0">
+            {/* Vision */}
+            <div className="bg-[#0b1320] p-8 sm:p-12 md:p-16 lg:p-20 relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-48 h-48 sm:w-64 sm:h-64 bg-[#b69c6b]/5 rounded-full blur-3xl group-hover:bg-[#b69c6b]/10 transition-all duration-700"></div>
+              <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#b69c6b]/5 rounded-full blur-2xl"></div>
+              {/* Corner accents */}
+              <div className="absolute top-6 left-6 w-12 h-12 border-l border-t border-[#b69c6b]/20"></div>
+              <div className="absolute bottom-6 right-6 w-12 h-12 border-r border-b border-[#b69c6b]/20"></div>
+              
+              <div className="relative z-10">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#b69c6b]/10 flex items-center justify-center mb-8 sm:mb-10">
+                  <svg className="w-7 h-7 sm:w-8 sm:h-8 text-[#b69c6b]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                </div>
+                <h3 className="text-[#b69c6b] font-serif text-[11px] sm:text-[12px] tracking-[0.4em] uppercase mb-4 sm:mb-6">{t('whoWeAre.visionTitle')}</h3>
+                <p className="text-white font-serif text-[24px] sm:text-[30px] md:text-[36px] lg:text-[40px] leading-[1.25] mb-6 sm:mb-8 font-light">
+                  {t('whoWeAre.visionP1')}
+                </p>
+                <div className="w-16 h-[1px] bg-[#b69c6b]/30 mb-6"></div>
+                <p className="text-white/50 font-serif text-[14px] sm:text-[16px] leading-[1.8]">
+                  {t('whoWeAre.visionP2')}
+                </p>
+              </div>
+            </div>
+
+            {/* Mission */}
+            <div className="bg-[#f7f5f0] p-8 sm:p-12 md:p-16 lg:p-20 relative overflow-hidden group md:border-l-4 md:border-[#b69c6b]/30">
+              <div className="absolute bottom-0 left-0 w-48 h-48 sm:w-64 sm:h-64 bg-[#b69c6b]/5 rounded-full blur-3xl group-hover:bg-[#b69c6b]/10 transition-all duration-700"></div>
+              {/* Corner accents */}
+              <div className="absolute top-6 left-6 w-12 h-12 border-l border-t border-[#b69c6b]/20"></div>
+              <div className="absolute bottom-6 right-6 w-12 h-12 border-r border-b border-[#b69c6b]/20"></div>
+              
+              <div className="relative z-10">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#b69c6b]/10 flex items-center justify-center mb-8 sm:mb-10">
+                  <svg className="w-7 h-7 sm:w-8 sm:h-8 text-[#b69c6b]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+                  </svg>
+                </div>
+                <h3 className="text-[#b69c6b] font-serif text-[11px] sm:text-[12px] tracking-[0.4em] uppercase mb-4 sm:mb-6">{t('whoWeAre.missionTitle')}</h3>
+                <p className="text-[#191817] font-serif text-[24px] sm:text-[30px] md:text-[36px] lg:text-[40px] leading-[1.25] mb-6 sm:mb-8 font-light">
+                  {t('whoWeAre.missionP1')}
+                </p>
+                <div className="w-16 h-[1px] bg-[#b69c6b]/30 mb-6"></div>
+                <p className="text-[#191817]/50 font-serif text-[14px] sm:text-[16px] leading-[1.8]">
+                  {t('whoWeAre.missionP2')}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CORE VALUES SECTION */}
+      <section className="pt-24 sm:pt-32 md:pt-[320px] pb-12 sm:pb-16 md:pb-20 px-4 sm:px-8 md:px-16 bg-[#f9f7f4]" data-scroll-animate>
+        <div className="max-w-[1400px] mx-auto">
+          <div className="text-center mb-16 sm:mb-20 md:mb-28">
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <div className="w-8 sm:w-12 h-[1px] bg-[#b69c6b]/50"></div>
+              <div className="w-1.5 h-1.5 bg-[#b69c6b] rotate-45"></div>
+              <div className="w-8 sm:w-12 h-[1px] bg-[#b69c6b]/50"></div>
+            </div>
+            <p className="text-[#b69c6b] font-serif text-[11px] sm:text-[12px] tracking-[0.4em] uppercase mb-4 sm:mb-6">{t('whoWeAre.valuesKicker')}</p>
+            <h2 className="text-[#191817] font-serif font-bold text-[14px] sm:text-[18px] md:text-[30px] uppercase tracking-[0.3em]">
+              {t('whoWeAre.valuesTitle')}
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+            {coreValues.map((value, index) => (
+              <div 
+                key={index} 
+                className="group bg-white hover:bg-[#0b1320] p-8 sm:p-10 md:p-12 transition-all duration-700 cursor-default relative overflow-hidden shadow-sm hover:shadow-2xl"
+              >
+                {/* Hover accent line */}
+                <div className="absolute top-0 left-0 w-0 h-1 bg-[#b69c6b] group-hover:w-full transition-all duration-500"></div>
+                {/* Corner accent */}
+                <div className="absolute bottom-0 right-0 w-16 h-16 border-r border-b border-[#b69c6b]/10 group-hover:border-[#b69c6b]/30 transition-colors"></div>
+                
+                <div className="text-[#b69c6b] mb-6 sm:mb-8 transition-colors">
+                  {value.icon}
+                </div>
+                <h3 className="text-[#191817] group-hover:text-white font-serif text-[20px] sm:text-[22px] md:text-[24px] mb-4 sm:mb-5 transition-colors uppercase tracking-[0.08em]">
+                  {value.title}
+                </h3>
+                <div className="w-10 h-[1px] bg-[#b69c6b]/30 group-hover:bg-[#b69c6b]/50 mb-4 sm:mb-5 transition-colors"></div>
+                <p className="text-[#191817]/60 group-hover:text-white/60 font-serif text-[14px] sm:text-[15px] leading-[1.8] transition-colors">
+                  {value.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* JOURNEY TIMELINE SECTION */}
+      <section className="pt-24 sm:pt-32 md:pt-[320px] pb-12 sm:pb-16 md:pb-20 px-4 sm:px-8 md:px-16 bg-[#fffcf8] relative overflow-hidden" data-scroll-animate>
+        {/* Background decorative elements */}
+        <div className="absolute top-20 left-10 w-32 h-32 border border-[#b69c6b]/10 rotate-45"></div>
+        <div className="absolute bottom-20 right-10 w-48 h-48 border border-[#b69c6b]/5 rotate-12"></div>
+        
+        <div className="max-w-[1400px] mx-auto relative z-10">
+          <div className="text-center mb-16 sm:mb-20 md:mb-28">
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <div className="w-8 sm:w-12 h-[1px] bg-[#b69c6b]/50"></div>
+              <div className="w-1.5 h-1.5 bg-[#b69c6b] rotate-45"></div>
+              <div className="w-8 sm:w-12 h-[1px] bg-[#b69c6b]/50"></div>
+            </div>
+            <p className="text-[#b69c6b] font-serif text-[11px] sm:text-[12px] tracking-[0.4em] uppercase mb-4 sm:mb-6">{t('whoWeAre.journeyKicker')}</p>
+            <h2 className="text-[#191817] font-serif font-bold text-[14px] sm:text-[18px] md:text-[30px] uppercase tracking-[0.3em]">
+              {t('whoWeAre.journeyTitle')}
+            </h2>
+          </div>
+
+          <div className="relative">
+            {/* Timeline line */}
+            <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-[2px] bg-gradient-to-b from-[#b69c6b]/50 via-[#b69c6b]/30 to-[#b69c6b]/10 transform -translate-x-1/2"></div>
+
+            <div className="space-y-8 sm:space-y-12 md:space-y-0">
+              {milestones.map((milestone, index) => (
+                <div 
+                  key={index} 
+                  className={`relative md:flex md:items-center ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} md:mb-20 lg:mb-24`}
+                >
+                  {/* Content */}
+                  <div className={`md:w-1/2 ${index % 2 === 0 ? 'md:pr-16 lg:pr-24 md:text-right' : 'md:pl-16 lg:pl-24 md:text-left'}`}>
+                    <div className="bg-white p-8 sm:p-10 md:p-12 shadow-lg hover:shadow-xl transition-shadow duration-500 relative group">
+                      {/* Accent line */}
+                      <div className={`absolute top-0 ${index % 2 === 0 ? 'right-0' : 'left-0'} w-1 h-0 bg-[#b69c6b] group-hover:h-full transition-all duration-500`}></div>
+                      
+                      <p className="text-[#b69c6b] font-serif text-[42px] sm:text-[52px] md:text-[64px] lg:text-[72px] font-extralight leading-none mb-3 sm:mb-4">{milestone.year}</p>
+                      <h3 className="text-[#191817] font-serif text-[20px] sm:text-[22px] md:text-[26px] uppercase tracking-[0.12em] mb-3 sm:mb-4">{milestone.title}</h3>
+                      <div className={`w-12 h-[1px] bg-[#b69c6b]/40 mb-4 ${index % 2 === 0 ? 'md:ml-auto' : ''}`}></div>
+                      <p className="text-[#191817]/60 font-serif text-[14px] sm:text-[15px] md:text-[16px] leading-[1.8]">{milestone.description}</p>
+                    </div>
+                  </div>
+
+                  {/* Center dot */}
+                  <div className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 w-5 h-5 bg-[#b69c6b] rounded-full border-4 border-[#fffcf8] shadow-lg z-10">
+                    <div className="absolute inset-1 bg-[#0b1320] rounded-full"></div>
+                  </div>
+
+                  {/* Empty space for alternating layout */}
+                  <div className="hidden md:block md:w-1/2"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA SECTION */}
+      <section className="py-20 sm:py-28 md:py-36 px-4 sm:px-8 md:px-16 bg-[#0b1320] relative overflow-hidden">
+        {/* Background elements */}
+        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-[#b69c6b]/5 rounded-full blur-[150px]"></div>
+        <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-[#b69c6b]/5 rounded-full blur-[100px]"></div>
+        
+        {/* Decorative borders */}
+        <div className="absolute top-8 left-8 right-8 bottom-8 border border-[#b69c6b]/10 pointer-events-none hidden lg:block"></div>
+        
+        <div className="max-w-[1400px] mx-auto text-center relative z-10">
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <div className="w-12 sm:w-16 h-[1px] bg-gradient-to-r from-transparent to-[#b69c6b]/60"></div>
+            <div className="w-2 h-2 bg-[#b69c6b] rotate-45"></div>
+            <div className="w-12 sm:w-16 h-[1px] bg-gradient-to-l from-transparent to-[#b69c6b]/60"></div>
+          </div>
+          <p className="text-[#b69c6b] font-serif text-[11px] sm:text-[12px] tracking-[0.5em] uppercase mb-6 sm:mb-8">{t('whoWeAre.ctaTitle')}</p>
+          <h2 className="text-white font-serif text-[32px] sm:text-[42px] md:text-[56px] lg:text-[64px] leading-[1.1] mb-8 sm:mb-10 uppercase tracking-[0.03em] font-light">
+            {t('whoWeAre.ctaHeading')}
+          </h2>
+          <p className="text-white/50 font-serif text-[15px] sm:text-[17px] md:text-[19px] leading-[1.9] mb-12 sm:mb-16 w-full">
+            {t('whoWeAre.ctaDescription')}
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center">
+            <Link 
+              href={`/${locale}/contact-us`} 
+              className="inline-flex items-center justify-center gap-3 bg-[#b69c6b] text-[#0b1320] font-serif text-[13px] sm:text-[15px] tracking-[0.2em] uppercase px-10 sm:px-12 py-5 hover:bg-[#d4b87a] transition-all duration-300 group"
+            >
+              {t('whoWeAre.ctaContact')}
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
+            <Link 
+              href="#" 
+              className="inline-flex items-center justify-center gap-3 border border-white/20 text-white font-serif text-[13px] sm:text-[15px] tracking-[0.2em] uppercase px-10 sm:px-12 py-5 hover:bg-white/10 hover:border-white/40 transition-all duration-300"
+            >
+              {t('whoWeAre.ctaCareers')}
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* H.H STATEMENT SECTION */}
       <section className="grid grid-cols-1 lg:grid-cols-3 min-h-screen lg:min-h-auto bg-[#f5f0e6]" data-scroll-animate>

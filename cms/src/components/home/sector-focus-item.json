@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_home_sector_focus_items",
+  "info": {
+    "displayName": "Sector Focus Card",
+    "description": "One card item inside Sectors of Focus carousel"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "defaultImage": {
+      "type": "string",
+      "required": true,
+      "default": "/assets/skyline.png"
+    },
+    "imageAlt": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

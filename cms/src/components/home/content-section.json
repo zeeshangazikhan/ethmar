@@ -1,0 +1,39 @@
+{
+  "collectionName": "components_home_content_sections",
+  "info": {
+    "displayName": "Legacy Block",
+    "description": "Legacy section below hero with heading, image and optional button"
+  },
+  "options": {},
+  "attributes": {
+    "headingLine1": {
+      "type": "string",
+      "required": true
+    },
+    "headingLine2": {
+      "type": "string",
+      "required": false
+    },
+    "description": {
+      "type": "text",
+      "required": false
+    },
+    "defaultImage": {
+      "type": "string",
+      "required": true,
+      "default": "/assets/horse.jpg"
+    },
+    "imageAlt": {
+      "type": "string",
+      "required": true
+    },
+    "ctaLabel": {
+      "type": "string",
+      "required": false
+    },
+    "ctaUrl": {
+      "type": "string",
+      "required": false
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "collectionName": "components_home_featured_sectors",
+  "info": {
+    "displayName": "Featured Sector Block",
+    "description": "Large highlighted sector section with title and image"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": false
+    },
+    "defaultImage": {
+      "type": "string",
+      "required": true,
+      "default": "/assets/private-equity.png"
+    },
+    "imageAlt": {
+      "type": "string",
+      "required": true
+    },
+    "ctaLabel": {
+      "type": "string",
+      "required": false,
+      "default": "Read More"
+    },
+    "ctaUrl": {
+      "type": "string",
+      "required": false,
+      "default": "#"
+    }
+  }
+}

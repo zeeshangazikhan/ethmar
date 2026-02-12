@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "cms:dev": "npm run develop --prefix cms",
+    "cms:build": "npm run build --prefix cms",
+    "cms:start": "npm run start --prefix cms"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.4",

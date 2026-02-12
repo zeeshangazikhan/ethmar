@@ -1,0 +1,27 @@
+{
+  "collectionName": "components_home_global_slides",
+  "info": {
+    "displayName": "Global Presence Card",
+    "description": "One slide card in the Global Presence carousel"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "defaultImage": {
+      "type": "string",
+      "required": true,
+      "default": "/assets/20.jpg"
+    },
+    "imageAlt": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

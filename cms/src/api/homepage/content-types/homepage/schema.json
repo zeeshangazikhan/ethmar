@@ -1,0 +1,178 @@
+{
+  "kind": "singleType",
+  "collectionName": "homepages",
+  "info": {
+    "singularName": "homepage",
+    "pluralName": "homepages",
+    "displayName": "Homepage (Simple Editor)",
+    "description": "Update homepage section by section in a non-technical way"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
+  "attributes": {
+    "internalName": {
+      "type": "string",
+      "required": true,
+      "default": "Homepage Content"
+    },
+    "editorInstructions": {
+      "type": "text",
+      "required": false,
+      "default": "How to edit: 1) Fill Section 1 to Section 7 in order. 2) Publish English first. 3) Switch locale to Arabic and translate. 4) Publish Arabic.",
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    },
+    "heroBanner": {
+      "type": "component",
+      "component": "home.hero",
+      "repeatable": false,
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "legacyBlock": {
+      "type": "component",
+      "component": "home.content-section",
+      "repeatable": false,
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "globalHeadingLine1": {
+      "type": "string",
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "globalHeadingLine2": {
+      "type": "string",
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "globalPresenceCards": {
+      "type": "component",
+      "component": "home.global-slide",
+      "repeatable": true,
+      "required": true,
+      "min": 1,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "featuredSectorBlock": {
+      "type": "component",
+      "component": "home.featured-sector",
+      "repeatable": false,
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "sectorsHeadingLine1": {
+      "type": "string",
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "sectorsHeadingLine2": {
+      "type": "string",
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "sectorsCardsHeading": {
+      "type": "string",
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "sectorsCards": {
+      "type": "component",
+      "component": "home.sector-focus-item",
+      "repeatable": true,
+      "required": true,
+      "min": 1,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "partnershipHeading": {
+      "type": "string",
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "partnershipLogos": {
+      "type": "component",
+      "component": "home.partner-logo",
+      "repeatable": true,
+      "required": false,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "finalCta": {
+      "type": "component",
+      "component": "home.partner-cta",
+      "repeatable": false,
+      "required": true,
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
+    },
+    "notesForEditors": {
+      "type": "text",
+      "required": false,
+      "default": "Tip: Keep section order as-is. For each update, publish both EN and AR.",
+      "pluginOptions": {
+        "i18n": {
+          "localized": false
+        }
+      }
+    }
+  }
+}

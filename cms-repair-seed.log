@@ -1,0 +1,131 @@
+
+> ethmar-website@1.0.0 cms:dev
+> npm run develop --prefix cms
+
+
+> cms@0.1.0 develop
+> strapi develop
+
+- Cleaning dist dir C:/Users/Arbaz PC/Downloads/Ethmar-Website-Conversion/Ethmar-Website-Conversion/cms/dist
+✔ Cleaning dist dir (9ms)
+- Loading Strapi
+[2026-02-12 15:17:09.327] [33mwarn[39m: admin.auth.options.expiresIn is deprecated and will be removed in Strapi 6. Please configure admin.auth.sessions.maxRefreshTokenLifespan and admin.auth.sessions.maxSessionLifespan.
+[2026-02-12 15:17:09.508] [33mwarn[39m: Could not seed EN homepage automatically: ValidationError: 6 errors occurred
+    at handleYupError (C:\Users\Arbaz PC\Downloads\Ethmar-Website-Conversion\Ethmar-Website-Conversion\cms\node_modules\@strapi\utils\dist\validators.js:27:11)
+    at C:\Users\Arbaz PC\Downloads\Ethmar-Website-Conversion\Ethmar-Website-Conversion\cms\node_modules\@strapi\utils\dist\validators.js:40:17
+    at async createEntry (C:\Users\Arbaz PC\Downloads\Ethmar-Website-Conversion\Ethmar-Website-Conversion\cms\node_modules\@strapi\core\dist\services\document-service\entries.js:63:27)
+    at async C:\Users\Arbaz PC\Downloads\Ethmar-Website-Conversion\Ethmar-Website-Conversion\cms\node_modules\@strapi\utils\dist\async.js:11:19
+    at async C:\Users\Arbaz PC\Downloads\Ethmar-Website-Conversion\Ethmar-Website-Conversion\cms\node_modules\p-map\index.js:57:22
+[2026-02-12 15:17:09.579] [33mwarn[39m: Could not seed AR homepage automatically: ValidationError: 6 errors occurred
+    at handleYupError (C:\Users\Arbaz PC\Downloads\Ethmar-Website-Conversion\Ethmar-Website-Conversion\cms\node_modules\@strapi\utils\dist\validators.js:27:11)
+    at C:\Users\Arbaz PC\Downloads\Ethmar-Website-Conversion\Ethmar-Website-Conversion\cms\node_modules\@strapi\utils\dist\validators.js:40:17
+    at async createEntry (C:\Users\Arbaz PC\Downloads\Ethmar-Website-Conversion\Ethmar-Website-Conversion\cms\node_modules\@strapi\core\dist\services\document-service\entries.js:63:27)
+    at async C:\Users\Arbaz PC\Downloads\Ethmar-Website-Conversion\Ethmar-Website-Conversion\cms\node_modules\@strapi\utils\dist\async.js:11:19
+    at async C:\Users\Arbaz PC\Downloads\Ethmar-Website-Conversion\Ethmar-Website-Conversion\cms\node_modules\p-map\index.js:57:22
+[2026-02-12 15:17:09.581] [32minfo[39m: Homepage bootstrap completed with auto-seed attempt
+- Building build context
+
+[INFO] Including the following ENV variables as part of the JS bundle:
+    - ADMIN_PATH
+    - STRAPI_ADMIN_BACKEND_URL
+    - STRAPI_TELEMETRY_DISABLED
+    - STRAPI_AI_URL
+    - STRAPI_ANALYTICS_URL
+✔ Building build context (86ms)
+- Creating admin
+✔ Creating admin (374ms)
+✔ Loading Strapi (1839ms)
+- Generating types
+✔ Generating types (667ms)
+- Compiling TS
+- Cleaning dist dir C:/Users/Arbaz PC/Downloads/Ethmar-Website-Conversion/Ethmar-Website-Conversion/cms/dist
+✔ Cleaning dist dir (21ms)
+✔ Compiling TS (1656ms)
+
+ Project information
+
+[90m┌────────────────────[39m[90m┬──────────────────────────────────────────────────┐[39m
+[90m│[39m Time               [90m│[39m Thu Feb 12 2026 15:17:12 GMT+0530 (India Standa… [90m│[39m
+[90m│[39m Launched in        [90m│[39m 4168 ms                                          [90m│[39m
+[90m│[39m Environment        [90m│[39m development                                      [90m│[39m
+[90m│[39m Process PID        [90m│[39m 12028                                            [90m│[39m
+[90m│[39m Version            [90m│[39m 5.36.0 (node v24.11.1)                           [90m│[39m
+[90m│[39m Edition            [90m│[39m Community                                        [90m│[39m
+[90m│[39m Database           [90m│[39m sqlite                                           [90m│[39m
+[90m│[39m Database name      [90m│[39m .tmp\data.db                                     [90m│[39m
+[90m└────────────────────[39m[90m┴──────────────────────────────────────────────────┘[39m
+
+ Actions available
+
+Welcome back!
+To access the server ⚡️, go to:
+http://localhost:1337
+
+[2026-02-12 15:17:12.389] [32minfo[39m: Strapi started successfully
+[2026-02-12 15:17:28.771] [32mhttp[39m: GET /api/homepage?locale=ar&populate[heroBanner][populate]=*&populate[legacyBlock][populate]=*&populate[globalPresenceCards][populate]=*&populate[featuredSectorBlock][populate]=*&populate[sectorsCards][populate]=*&populate[partnershipLogos][populate]=*&populate[finalCta][populate]=* (24 ms) 200
+
+[1m[33mwarn[39m[22m - The `content` option in your Tailwind CSS configuration is missing or empty.
+[1m[33mwarn[39m[22m - Configure your content sources or your generated CSS will be missing styles.
+[1m[33mwarn[39m[22m - https://tailwindcss.com/docs/content-configuration
+[2026-02-12 15:27:27.721] [32mhttp[39m: GET /admin/content-manager/single-types/api::homepage.homepage?status=published&plugins[i18n][locale]=ar (204 ms) 200
+[2026-02-12 15:27:28.519] [32mhttp[39m: GET /admin/project-type (4 ms) 200
+[2026-02-12 15:27:28.841] [32mhttp[39m: GET /admin/init (3 ms) 200
+[2026-02-12 15:27:28.850] [32mhttp[39m: GET /admin/users/me (5 ms) 401
+[2026-02-12 15:27:28.852] [32mhttp[39m: GET /admin/users/me/permissions (2 ms) 401
+[2026-02-12 15:27:28.872] [32mhttp[39m: GET /admin/information (2 ms) 401
+[2026-02-12 15:27:28.873] [32mhttp[39m: GET /admin/telemetry-properties (1 ms) 401
+[2026-02-12 15:27:28.907] [32mhttp[39m: POST /admin/access-token (31 ms) 200
+[2026-02-12 15:27:28.926] [32mhttp[39m: GET /admin/users/me (9 ms) 200
+[2026-02-12 15:27:28.935] [32mhttp[39m: GET /admin/users/me/permissions (9 ms) 200
+[2026-02-12 15:27:28.941] [32mhttp[39m: GET /admin/information (14 ms) 200
+[2026-02-12 15:27:29.034] [32mhttp[39m: GET /admin/guided-tour-meta (8 ms) 200
+[2026-02-12 15:27:29.042] [32mhttp[39m: GET /content-manager/init (5 ms) 200
+[2026-02-12 15:27:29.055] [32mhttp[39m: GET /content-manager/content-types-settings (12 ms) 200
+[2026-02-12 15:27:29.082] [32mhttp[39m: GET /admin/license-limit-information (47 ms) 200
+[2026-02-12 15:27:29.217] [32mhttp[39m: GET /content-manager/init (5 ms) 200
+[2026-02-12 15:27:29.311] [32mhttp[39m: GET /content-manager/single-types/api::homepage.homepage?status=published&locale=ar (25 ms) 200
+[2026-02-12 15:27:29.318] [32mhttp[39m: GET /content-manager/content-types/api::homepage.homepage/configuration (6 ms) 200
+[2026-02-12 15:27:29.535] [32mhttp[39m: GET /admin/ai-feature-config (23 ms) 200
+[2026-02-12 15:27:29.541] [32mhttp[39m: GET /i18n/locales (6 ms) 200
+[2026-02-12 15:27:29.547] [32mhttp[39m: GET /i18n/settings (6 ms) 200
+[2026-02-12 15:27:29.553] [32mhttp[39m: GET /i18n/ai-localization-jobs/single-types/api::homepage.homepage (5 ms) 200
+[2026-02-12 15:27:29.569] [32mhttp[39m: GET /content-manager/single-types/api::homepage.homepage?locale=ar (16 ms) 200
+[2026-02-12 15:27:29.574] [32mhttp[39m: GET /content-manager/preview/url/api::homepage.homepage?locale=ar&status=published (5 ms) 404
+[2026-02-12 15:27:31.128] [32mhttp[39m: GET /content-manager/single-types/api::homepage.homepage/actions/countDraftRelations?status=published&locale=ar (11 ms) 200
+[2026-02-12 19:42:22.991] [32mhttp[39m: GET /admin/auth/login?redirectTo=%2Fcontent-manager%2Fsingle-types%2Fapi%3A%3Ahomepage.homepage%3Fplugins%5Bi18n%5D%5Blocale%5D%3Den (509 ms) 200
+[2026-02-12 19:42:23.415] [32mhttp[39m: GET /admin/auth/login?redirectTo=%2Fcontent-manager%2Fsingle-types%2Fapi%3A%3Ahomepage.homepage%3Fplugins%5Bi18n%5D%5Blocale%5D%3Den (100 ms) 200
+[2026-02-12 19:42:24.191] [32mhttp[39m: GET /admin/project-type (3 ms) 200
+[2026-02-12 19:42:24.389] [32mhttp[39m: GET /admin/init (29 ms) 200
+[2026-02-12 19:43:19.679] [32mhttp[39m: GET /admin (32 ms) 200
+[2026-02-12 19:43:19.863] [32mhttp[39m: GET /admin/content-manager/single-types/api::homepage.homepage?status=published&plugins[i18n][locale]=ar (29 ms) 200
+[2026-02-12 19:43:20.249] [32mhttp[39m: GET /admin/project-type (2 ms) 200
+[2026-02-12 19:43:20.373] [32mhttp[39m: GET /admin/project-type (2 ms) 200
+[2026-02-12 19:43:20.407] [32mhttp[39m: GET /admin/init (4 ms) 200
+[2026-02-12 19:43:20.428] [32mhttp[39m: GET /admin/users/me (21 ms) 401
+[2026-02-12 19:43:20.429] [32mhttp[39m: GET /admin/users/me/permissions (20 ms) 401
+[2026-02-12 19:43:20.433] [32mhttp[39m: GET /admin/information (4 ms) 401
+[2026-02-12 19:43:20.434] [32mhttp[39m: GET /admin/telemetry-properties (2 ms) 401
+[2026-02-12 19:43:20.440] [32mhttp[39m: POST /admin/access-token (6 ms) 401
+[2026-02-12 19:43:20.443] [32mhttp[39m: POST /admin/logout (1 ms) 401
+[2026-02-12 19:43:20.446] [32mhttp[39m: POST /admin/logout (3 ms) 401
+[2026-02-12 19:43:20.447] [32mhttp[39m: POST /admin/logout (2 ms) 401
+[2026-02-12 19:43:20.493] [32mhttp[39m: GET /admin/auth/login (31 ms) 200
+[2026-02-12 19:43:20.627] [32mhttp[39m: GET /admin/init (2 ms) 200
+[2026-02-12 19:43:20.691] [32mhttp[39m: GET /admin/project-type (3 ms) 200
+[2026-02-12 19:43:20.832] [32mhttp[39m: GET /admin/init (3 ms) 200
+[2026-02-12 19:44:02.269] [32mhttp[39m: GET /api/homepage?locale=en&populate%5BheroBanner%5D%5Bpopulate%5D=*&populate%5BlegacyBlock%5D%5Bpopulate%5D=*&populate%5BglobalPresenceCards%5D%5Bpopulate%5D=*&populate%5BfeaturedSectorBlock%5D%5Bpopulate%5D=*&populate%5BsectorsCards%5D%5Bpopulate%5D=*&populate%5BpartnershipLogos%5D%5Bpopulate%5D=*&populate%5BfinalCta%5D%5Bpopulate%5D=* (21 ms) 200
+[2026-02-12 19:44:02.299] [32mhttp[39m: GET /api/homepage?locale=en&populate%5BheroBanner%5D%5Bpopulate%5D=*&populate%5BlegacyBlock%5D%5Bpopulate%5D=*&populate%5BglobalPresenceCards%5D%5Bpopulate%5D=*&populate%5BfeaturedSectorBlock%5D%5Bpopulate%5D=*&populate%5BsectorsCards%5D%5Bpopulate%5D=*&populate%5BpartnershipLogos%5D%5Bpopulate%5D=*&populate%5BfinalCta%5D%5Bpopulate%5D=* (8 ms) 200
+[2026-02-13 01:47:18.704] [32mhttp[39m: GET /api/homepage?locale=en&populate%5BheroBanner%5D%5Bpopulate%5D=*&populate%5BlegacyBlock%5D%5Bpopulate%5D=*&populate%5BglobalPresenceCards%5D%5Bpopulate%5D=*&populate%5BfeaturedSectorBlock%5D%5Bpopulate%5D=*&populate%5BsectorsCards%5D%5Bpopulate%5D=*&populate%5BpartnershipLogos%5D%5Bpopulate%5D=*&populate%5BfinalCta%5D%5Bpopulate%5D=* (645 ms) 200
+[2026-02-13 01:47:18.938] [32mhttp[39m: GET /api/homepage?locale=en&populate%5BheroBanner%5D%5Bpopulate%5D=*&populate%5BlegacyBlock%5D%5Bpopulate%5D=*&populate%5BglobalPresenceCards%5D%5Bpopulate%5D=*&populate%5BfeaturedSectorBlock%5D%5Bpopulate%5D=*&populate%5BsectorsCards%5D%5Bpopulate%5D=*&populate%5BpartnershipLogos%5D%5Bpopulate%5D=*&populate%5BfinalCta%5D%5Bpopulate%5D=* (65 ms) 200
+[2026-02-13 01:47:47.757] [32mhttp[39m: GET /api/homepage?locale=en&populate%5BheroBanner%5D%5Bpopulate%5D=*&populate%5BlegacyBlock%5D%5Bpopulate%5D=*&populate%5BglobalPresenceCards%5D%5Bpopulate%5D=*&populate%5BfeaturedSectorBlock%5D%5Bpopulate%5D=*&populate%5BsectorsCards%5D%5Bpopulate%5D=*&populate%5BpartnershipLogos%5D%5Bpopulate%5D=*&populate%5BfinalCta%5D%5Bpopulate%5D=* (28 ms) 200
+[2026-02-13 01:47:47.785] [32mhttp[39m: GET /api/homepage?locale=en&populate%5BheroBanner%5D%5Bpopulate%5D=*&populate%5BlegacyBlock%5D%5Bpopulate%5D=*&populate%5BglobalPresenceCards%5D%5Bpopulate%5D=*&populate%5BfeaturedSectorBlock%5D%5Bpopulate%5D=*&populate%5BsectorsCards%5D%5Bpopulate%5D=*&populate%5BpartnershipLogos%5D%5Bpopulate%5D=*&populate%5BfinalCta%5D%5Bpopulate%5D=* (18 ms) 200
+[2026-02-13 01:55:45.681] [32mhttp[39m: GET /api/homepage?locale=en&populate%5BheroBanner%5D%5Bpopulate%5D=*&populate%5BlegacyBlock%5D%5Bpopulate%5D=*&populate%5BglobalPresenceCards%5D%5Bpopulate%5D=*&populate%5BfeaturedSectorBlock%5D%5Bpopulate%5D=*&populate%5BsectorsCards%5D%5Bpopulate%5D=*&populate%5BpartnershipLogos%5D%5Bpopulate%5D=*&populate%5BfinalCta%5D%5Bpopulate%5D=* (38 ms) 200
+[2026-02-13 01:55:45.710] [32mhttp[39m: GET /api/homepage?locale=en&populate%5BheroBanner%5D%5Bpopulate%5D=*&populate%5BlegacyBlock%5D%5Bpopulate%5D=*&populate%5BglobalPresenceCards%5D%5Bpopulate%5D=*&populate%5BfeaturedSectorBlock%5D%5Bpopulate%5D=*&populate%5BsectorsCards%5D%5Bpopulate%5D=*&populate%5BpartnershipLogos%5D%5Bpopulate%5D=*&populate%5BfinalCta%5D%5Bpopulate%5D=* (25 ms) 200
+[2026-02-13 02:19:37.120] [32mhttp[39m: GET /api/homepage?locale=en&populate%5BheroBanner%5D%5Bpopulate%5D=*&populate%5BlegacyBlock%5D%5Bpopulate%5D=*&populate%5BglobalPresenceCards%5D%5Bpopulate%5D=*&populate%5BfeaturedSectorBlock%5D%5Bpopulate%5D=*&populate%5BsectorsCards%5D%5Bpopulate%5D=*&populate%5BpartnershipLogos%5D%5Bpopulate%5D=*&populate%5BfinalCta%5D%5Bpopulate%5D=* (769 ms) 200
+[2026-02-13 02:19:37.371] [32mhttp[39m: GET /api/homepage?locale=en&populate%5BheroBanner%5D%5Bpopulate%5D=*&populate%5BlegacyBlock%5D%5Bpopulate%5D=*&populate%5BglobalPresenceCards%5D%5Bpopulate%5D=*&populate%5BfeaturedSectorBlock%5D%5Bpopulate%5D=*&populate%5BsectorsCards%5D%5Bpopulate%5D=*&populate%5BpartnershipLogos%5D%5Bpopulate%5D=*&populate%5BfinalCta%5D%5Bpopulate%5D=* (52 ms) 200
+[2026-02-13 03:05:00.665] [32mhttp[39m: GET /api/homepage?locale=en&populate%5BheroBanner%5D%5Bpopulate%5D=*&populate%5BlegacyBlock%5D%5Bpopulate%5D=*&populate%5BglobalPresenceCards%5D%5Bpopulate%5D=*&populate%5BfeaturedSectorBlock%5D%5Bpopulate%5D=*&populate%5BsectorsCards%5D%5Bpopulate%5D=*&populate%5BpartnershipLogos%5D%5Bpopulate%5D=*&populate%5BfinalCta%5D%5Bpopulate%5D=* (341 ms) 200
+[2026-02-13 03:05:00.747] [32mhttp[39m: GET /api/homepage?locale=en&populate%5BheroBanner%5D%5Bpopulate%5D=*&populate%5BlegacyBlock%5D%5Bpopulate%5D=*&populate%5BglobalPresenceCards%5D%5Bpopulate%5D=*&populate%5BfeaturedSectorBlock%5D%5Bpopulate%5D=*&populate%5BsectorsCards%5D%5Bpopulate%5D=*&populate%5BpartnershipLogos%5D%5Bpopulate%5D=*&populate%5BfinalCta%5D%5Bpopulate%5D=* (12 ms) 200
+[2026-02-13 03:08:43.627] [32mhttp[39m: GET /api/homepage?locale=en&populate%5BheroBanner%5D%5Bpopulate%5D=*&populate%5BlegacyBlock%5D%5Bpopulate%5D=*&populate%5BglobalPresenceCards%5D%5Bpopulate%5D=*&populate%5BfeaturedSectorBlock%5D%5Bpopulate%5D=*&populate%5BsectorsCards%5D%5Bpopulate%5D=*&populate%5BpartnershipLogos%5D%5Bpopulate%5D=*&populate%5BfinalCta%5D%5Bpopulate%5D=* (40 ms) 200
+[2026-02-13 03:08:43.664] [32mhttp[39m: GET /api/homepage?locale=en&populate%5BheroBanner%5D%5Bpopulate%5D=*&populate%5BlegacyBlock%5D%5Bpopulate%5D=*&populate%5BglobalPresenceCards%5D%5Bpopulate%5D=*&populate%5BfeaturedSectorBlock%5D%5Bpopulate%5D=*&populate%5BsectorsCards%5D%5Bpopulate%5D=*&populate%5BpartnershipLogos%5D%5Bpopulate%5D=*&populate%5BfinalCta%5D%5Bpopulate%5D=* (17 ms) 200
+[2026-02-13 03:34:41.635] [32mhttp[39m: GET /api/homepage?locale=en&populate%5BheroBanner%5D%5Bpopulate%5D=*&populate%5BlegacyBlock%5D%5Bpopulate%5D=*&populate%5BglobalPresenceCards%5D%5Bpopulate%5D=*&populate%5BfeaturedSectorBlock%5D%5Bpopulate%5D=*&populate%5BsectorsCards%5D%5Bpopulate%5D=*&populate%5BpartnershipLogos%5D%5Bpopulate%5D=*&populate%5BfinalCta%5D%5Bpopulate%5D=* (222 ms) 200
+[2026-02-13 03:34:41.688] [32mhttp[39m: GET /api/homepage?locale=en&populate%5BheroBanner%5D%5Bpopulate%5D=*&populate%5BlegacyBlock%5D%5Bpopulate%5D=*&populate%5BglobalPresenceCards%5D%5Bpopulate%5D=*&populate%5BfeaturedSectorBlock%5D%5Bpopulate%5D=*&populate%5BsectorsCards%5D%5Bpopulate%5D=*&populate%5BpartnershipLogos%5D%5Bpopulate%5D=*&populate%5BfinalCta%5D%5Bpopulate%5D=* (14 ms) 200
