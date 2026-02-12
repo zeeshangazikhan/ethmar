@@ -587,6 +587,99 @@ html[dir="rtl"] .article-content p:first-of-type::first-letter {
     transform: translateX(0) !important;
   }
 
+  /* Full-page scroll snap container (ADIA-style) */
+  .scroll-snap-container {
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-snap-type: y mandatory;
+    -ms-overflow-style: none;  /* Hide scrollbar IE/Edge */
+    scrollbar-width: none;  /* Hide scrollbar Firefox */
+  }
+
+  .scroll-snap-container::-webkit-scrollbar {
+    display: none;  /* Hide scrollbar Chrome/Safari */
+  }
+
+  /* Full-page scroll snap section */
+  .scroll-snap-section {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+    will-change: transform, opacity;
+  }
+
+  /* Last section allows overflow for footer */
+  .scroll-snap-section.last-section {
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
+    min-height: auto;
+  }
+
+  /* When near end, disable mandatory snapping */
+  .scroll-snap-container.at-end {
+    scroll-snap-type: y proximity;
+  }
+
+  /* Diagonal zig-zag section transitions - controlled by JS */
+  .scroll-snap-section {
+    opacity: 1;
+    transform: translate(0, 0);
+    transition: none; /* JS controls everything */
+  }
+
+  /* Odd sections: slide from top-right to bottom-left */
+  .scroll-snap-section:nth-child(odd) {
+    --slide-x: 100%;
+    --slide-y: -100%;
+  }
+
+  /* Even sections: slide from top-left to bottom-right */
+  .scroll-snap-section:nth-child(even) {
+    --slide-x: -100%;
+    --slide-y: -100%;
+  }
+
+  /* Side navigation dots */
+  .scroll-nav-dots {
+    position: fixed;
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .scroll-nav-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1px solid rgba(182, 156, 107, 0.5);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .scroll-nav-dot:hover {
+    border-color: #b69c6b;
+  }
+
+  .scroll-nav-dot.active {
+    background: #b69c6b;
+    border-color: #b69c6b;
+  }
+
+  .scroll-nav-line {
+    width: 1px;
+    height: 20px;
+    background: rgba(182, 156, 107, 0.3);
+  }
+
   @keyframes fadeInUp {
     from {
       opacity: 0;

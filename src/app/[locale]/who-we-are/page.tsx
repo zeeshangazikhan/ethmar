@@ -3,7 +3,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { ChevronDown, ArrowRight } from "lucide-react"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useState, useRef } from "react"
 import { NavLangToggle, SidebarLangToggle } from '@/components/LanguageToggle'
 import { useLanguage } from '@/components/LanguageProvider'
 
@@ -11,28 +11,167 @@ export default function WhoWeAre() {
   const { isArabic, t, locale } = useLanguage()
   const [menuOpen, setMenuOpen] = useState(false)
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null)
-
-  // Scroll animation setup - zig-zag reveal
-  useEffect(() => {
-    const observerOptions = {
-      threshold: 0.15,
-      rootMargin: '0px 0px -50px 0px'
+  const [activeSection, setActiveSection] = useState(0)
+  const lastScrollTop = useRef(0)
+  const scrollVelocity = useRef(0)
+  const rafId = useRef<number | null>(null)
+  const isLastSection = useRef(false)
+  
+  const containerRef = useCallback((node: HTMLElement | null) => {
+    if (node) {
+      // Setup initial state
+      const sections = node.querySelectorAll('.scroll-snap-section')
+      sections.forEach((section, index) => {
+        const el = section as HTMLElement
+        // Start with sections visible in their final position
+        el.style.transform = 'translate(0, 0)'
+        el.style.opacity = '1'
+      })
     }
+  }, [])
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('animate-fade-in-up')
-          entry.target.classList.remove('opacity-0')
+  // Diagonal zig-zag scroll animation with speed-based transitions
+  useEffect(() => {
+    const container = document.querySelector('.scroll-snap-container') as HTMLElement
+    if (!container) return
+
+    let ticking = false
+    let lastTime = performance.now()
+
+    const updateAnimation = () => {
+      const sections = container.querySelectorAll('.scroll-snap-section')
+      const scrollTop = container.scrollTop
+      const viewportHeight = window.innerHeight
+      const scrollDelta = scrollTop - lastScrollTop.current
+      const currentTime = performance.now()
+      const timeDelta = Math.max(currentTime - lastTime, 16)
+      
+      // Calculate velocity (pixels per ms) and clamp it
+      const rawVelocity = Math.abs(scrollDelta) / timeDelta
+      scrollVelocity.current = Math.min(rawVelocity * 100, 1) // Normalize to 0-1
+      
+      // Determine scroll direction
+      const scrollingDown = scrollDelta > 0
+      
+      // Check if we're at or near the last section
+      const totalScrollable = container.scrollHeight - viewportHeight
+      const lastSectionEl = sections[sections.length - 1] as HTMLElement
+      const lastSectionTop = lastSectionEl?.offsetTop || 0
+      const isNearLastSection = scrollTop >= lastSectionTop - viewportHeight * 0.5
+      
+      // Toggle at-end class for footer accessibility
+      if (isNearLastSection) {
+        container.classList.add('at-end')
+      } else {
+        container.classList.remove('at-end')
+      }
+      
+      isLastSection.current = isNearLastSection
+
+      sections.forEach((section, index) => {
+        const el = section as HTMLElement
+        const sectionTop = el.offsetTop
+        const sectionHeight = el.offsetHeight
+        
+        // Calculate how far through this section we are (0 to 1)
+        const distanceFromViewport = sectionTop - scrollTop
+        const progress = 1 - Math.max(0, Math.min(1, distanceFromViewport / viewportHeight))
+        
+        // Determine slide direction based on odd/even
+        // odd (0,2,4...): enter from top-right, exit to bottom-left
+        // even (1,3,5...): enter from top-left, exit to bottom-right
+        const isOdd = index % 2 === 0
+        
+        let translateX = 0
+        let translateY = 0
+        let opacity = 1
+        
+        // Skip animation for last section with footer
+        if (el.classList.contains('last-section') && isNearLastSection) {
+          el.style.transform = 'translate(0, 0)'
+          el.style.opacity = '1'
+          el.style.transition = 'transform 0.4s ease-out, opacity 0.3s ease-out'
+          return
+        }
+        
+        if (distanceFromViewport > 0) {
+          // Section is BELOW viewport - animate ENTERING
+          // Slides diagonally over the current section
+          const entryProgress = 1 - progress // 1 = fully off-screen, 0 = fully in view
+          
+          if (scrollingDown) {
+            // Scrolling down: next section slides in from diagonal
+            translateX = isOdd ? entryProgress * 100 : -entryProgress * 100  // from right or left
+            translateY = -entryProgress * 100  // from top
+          } else {
+            // Scrolling up: section was visible, now moving out below
+            translateX = isOdd ? entryProgress * 60 : -entryProgress * 60
+            translateY = entryProgress * 40
+          }
+          opacity = 0.3 + progress * 0.7
+          
+        } else if (distanceFromViewport < -sectionHeight * 0.1) {
+          // Section is ABOVE viewport - animate EXITING
+          const exitAmount = Math.abs(distanceFromViewport) / viewportHeight
+          const exitProgress = Math.min(1, exitAmount)
+          
+          if (scrollingDown) {
+            // Scrolling down: current section slides out diagonally underneath
+            translateX = isOdd ? -exitProgress * 40 : exitProgress * 40  // opposite direction
+            translateY = exitProgress * 60
+          } else {
+            // Scrolling up: section coming back into view from above
+            translateX = isOdd ? -exitProgress * 100 : exitProgress * 100
+            translateY = exitProgress * 100
+          }
+          opacity = Math.max(0.2, 1 - exitProgress * 0.8)
+          
+        } else {
+          // Section is IN viewport - fully visible
+          translateX = 0
+          translateY = 0
+          opacity = 1
+        }
+        
+        // Speed-based transition timing
+        const speed = 0.15 + scrollVelocity.current * 0.85
+        const duration = Math.max(0.2, 0.8 / speed)
+        
+        el.style.transition = `transform ${duration}s cubic-bezier(0.16, 1, 0.3, 1), opacity ${duration * 0.7}s ease-out`
+        el.style.transform = `translate(${translateX}px, ${translateY}px)`
+        el.style.opacity = String(opacity)
+        
+        // Update active section for nav dots
+        if (Math.abs(distanceFromViewport) < viewportHeight * 0.3) {
+          setActiveSection(index)
         }
       })
-    }, observerOptions)
+      
+      lastScrollTop.current = scrollTop
+      lastTime = currentTime
+      ticking = false
+    }
 
-    const sections = document.querySelectorAll('[data-scroll-animate]')
-    sections.forEach(section => observer.observe(section))
+    const handleScroll = () => {
+      if (!ticking) {
+        rafId.current = requestAnimationFrame(updateAnimation)
+        ticking = true
+      }
+    }
 
-    return () => observer.disconnect()
+    container.addEventListener('scroll', handleScroll, { passive: true })
+    
+    // Initial animation
+    updateAnimation()
+
+    return () => {
+      container.removeEventListener('scroll', handleScroll)
+      if (rafId.current) cancelAnimationFrame(rafId.current)
+    }
   }, [])
+
+  // Section names for navigation dots
+  const sectionNames = ['Hero', 'About', 'Purpose', 'Promise', 'Believe', 'Values', 'Statement']
 
   // Navigation structure
   const navigation = [
@@ -141,8 +280,33 @@ export default function WhoWeAre() {
   const convictionLast = _convictionParts.length ? _convictionParts[_convictionParts.length - 1] : ''
   const convictionFirst = _convictionParts.length > 1 ? _convictionParts.slice(0, -1).join(' ') : t('whoWeAre.convictionTitle')
 
+  // Split the "WE BELIEVE IN" title into words for mobile stacking
+  const _believeTitleParts = t('whoWeAre.believeTitle').split(' ')
+  const believeTitleWords = _believeTitleParts.length ? _believeTitleParts : [t('whoWeAre.believeTitle')]
+
   return (
-    <main data-testid="page-who-we-are" className="bg-[#fffcf8] overflow-x-hidden">
+    <>
+      {/* Side Navigation Dots */}
+      <nav className="scroll-nav-dots hidden lg:flex">
+        {sectionNames.map((name, index) => (
+          <div key={name} className="flex flex-col items-center">
+            <button
+              onClick={() => {
+                const container = document.querySelector('.scroll-snap-container')
+                const sections = container?.querySelectorAll('.scroll-snap-section')
+                if (sections && sections[index]) {
+                  sections[index].scrollIntoView({ behavior: 'smooth' })
+                }
+              }}
+              className={`scroll-nav-dot ${activeSection === index ? 'active' : ''}`}
+              aria-label={`Go to ${name} section`}
+            />
+            {index < sectionNames.length - 1 && <div className="scroll-nav-line" />}
+          </div>
+        ))}
+      </nav>
+
+      <main data-testid="page-who-we-are" className="scroll-snap-container bg-[#fffcf8]" ref={containerRef}>
       {/* FULL SCREEN MENU OVERLAY */}
       <div 
         className={`fixed inset-0 z-[100] bg-[#fffcf8] transition-transform duration-500 ease-in-out ${
@@ -279,7 +443,7 @@ export default function WhoWeAre() {
       </div>
 
       {/* HERO SECTION */}
-      <header className="relative min-h-[85vh] md:min-h-[90vh] flex flex-col bg-[#0b1320]">
+      <header className="scroll-snap-section section-visible relative min-h-screen flex flex-col bg-[#0b1320]">
         <div className="absolute inset-0 z-0">
           <Image 
             src="/assets/hero.jpg" 
@@ -366,7 +530,7 @@ export default function WhoWeAre() {
       </header>
 
       {/* WHO WE ARE INTRO SECTION */}
-      <section className="pt-20 sm:pt-28 md:pt-36 pb-20 sm:pb-28 md:pb-36 px-4 sm:px-8 md:px-16 bg-[#f1ebe1]" data-scroll-animate>
+      <section className="scroll-snap-section flex items-center justify-center min-h-screen px-4 sm:px-8 md:px-16 bg-[#f1ebe1]">
         <div className="max-w-[1400px] mx-auto">
           {/* Section kicker */}
           <div className="flex items-center gap-3 mb-6 sm:mb-8 justify-center">
@@ -394,7 +558,7 @@ export default function WhoWeAre() {
       </section>
 
       {/* PURPOSE SECTION */}
-      <section className="py-20 sm:py-28 md:py-36 px-4 sm:px-8 md:px-16 bg-[#efe6d8]" data-scroll-animate>
+      <section className="scroll-snap-section flex items-center justify-center min-h-screen px-4 sm:px-8 md:px-16 bg-[#efe6d8]">
         <div className="max-w-[1400px] mx-auto">
           {/* Decorative icon (from assets) */}
           <div className="flex justify-center mb-8 sm:mb-10">
@@ -419,7 +583,7 @@ export default function WhoWeAre() {
       </section>
 
       {/* PROMISE SECTION */}
-      <section className="py-20 sm:py-28 md:py-36 px-4 sm:px-8 md:px-16 bg-[#f1ebe1]" data-scroll-animate>
+      <section className="scroll-snap-section flex items-center justify-center min-h-screen px-4 sm:px-8 md:px-16 bg-[#f1ebe1]">
         <div className="max-w-[1400px] mx-auto">
           {/* Top icon */}
           <div className="flex justify-center mb-8 sm:mb-10">
@@ -454,12 +618,17 @@ export default function WhoWeAre() {
       </section>
 
       {/* WE BELIEVE IN SECTION */}
-      <section className="grid grid-cols-1 lg:grid-cols-2 min-h-[760px]">
+      <section className="scroll-snap-section grid grid-cols-1 lg:grid-cols-2 min-h-screen">
         {/* Left side - Text */}
         <div className="bg-[#efe6d8] flex items-center justify-center px-4 sm:px-8 md:px-16 py-20 sm:py-28 md:py-36">
           <div className="max-w-[500px]">
             <h2 className="text-[#191817] font-serif text-[48px] sm:text-[64px] md:text-[80px] lg:text-[96px] leading-[0.95] font-light tracking-[0.02em]">
-              {t('whoWeAre.believeTitle')}
+              {/* Mobile: stack each word on its own line. Desktop: show full title. */}
+              <span className="block sm:hidden text-[48px] sm:text-inherit">{believeTitleWords[0] ?? ''}</span>
+              {believeTitleWords.slice(1).map((w, i) => (
+                <span key={i} className="block sm:hidden text-[48px] sm:text-inherit">{w}</span>
+              ))}
+              <span className="hidden sm:block">{t('whoWeAre.believeTitle')}</span>
             </h2>
           </div>
         </div>
@@ -491,7 +660,7 @@ export default function WhoWeAre() {
       </section>
 
       {/* ALIGNMENT AND CONVICTION SECTION */}
-      <section className="grid grid-cols-1 lg:grid-cols-2 min-h-screen lg:min-h-auto" data-scroll-animate>
+      <section className="scroll-snap-section grid grid-cols-1 lg:grid-cols-2 min-h-screen">
         {/* Left side - Alignment */}
         <div 
           className="relative overflow-hidden flex flex-col items-start justify-end px-4 sm:px-8 md:px-16 py-20 sm:py-28 md:py-36 min-h-[500px] lg:min-h-[700px]"
@@ -536,7 +705,7 @@ export default function WhoWeAre() {
 
 
       {/* H.H STATEMENT SECTION */}
-      <section className="grid grid-cols-1 lg:grid-cols-3 min-h-screen lg:min-h-auto bg-[#f5f0e6]" data-scroll-animate>
+      <section className="scroll-snap-section last-section grid grid-cols-1 lg:grid-cols-3 bg-[#f5f0e6]">
         {/* Left side - Horse image (1 col) */}
         <div className="relative overflow-hidden min-h-[400px] lg:min-h-[700px]">
           <Image
@@ -613,5 +782,6 @@ export default function WhoWeAre() {
         </div>
       </footer>
     </main>
+    </>
   )
 }
