@@ -5,7 +5,10 @@ export const locales = ['en', 'ar'] as const;
 export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = 'en';
 
-const dictionaries: Record<Locale, typeof en> = { en, ar };
+// Use a permissive record type for dictionaries because imported JSON
+// modules can produce distinct anonymous types that are incompatible
+// with each other. We only need an indexable dictionary at runtime.
+const dictionaries: Record<Locale, Record<string, unknown>> = { en, ar };
 
 export function getDictionary(locale: Locale) {
   return dictionaries[locale] ?? dictionaries.en;
