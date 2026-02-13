@@ -762,7 +762,9 @@ html[dir="rtl"] .article-content p:first-of-type::first-letter {
     will-change: transform;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
+    transform: translateZ(0); /* Force GPU layer */
     box-sizing: border-box;
+    /* No CSS transition - JS handles smooth 60fps animation */
   }
 
   /* Last section allows overflow for footer */

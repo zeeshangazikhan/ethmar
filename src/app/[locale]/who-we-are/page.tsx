@@ -15,13 +15,10 @@ export default function WhoWeAre() {
   const [sliderComplete, setSliderComplete] = useState(false)
   const prevActiveRef = useRef(0)
   
-  // ADIA-STYLE SMOOTH SCROLL SNAP
-  // A small scroll triggers a full smooth transition to the next slide.
-  // Animation speed is proportional to scroll speed.
-  const currentSectionRef = useRef(0)
-  const isAnimatingRef = useRef(false)
-  const animationProgressRef = useRef(0)
-  const targetSectionRef = useRef(0)
+  // SCROLL-POSITION BASED SLIDER
+  // Scroll directly controls slide position - like a normal scrollbar
+  // No snapping, smooth progressive movement
+  const scrollProgressRef = useRef(0) // 0 = first slide, 1 = second slide, etc.
   const normalContentRef = useRef<HTMLDivElement>(null)
   const sliderCompleteRef = useRef(false)
   
@@ -33,23 +30,24 @@ export default function WhoWeAre() {
   const containerRef = useCallback((node: HTMLElement | null) => {
     if (node) {
       const sections = node.querySelectorAll('.scroll-snap-section')
+      const OFFSET = 35 // Match the animation offset
       sections.forEach((section, index) => {
         const el = section as HTMLElement
-        el.style.zIndex = String(index + 1)
+        el.style.zIndex = String(sections.length - index + 2) // First slide on top initially
         if (index === 0) {
           el.style.transform = 'translate(0, 0)'
         } else {
-          // Park off-screen: odd → bottom-right, even → bottom-left
-          const dirX = index % 2 === 1 ? 100 : -100
-          el.style.transform = `translate(${dirX}%, 40%)`
+          // Park off-screen with reduced offset: odd → bottom-right, even → bottom-left
+          const dirX = index % 2 === 1 ? 1 : -1
+          el.style.transform = `translate(${dirX * 100}%, ${OFFSET}%)`
         }
       })
     }
   }, [])
 
-  // CAMERA-PAN DIAGONAL ZIGZAG - ADIA STYLE
-  // Scroll wheel triggers smooth animated transitions between sections.
-  // Small scroll = full slide transition with smooth easing.
+  // SCROLL-POSITION BASED DIAGONAL ZIGZAG SLIDER
+  // Smooth 60fps animation with lerp for butter-smooth movement
+  // Pause at 3rd slide before allowing exit
   useEffect(() => {
     const container = document.querySelector('.scroll-snap-container') as HTMLElement
     if (!container) return
@@ -58,238 +56,194 @@ export default function WhoWeAre() {
     const numSections = sections.length
     if (numSections === 0) return
 
-    let currentSection = currentSectionRef.current
+    // Animation state
+    let targetProgress = scrollProgressRef.current // Where we want to animate to
+    let currentProgress = scrollProgressRef.current // Current animated position
     let animationId: number | null = null
-    let isAnimating = false
-    let animProgress = 0
-    let targetSection = currentSection
-    let lastWheelTime = 0
-    const ANIMATION_DURATION = 3500 // slower base duration
-    const WHEEL_COOLDOWN = 80 // ms between wheel events
+    let reachedEnd = false // Track if we've fully reached the last slide
+    let dwellTimeStart = 0 // When we reached end position
+    let dwellCompleted = false // If dwell time has passed
+    const SCROLL_SENSITIVITY = 0.001 // Scroll sensitivity (slower)
+    const LERP_FACTOR = 0.2 // Smooth factor (higher = smoother response)
+    const DWELL_TIME = 400 // ms to pause at 3rd slide before allowing exit
+    const maxProgress = numSections - 1
 
-    // Get the X direction for a section based on its index (fixed position)
-    // even(0,2) = left(-1), odd(1) = right(+1)
+    // Get the X direction for a section based on its index
+    // even(0,2,4) = left(-1), odd(1,3,5) = right(+1)
     const getSectionXDir = (idx: number) => idx % 2 === 0 ? -1 : 1
 
-    // Apply transform for a given progress between fromSection and toSection
-    // Both slides animate simultaneously - entering slide appears while exiting slide leaves
-    const applyTransform = (fromIdx: number, toIdx: number, progress: number) => {
-      // Extra smooth ease-in-out cubic bezier style
-      const eased = progress < 0.5 
-        ? 4 * progress * progress * progress 
-        : 1 - Math.pow(-2 * progress + 2, 3) / 2
-      
-      const goingDown = toIdx > fromIdx // Scroll direction
+    // Apply transforms based on current scroll progress
+    // Using smaller offsets (35%) so both slides are visible during transition
+    const applyTransforms = (progress: number) => {
+      const currentSlideIndex = Math.floor(progress)
+      const slideProgress = progress - currentSlideIndex // 0-1 within current transition
 
-      for (let i = 0; i < numSections; i++) {
-        const el = sections[i] as HTMLElement
-        
-        let x = 0
-        let y = 0
-        const xDir = getSectionXDir(i) // This section's fixed X direction
-
-        if (i === fromIdx) {
-          // Exiting section - goes BEHIND the entering slide
-          if (goingDown) {
-            // Going DOWN: exit to EXIT position (top: Y=-40%)
-            x = eased * xDir * 100
-            y = eased * -40
-          } else {
-            // Going UP: exit BACK to ENTRY position (bottom: Y=+40%)
-            x = eased * xDir * 100
-            y = eased * 40
-          }
-          el.style.zIndex = '5' // Exiting slide BELOW so entering slide is visible
-        } else if (i === toIdx) {
-          // Entering section - comes ON TOP
-          if (goingDown) {
-            // Going DOWN: come from ENTRY position (bottom: Y=+40%)
-            x = (1 - eased) * xDir * 100
-            y = (1 - eased) * 40
-          } else {
-            // Going UP: come from EXIT position (top: Y=-40%)
-            x = (1 - eased) * xDir * 100
-            y = (1 - eased) * -40
-          }
-          el.style.zIndex = '10' // Entering slide ON TOP - visible during transition
-        } else if (i < Math.min(fromIdx, toIdx)) {
-          // Already passed sections - parked at their exit positions (top)
-          x = xDir * 100
-          y = -40
-          el.style.zIndex = String(i)
-        } else {
-          // Future sections - parked at entry positions (bottom)
-          x = xDir * 100
-          y = 40
-          el.style.zIndex = String(i)
-        }
-
-        el.style.transform = `translate(${x}%, ${y}%)`
-      }
-    }
-
-    // Snap to a specific section instantly
-    const snapToSection = (idx: number) => {
       for (let i = 0; i < numSections; i++) {
         const el = sections[i] as HTMLElement
         const xDir = getSectionXDir(i)
 
-        if (i < idx) {
-          // Passed sections at exit position (top)
-          el.style.transform = `translate(${xDir * 100}%, -40%)`
-          el.style.zIndex = String(i)
-        } else if (i === idx) {
-          el.style.transform = 'translate(0, 0)'
-          el.style.zIndex = '10'
+        let x = 0
+        let y = 0
+        let zIndex = numSections - i
+
+        // Reduced offset for tighter overlap (35% instead of 100%)
+        const OFFSET = 35
+
+        if (i < currentSlideIndex) {
+          // Passed slides - parked at exit position (top-side)
+          x = xDir * 100
+          y = -OFFSET
+          zIndex = i
+        } else if (i === currentSlideIndex) {
+          // Current slide - exiting based on progress
+          // Moves from center (0,0) to exit position
+          x = slideProgress * xDir * 100
+          y = slideProgress * -OFFSET
+          zIndex = numSections + 2 // Current slide on top
+        } else if (i === currentSlideIndex + 1) {
+          // Next slide - entering based on progress
+          // Moves from entry position to center (0,0)
+          x = (1 - slideProgress) * xDir * 100
+          y = (1 - slideProgress) * OFFSET
+          zIndex = numSections + 1 // Next slide just below current
         } else {
-          // Future sections at entry position (bottom)
-          el.style.transform = `translate(${xDir * 100}%, 40%)`
-          el.style.zIndex = String(i)
+          // Future slides - parked at entry position (bottom-side)
+          x = xDir * 100
+          y = OFFSET
+          zIndex = numSections - i
         }
+
+        el.style.transform = `translate(${x}%, ${y}%)`
+        el.style.zIndex = String(zIndex)
       }
-      currentSection = idx
-      currentSectionRef.current = idx
-      setActiveSection(idx)
+
+      // Update active section indicator
+      const newActiveSection = Math.round(progress)
+      if (newActiveSection !== prevActiveRef.current && newActiveSection < numSections) {
+        prevActiveRef.current = newActiveSection
+        setActiveSection(newActiveSection)
+      }
     }
 
-    // Animate transition from current section to target
-    const animateToSection = (from: number, to: number, speed: number = 1) => {
-      if (from === to) return
+    // 60fps animation loop for smooth interpolation
+    const animate = () => {
+      // Lerp towards target
+      const diff = targetProgress - currentProgress
       
-      isAnimating = true
-      isAnimatingRef.current = true
-      animProgress = 0
-      targetSection = to
-      targetSectionRef.current = to
+      if (Math.abs(diff) > 0.0001) {
+        currentProgress += diff * LERP_FACTOR
+        scrollProgressRef.current = currentProgress
+        applyTransforms(currentProgress)
+      } else {
+        // Snap to target when close enough
+        currentProgress = targetProgress
+        scrollProgressRef.current = currentProgress
+        applyTransforms(currentProgress)
+      }
       
-      const duration = ANIMATION_DURATION / speed
-      const startTime = performance.now()
-
-      const animate = (now: number) => {
-        const elapsed = now - startTime
-        animProgress = Math.min(1, elapsed / duration)
-        animationProgressRef.current = animProgress
-
-        applyTransform(from, to, animProgress)
-
-        // Update active section indicator at midpoint
-        if (animProgress >= 0.5) {
-          setActiveSection(to)
+      // Check if we've reached the end (3rd slide fully visible)
+      if (currentProgress >= maxProgress - 0.01) {
+        if (!reachedEnd) {
+          reachedEnd = true
+          dwellTimeStart = performance.now()
+          dwellCompleted = false
         }
-
-        if (animProgress < 1) {
-          animationId = requestAnimationFrame(animate)
-        } else {
-          // Animation complete
-          isAnimating = false
-          isAnimatingRef.current = false
-          currentSection = to
-          currentSectionRef.current = to
-          snapToSection(to)
+        // Check if dwell time has passed
+        if (!dwellCompleted && performance.now() - dwellTimeStart >= DWELL_TIME) {
+          dwellCompleted = true
         }
       }
-
+      
       animationId = requestAnimationFrame(animate)
     }
 
+    // Start animation loop
+    animationId = requestAnimationFrame(animate)
+
+    // Initialize transforms
+    applyTransforms(currentProgress)
+
     // Handle wheel event
     const handleWheel = (e: WheelEvent) => {
-      // If slider is complete, don't intercept - allow normal page scroll
+      // If slider is complete, don't intercept
       if (sliderCompleteRef.current) return
-      
-      const now = performance.now()
-      
-      // At the last animated section
-      if (currentSection === numSections - 1 && !isAnimating) {
-        if (e.deltaY > 0) {
-          // Scrolling down from last slide - mark slider complete, allow normal scroll
-          setSliderComplete(true)
-          return // Don't prevent default, allow normal page scroll
-        } else if (e.deltaY < 0) {
-          // Scrolling up - animate back to previous slide
-          e.preventDefault()
-          // Speed based on wheel delta - slow scroll = slow animation, fast scroll = fast animation
-          const speed = Math.min(2, Math.max(0.2, Math.abs(e.deltaY) / 60))
-          animateToSection(currentSection, currentSection - 1, speed)
-          return
-        }
-      }
 
-      e.preventDefault()
-
-      // Debounce rapid wheel events
-      if (now - lastWheelTime < WHEEL_COOLDOWN) return
-      lastWheelTime = now
-
-      // If already animating, don't start new animation
-      if (isAnimating) return
-
-      const direction = e.deltaY > 0 ? 1 : -1
-      const nextSection = currentSection + direction
-
-      // Bounds check
-      if (nextSection < 0 || nextSection >= numSections) return
-
-      // Calculate speed based on wheel delta - slow scroll = slow animation, fast scroll = fast animation
-      // deltaY ~20-40 for slow scroll, ~100+ for fast scroll
-      const speed = Math.min(2, Math.max(0.2, Math.abs(e.deltaY) / 60))
-      
-      animateToSection(currentSection, nextSection, speed)
-    }
-
-    // Handle touch events for mobile
-    let touchStartY = 0
-    let touchStartTime = 0
-
-    const handleTouchStart = (e: TouchEvent) => {
-      touchStartY = e.touches[0].clientY
-      touchStartTime = performance.now()
-    }
-
-    const handleTouchEnd = (e: TouchEvent) => {
-      if (sliderCompleteRef.current) return // Allow normal scroll if slider complete
-      if (isAnimating) return
-      
-      const touchEndY = e.changedTouches[0].clientY
-      const deltaY = touchStartY - touchEndY
-      const deltaTime = performance.now() - touchStartTime
-
-      // Minimum swipe distance and speed
-      if (Math.abs(deltaY) < 30) return
-
-      // At last section and swiping down - allow normal scroll
-      if (currentSection >= numSections - 1 && deltaY > 0) {
+      // Only exit slider when:
+      // 1. 3rd slide animation is FULLY complete
+      // 2. Dwell time has passed
+      // 3. User continues scrolling down
+      if (reachedEnd && dwellCompleted && currentProgress >= maxProgress - 0.01 && e.deltaY > 0) {
+        // Snap to end and mark complete
+        targetProgress = maxProgress
+        currentProgress = maxProgress
+        scrollProgressRef.current = maxProgress
+        applyTransforms(maxProgress)
         setSliderComplete(true)
         return
       }
-
-      const direction = deltaY > 0 ? 1 : -1
-      const nextSection = currentSection + direction
-
-      if (nextSection < 0 || nextSection >= numSections) return
+      
+      // Reset if going backwards
+      if (e.deltaY < 0) {
+        reachedEnd = false
+        dwellCompleted = false
+        dwellTimeStart = 0
+      }
 
       e.preventDefault()
-      
-      // Speed based on swipe velocity - matches wheel behavior (slower)
-      const velocity = Math.abs(deltaY) / deltaTime
-      const speed = Math.min(2, Math.max(0.2, velocity * 2))
-      
-      animateToSection(currentSection, nextSection, speed)
+
+      // Update target progress based on scroll
+      const delta = e.deltaY * SCROLL_SENSITIVITY
+      targetProgress = Math.max(0, Math.min(maxProgress, targetProgress + delta))
     }
 
-    // Initialize to current section
-    snapToSection(currentSection)
+    // Handle touch events for mobile
+    let lastTouchY = 0
+
+    const handleTouchStart = (e: TouchEvent) => {
+      lastTouchY = e.touches[0].clientY
+    }
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (sliderCompleteRef.current) return
+
+      const touchY = e.touches[0].clientY
+      const deltaY = lastTouchY - touchY // Inverted for natural scroll feel
+      lastTouchY = touchY
+
+      // Only exit slider when 3rd slide is FULLY visible, dwell completed, and additional swipe
+      if (reachedEnd && dwellCompleted && currentProgress >= maxProgress - 0.01 && deltaY > 0) {
+        targetProgress = maxProgress
+        currentProgress = maxProgress
+        scrollProgressRef.current = maxProgress
+        applyTransforms(maxProgress)
+        setSliderComplete(true)
+        return
+      }
+      
+      // Reset if going backwards
+      if (deltaY < 0) {
+        reachedEnd = false
+        dwellCompleted = false
+        dwellTimeStart = 0
+      }
+
+      e.preventDefault()
+
+      // Update target progress based on touch
+      const delta = deltaY * 0.003 // Touch sensitivity (slower)
+      targetProgress = Math.max(0, Math.min(maxProgress, targetProgress + delta))
+    }
 
     // Add event listeners
     container.addEventListener('wheel', handleWheel, { passive: false })
     container.addEventListener('touchstart', handleTouchStart, { passive: true })
-    container.addEventListener('touchend', handleTouchEnd, { passive: false })
+    container.addEventListener('touchmove', handleTouchMove, { passive: false })
 
     return () => {
+      if (animationId) cancelAnimationFrame(animationId)
       container.removeEventListener('wheel', handleWheel)
       container.removeEventListener('touchstart', handleTouchStart)
-      container.removeEventListener('touchend', handleTouchEnd)
-      if (animationId) cancelAnimationFrame(animationId)
+      container.removeEventListener('touchmove', handleTouchMove)
     }
   }, [])
 
@@ -335,23 +289,27 @@ export default function WhoWeAre() {
     const sections = container.querySelectorAll('.scroll-snap-section')
     if (sections.length === 0) return
     
-    // Snap directly to the target section
-    for (let i = 0; i < sections.length; i++) {
+    const numSections = sections.length
+    
+    // Snap directly to the target section (35% offset to match animation)
+    const OFFSET = 35
+    for (let i = 0; i < numSections; i++) {
       const el = sections[i] as HTMLElement
-      el.style.zIndex = String(i + 1)
+      const xDir = i % 2 === 0 ? -1 : 1
 
       if (i < targetIndex) {
-        const dir = i % 2 === 0 ? -1 : 1
-        el.style.transform = `translate(${dir * 100}%, -40%)`
+        el.style.transform = `translate(${xDir * 100}%, -${OFFSET}%)`
+        el.style.zIndex = String(i)
       } else if (i === targetIndex) {
         el.style.transform = 'translate(0, 0)'
+        el.style.zIndex = String(numSections + 2)
       } else {
-        const dir = i % 2 === 1 ? 1 : -1
-        el.style.transform = `translate(${dir * 100}%, 40%)`
+        el.style.transform = `translate(${xDir * 100}%, ${OFFSET}%)`
+        el.style.zIndex = String(numSections - i)
       }
     }
     
-    currentSectionRef.current = targetIndex
+    scrollProgressRef.current = targetIndex
     setActiveSection(targetIndex)
   }, [sliderComplete])
 
@@ -471,19 +429,44 @@ export default function WhoWeAre() {
 
   return (
     <>
-      {/* Side Navigation Dots */}
-      <nav className="scroll-nav-dots hidden lg:flex">
-        {sectionNames.map((name, index) => (
-          <div key={name} className="flex flex-col items-center">
-            <button
-              onClick={() => navigateToSlide(index)}
-              className={`scroll-nav-dot ${activeSection === index ? 'active' : ''}`}
-              aria-label={`Go to ${name} section`}
-            />
-            {index < sectionNames.length - 1 && <div className="scroll-nav-line" />}
-          </div>
-        ))}
-      </nav>
+      {/* Side Navigation Dots - Desktop: vertical right side, Mobile: horizontal bottom */}
+      {!sliderComplete && (
+        <>
+          {/* Desktop - vertical on right */}
+          <nav className="scroll-nav-dots hidden md:flex">
+            {sectionNames.map((name, index) => (
+              <div key={name} className="flex flex-col items-center">
+                <button
+                  onClick={() => navigateToSlide(index)}
+                  className={`scroll-nav-dot ${activeSection === index ? 'active' : ''}`}
+                  aria-label={`Go to ${name} section`}
+                />
+                {index < sectionNames.length - 1 && <div className="scroll-nav-line" />}
+              </div>
+            ))}
+          </nav>
+          
+          {/* Mobile - horizontal at bottom */}
+          <nav className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 bg-[#191817]/80 backdrop-blur-sm px-4 py-2 rounded-full">
+            {sectionNames.map((name, index) => (
+              <div key={name} className="flex items-center">
+                <button
+                  onClick={() => navigateToSlide(index)}
+                  className={`w-2.5 h-2.5 rounded-full border transition-all duration-300 ${
+                    activeSection === index 
+                      ? 'bg-[#b69c6b] border-[#b69c6b] scale-125' 
+                      : 'bg-transparent border-[#b69c6b]/50 hover:border-[#b69c6b]'
+                  }`}
+                  aria-label={`Go to ${name} section`}
+                />
+                {index < sectionNames.length - 1 && (
+                  <div className="w-4 h-[1px] bg-[#b69c6b]/30 ml-3" />
+                )}
+              </div>
+            ))}
+          </nav>
+        </>
+      )}
 
       <main data-testid="page-who-we-are" className="bg-[#f1ebe1]">
       {/* ANIMATED SLIDER CONTAINER - Fixed, stays visible until scrolled over */}
