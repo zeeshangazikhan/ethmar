@@ -47,7 +47,7 @@ export default function WhoWeAre() {
 
   // SCROLL-POSITION BASED DIAGONAL ZIGZAG SLIDER
   // Smooth 60fps animation with lerp for butter-smooth movement
-  // Pause at 3rd slide before allowing exit
+  // Pause at each slide center before allowing next
   useEffect(() => {
     const container = document.querySelector('.scroll-snap-container') as HTMLElement
     if (!container) return
@@ -60,12 +60,15 @@ export default function WhoWeAre() {
     let targetProgress = scrollProgressRef.current // Where we want to animate to
     let currentProgress = scrollProgressRef.current // Current animated position
     let animationId: number | null = null
-    let reachedEnd = false // Track if we've fully reached the last slide
-    let dwellTimeStart = 0 // When we reached end position
-    let dwellCompleted = false // If dwell time has passed
+    
+    // Dwell state - pause at each slide center
+    let currentDwellSlide = -1 // Which slide we're dwelling on (-1 = none)
+    let dwellTimeStart = 0 // When we started dwelling
+    let dwellCompleted = false // If dwell time has passed for current slide
+    
     const SCROLL_SENSITIVITY = 0.001 // Scroll sensitivity (slower)
     const LERP_FACTOR = 0.2 // Smooth factor (higher = smoother response)
-    const DWELL_TIME = 400 // ms to pause at 3rd slide before allowing exit
+    const DWELL_TIME = 400 // ms to pause at each slide center
     const maxProgress = numSections - 1
 
     // Get the X direction for a section based on its index
@@ -141,16 +144,23 @@ export default function WhoWeAre() {
         applyTransforms(currentProgress)
       }
       
-      // Check if we've reached the end (3rd slide fully visible)
-      if (currentProgress >= maxProgress - 0.01) {
-        if (!reachedEnd) {
-          reachedEnd = true
-          dwellTimeStart = performance.now()
-          dwellCompleted = false
-        }
-        // Check if dwell time has passed
-        if (!dwellCompleted && performance.now() - dwellTimeStart >= DWELL_TIME) {
-          dwellCompleted = true
+      // Check if we've reached a slide center (progress is near an integer >= 1)
+      // Slide 1 center = progress 1, Slide 2 center = progress 2, etc.
+      for (let slideIdx = 1; slideIdx <= maxProgress; slideIdx++) {
+        if (currentProgress >= slideIdx - 0.01 && currentProgress <= slideIdx + 0.01) {
+          if (currentDwellSlide !== slideIdx) {
+            // Just arrived at this slide center - start dwell
+            currentDwellSlide = slideIdx
+            dwellTimeStart = performance.now()
+            dwellCompleted = false
+            // Snap target to exact center
+            targetProgress = slideIdx
+          }
+          // Check if dwell time has passed
+          if (!dwellCompleted && performance.now() - dwellTimeStart >= DWELL_TIME) {
+            dwellCompleted = true
+          }
+          break
         }
       }
       
@@ -168,12 +178,9 @@ export default function WhoWeAre() {
       // If slider is complete, don't intercept
       if (sliderCompleteRef.current) return
 
-      // Only exit slider when:
-      // 1. 3rd slide animation is FULLY complete
-      // 2. Dwell time has passed
-      // 3. User continues scrolling down
-      if (reachedEnd && dwellCompleted && currentProgress >= maxProgress - 0.01 && e.deltaY > 0) {
-        // Snap to end and mark complete
+      // Check if we're at the last slide and trying to exit
+      if (currentDwellSlide === maxProgress && dwellCompleted && e.deltaY > 0) {
+        // Allow exit to normal content
         targetProgress = maxProgress
         currentProgress = maxProgress
         scrollProgressRef.current = maxProgress
@@ -182,18 +189,36 @@ export default function WhoWeAre() {
         return
       }
       
-      // Reset if going backwards
-      if (e.deltaY < 0) {
-        reachedEnd = false
-        dwellCompleted = false
-        dwellTimeStart = 0
+      // Check if we're dwelling at a slide center and trying to move forward
+      if (currentDwellSlide >= 1 && !dwellCompleted && e.deltaY > 0) {
+        // Block forward scrolling until dwell completes
+        e.preventDefault()
+        return
+      }
+      
+      // Reset dwell state if going backwards past the dwell slide
+      if (e.deltaY < 0 && currentDwellSlide >= 1) {
+        const currentSlideCenter = currentDwellSlide
+        // If we're moving backwards, allow it and reset dwell
+        if (targetProgress <= currentSlideCenter) {
+          currentDwellSlide = -1
+          dwellCompleted = false
+          dwellTimeStart = 0
+        }
       }
 
       e.preventDefault()
 
       // Update target progress based on scroll
       const delta = e.deltaY * SCROLL_SENSITIVITY
-      targetProgress = Math.max(0, Math.min(maxProgress, targetProgress + delta))
+      let newTarget = targetProgress + delta
+      
+      // If dwelling and not completed, cap at the dwell slide
+      if (currentDwellSlide >= 1 && !dwellCompleted && delta > 0) {
+        newTarget = Math.min(newTarget, currentDwellSlide)
+      }
+      
+      targetProgress = Math.max(0, Math.min(maxProgress, newTarget))
     }
 
     // Handle touch events for mobile
@@ -210,8 +235,8 @@ export default function WhoWeAre() {
       const deltaY = lastTouchY - touchY // Inverted for natural scroll feel
       lastTouchY = touchY
 
-      // Only exit slider when 3rd slide is FULLY visible, dwell completed, and additional swipe
-      if (reachedEnd && dwellCompleted && currentProgress >= maxProgress - 0.01 && deltaY > 0) {
+      // Check if we're at the last slide and trying to exit
+      if (currentDwellSlide === maxProgress && dwellCompleted && deltaY > 0) {
         targetProgress = maxProgress
         currentProgress = maxProgress
         scrollProgressRef.current = maxProgress
@@ -220,18 +245,34 @@ export default function WhoWeAre() {
         return
       }
       
-      // Reset if going backwards
-      if (deltaY < 0) {
-        reachedEnd = false
-        dwellCompleted = false
-        dwellTimeStart = 0
+      // Check if we're dwelling at a slide center and trying to move forward
+      if (currentDwellSlide >= 1 && !dwellCompleted && deltaY > 0) {
+        e.preventDefault()
+        return
+      }
+      
+      // Reset dwell state if going backwards
+      if (deltaY < 0 && currentDwellSlide >= 1) {
+        const currentSlideCenter = currentDwellSlide
+        if (targetProgress <= currentSlideCenter) {
+          currentDwellSlide = -1
+          dwellCompleted = false
+          dwellTimeStart = 0
+        }
       }
 
       e.preventDefault()
 
       // Update target progress based on touch
       const delta = deltaY * 0.003 // Touch sensitivity (slower)
-      targetProgress = Math.max(0, Math.min(maxProgress, targetProgress + delta))
+      let newTarget = targetProgress + delta
+      
+      // If dwelling and not completed, cap at the dwell slide
+      if (currentDwellSlide >= 1 && !dwellCompleted && delta > 0) {
+        newTarget = Math.min(newTarget, currentDwellSlide)
+      }
+      
+      targetProgress = Math.max(0, Math.min(maxProgress, newTarget))
     }
 
     // Add event listeners
