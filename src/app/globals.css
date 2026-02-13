@@ -47,6 +47,13 @@ html[dir="rtl"] .article-content p:first-of-type::first-letter {
 @layer base {
   html {
     scroll-behavior: smooth;
+    /* Enhanced smooth scrolling */
+    scroll-padding-top: 2rem;
+  }
+  
+  /* Smooth scroll for all scrollable elements */
+  html, body {
+    scroll-behavior: smooth;
   }
   
   * {
@@ -118,6 +125,26 @@ html[dir="rtl"] .article-content p:first-of-type::first-letter {
     @apply bg-background text-foreground;
     font-family: var(--font-optima);
     background-color: #fffcf8;
+    /* Smoother text rendering */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* GPU-accelerated smooth scrolling and transitions */
+  * {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  
+  /* Smooth transitions for interactive elements */
+  a, button, input, textarea, select {
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  /* Smooth image loading */
+  img {
+    transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   }
 }
 
@@ -565,81 +592,188 @@ html[dir="rtl"] .article-content p:first-of-type::first-letter {
     }
   }
 
-  /* Scroll animations - zig-zag */
+  /* ============================================
+     SMOOTH SCROLL ANIMATIONS - Enhanced System
+     ============================================ */
+  
+  /* Base transition for all scroll-animated elements */
   [data-scroll-animate] {
     opacity: 0;
-    transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: 
+      opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
   }
 
-  /* Odd sections slide from left */
-  [data-scroll-animate]:nth-child(odd) {
-    transform: translateX(-80px);
+  /* Default fade up animation */
+  [data-scroll-animate="fade-up"] {
+    transform: translateY(80px);
   }
 
-  /* Even sections slide from right */
-  [data-scroll-animate]:nth-child(even) {
+  /* Fade down animation */
+  [data-scroll-animate="fade-down"] {
+    transform: translateY(-80px);
+  }
+
+  /* Fade left animation */
+  [data-scroll-animate="fade-left"] {
     transform: translateX(80px);
   }
 
-  .animate-fade-in-up {
-    animation: none !important;
-    opacity: 1 !important;
-    transform: translateX(0) !important;
+  /* Fade right animation */
+  [data-scroll-animate="fade-right"] {
+    transform: translateX(-80px);
   }
 
-  /* Full-page scroll snap container (ADIA-style) */
+  /* Scale up animation */
+  [data-scroll-animate="scale-up"] {
+    transform: scale(0.85);
+  }
+
+  /* Scale down animation */
+  [data-scroll-animate="scale-down"] {
+    transform: scale(1.15);
+  }
+
+  /* Fade in only (no movement) */
+  [data-scroll-animate="fade"] {
+    transform: none;
+  }
+
+  /* Zigzag pattern - odd sections from left */
+  [data-scroll-animate="zigzag"]:nth-child(odd),
+  [data-scroll-animate]:not([data-scroll-animate="fade-up"]):not([data-scroll-animate="fade-down"]):not([data-scroll-animate="fade-left"]):not([data-scroll-animate="fade-right"]):not([data-scroll-animate="scale-up"]):not([data-scroll-animate="scale-down"]):not([data-scroll-animate="fade"]):nth-child(odd) {
+    transform: translateX(-60px) translateY(40px);
+  }
+
+  /* Zigzag pattern - even sections from right */
+  [data-scroll-animate="zigzag"]:nth-child(even),
+  [data-scroll-animate]:not([data-scroll-animate="fade-up"]):not([data-scroll-animate="fade-down"]):not([data-scroll-animate="fade-left"]):not([data-scroll-animate="fade-right"]):not([data-scroll-animate="scale-up"]):not([data-scroll-animate="scale-down"]):not([data-scroll-animate="fade"]):nth-child(even) {
+    transform: translateX(60px) translateY(40px);
+  }
+
+  /* Stagger delay modifiers */
+  [data-scroll-delay="100"] { transition-delay: 100ms; }
+  [data-scroll-delay="200"] { transition-delay: 200ms; }
+  [data-scroll-delay="300"] { transition-delay: 300ms; }
+  [data-scroll-delay="400"] { transition-delay: 400ms; }
+  [data-scroll-delay="500"] { transition-delay: 500ms; }
+  [data-scroll-delay="600"] { transition-delay: 600ms; }
+  [data-scroll-delay="700"] { transition-delay: 700ms; }
+  [data-scroll-delay="800"] { transition-delay: 800ms; }
+
+  /* Animated state - applied when in viewport */
+  .animate-fade-in-up {
+    opacity: 1 !important;
+    transform: translateX(0) translateY(0) scale(1) !important;
+  }
+
+  /* Child elements for staggered animations */
+  [data-scroll-child] {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: 
+      opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  [data-scroll-child].animate-fade-in-up {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Smooth parallax effect for images */
+  [data-scroll-parallax] {
+    transition: transform 0.1s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
+  }
+
+  /* Reveal animation for text and headings */
+  [data-scroll-reveal] {
+    opacity: 0;
+    clip-path: inset(0 0 100% 0);
+    transition: 
+      opacity 1s cubic-bezier(0.22, 1, 0.36, 1),
+      clip-path 1s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  [data-scroll-reveal].animate-fade-in-up {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+
+  /* Smooth image reveal */
+  [data-scroll-image] {
+    opacity: 0;
+    transform: scale(1.08);
+    transition: 
+      opacity 1.4s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  [data-scroll-image].animate-fade-in-up {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Blur reveal animation */
+  [data-scroll-blur] {
+    opacity: 0;
+    filter: blur(10px);
+    transform: translateY(20px);
+    transition: 
+      opacity 1s cubic-bezier(0.22, 1, 0.36, 1),
+      filter 1s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  [data-scroll-blur].animate-fade-in-up {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+
+  /* Full-page scroll container (ADIA-style smooth scroll) */
   .scroll-snap-container {
     height: 100vh;
-    overflow-y: auto;
-    overflow-x: hidden;
-    scroll-snap-type: y mandatory;
+    overflow: hidden;
     -ms-overflow-style: none;  /* Hide scrollbar IE/Edge */
     scrollbar-width: none;  /* Hide scrollbar Firefox */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 40;
+    background: #f1ebe1;
   }
 
   .scroll-snap-container::-webkit-scrollbar {
     display: none;  /* Hide scrollbar Chrome/Safari */
   }
 
-  /* Full-page scroll snap section */
+  /* Full-page section - absolute stacking for ADIA-style animation */
   .scroll-snap-section {
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
-    min-height: 100vh;
-    position: relative;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
     overflow: hidden;
-    will-change: transform, opacity;
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    box-sizing: border-box;
   }
 
   /* Last section allows overflow for footer */
   .scroll-snap-section.last-section {
-    scroll-snap-align: start;
-    scroll-snap-stop: normal;
     min-height: auto;
+    position: relative;
   }
 
-  /* When near end, disable mandatory snapping */
-  .scroll-snap-container.at-end {
-    scroll-snap-type: y proximity;
-  }
-
-  /* Diagonal zig-zag section transitions - controlled by JS */
+  /* Initial state (overridden by JS) */
   .scroll-snap-section {
-    opacity: 1;
     transform: translate(0, 0);
-    transition: none; /* JS controls everything */
-  }
-
-  /* Odd sections: slide from top-right to bottom-left */
-  .scroll-snap-section:nth-child(odd) {
-    --slide-x: 100%;
-    --slide-y: -100%;
-  }
-
-  /* Even sections: slide from top-left to bottom-right */
-  .scroll-snap-section:nth-child(even) {
-    --slide-x: -100%;
-    --slide-y: -100%;
   }
 
   /* Side navigation dots */

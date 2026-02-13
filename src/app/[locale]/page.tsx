@@ -8,6 +8,7 @@ import { NavLangToggle, SidebarLangToggle } from '@/components/LanguageToggle'
 import { useLanguage } from '@/components/LanguageProvider'
 import EmblaCarousel from 'embla-carousel'
 import { fetchHomepageCms, type HomepageCmsData } from '@/lib/homepage-cms'
+import { useSmoothScroll } from '@/hooks/use-smooth-scroll'
 
 export default function Home() {
   const { isArabic, t, locale } = useLanguage()
@@ -54,27 +55,8 @@ export default function Home() {
     }
   }, [locale])
 
-  // Scroll animation setup
-  useEffect(() => {
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -100px 0px'
-    }
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('animate-fade-in-up')
-          entry.target.classList.remove('opacity-0')
-        }
-      })
-    }, observerOptions)
-
-    const sections = document.querySelectorAll('[data-scroll-animate]')
-    sections.forEach(section => observer.observe(section))
-
-    return () => observer.disconnect()
-  }, [])
+  // Enhanced smooth scroll animation
+  useSmoothScroll({ threshold: 0.08, rootMargin: '0px 0px -80px 0px' })
 
   // Navigation structure with translations
   const navigation = [

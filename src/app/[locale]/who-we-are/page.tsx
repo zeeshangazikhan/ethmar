@@ -12,166 +12,351 @@ export default function WhoWeAre() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null)
   const [activeSection, setActiveSection] = useState(0)
-  const lastScrollTop = useRef(0)
-  const scrollVelocity = useRef(0)
-  const rafId = useRef<number | null>(null)
-  const isLastSection = useRef(false)
+  const [sliderComplete, setSliderComplete] = useState(false)
+  const prevActiveRef = useRef(0)
+  
+  // ADIA-STYLE SMOOTH SCROLL SNAP
+  // A small scroll triggers a full smooth transition to the next slide.
+  // Animation speed is proportional to scroll speed.
+  const currentSectionRef = useRef(0)
+  const isAnimatingRef = useRef(false)
+  const animationProgressRef = useRef(0)
+  const targetSectionRef = useRef(0)
+  const normalContentRef = useRef<HTMLDivElement>(null)
+  const sliderCompleteRef = useRef(false)
+  
+  // Keep ref in sync with state
+  useEffect(() => {
+    sliderCompleteRef.current = sliderComplete
+  }, [sliderComplete])
   
   const containerRef = useCallback((node: HTMLElement | null) => {
     if (node) {
-      // Setup initial state
       const sections = node.querySelectorAll('.scroll-snap-section')
       sections.forEach((section, index) => {
         const el = section as HTMLElement
-        // Start with sections visible in their final position
-        el.style.transform = 'translate(0, 0)'
-        el.style.opacity = '1'
+        el.style.zIndex = String(index + 1)
+        if (index === 0) {
+          el.style.transform = 'translate(0, 0)'
+        } else {
+          // Park off-screen: odd → bottom-right, even → bottom-left
+          const dirX = index % 2 === 1 ? 100 : -100
+          el.style.transform = `translate(${dirX}%, 40%)`
+        }
       })
     }
   }, [])
 
-  // Diagonal zig-zag scroll animation with speed-based transitions
+  // CAMERA-PAN DIAGONAL ZIGZAG - ADIA STYLE
+  // Scroll wheel triggers smooth animated transitions between sections.
+  // Small scroll = full slide transition with smooth easing.
   useEffect(() => {
     const container = document.querySelector('.scroll-snap-container') as HTMLElement
     if (!container) return
 
-    let ticking = false
-    let lastTime = performance.now()
+    const sections = container.querySelectorAll('.scroll-snap-section')
+    const numSections = sections.length
+    if (numSections === 0) return
 
-    const updateAnimation = () => {
-      const sections = container.querySelectorAll('.scroll-snap-section')
-      const scrollTop = container.scrollTop
-      const viewportHeight = window.innerHeight
-      const scrollDelta = scrollTop - lastScrollTop.current
-      const currentTime = performance.now()
-      const timeDelta = Math.max(currentTime - lastTime, 16)
+    let currentSection = currentSectionRef.current
+    let animationId: number | null = null
+    let isAnimating = false
+    let animProgress = 0
+    let targetSection = currentSection
+    let lastWheelTime = 0
+    const ANIMATION_DURATION = 3500 // slower base duration
+    const WHEEL_COOLDOWN = 80 // ms between wheel events
+
+    // Get the X direction for a section based on its index (fixed position)
+    // even(0,2) = left(-1), odd(1) = right(+1)
+    const getSectionXDir = (idx: number) => idx % 2 === 0 ? -1 : 1
+
+    // Apply transform for a given progress between fromSection and toSection
+    // Both slides animate simultaneously - entering slide appears while exiting slide leaves
+    const applyTransform = (fromIdx: number, toIdx: number, progress: number) => {
+      // Extra smooth ease-in-out cubic bezier style
+      const eased = progress < 0.5 
+        ? 4 * progress * progress * progress 
+        : 1 - Math.pow(-2 * progress + 2, 3) / 2
       
-      // Calculate velocity (pixels per ms) and clamp it
-      const rawVelocity = Math.abs(scrollDelta) / timeDelta
-      scrollVelocity.current = Math.min(rawVelocity * 100, 1) // Normalize to 0-1
-      
-      // Determine scroll direction
-      const scrollingDown = scrollDelta > 0
-      
-      // Check if we're at or near the last section
-      const totalScrollable = container.scrollHeight - viewportHeight
-      const lastSectionEl = sections[sections.length - 1] as HTMLElement
-      const lastSectionTop = lastSectionEl?.offsetTop || 0
-      const isNearLastSection = scrollTop >= lastSectionTop - viewportHeight * 0.5
-      
-      // Toggle at-end class for footer accessibility
-      if (isNearLastSection) {
-        container.classList.add('at-end')
-      } else {
-        container.classList.remove('at-end')
+      const goingDown = toIdx > fromIdx // Scroll direction
+
+      for (let i = 0; i < numSections; i++) {
+        const el = sections[i] as HTMLElement
+        
+        let x = 0
+        let y = 0
+        const xDir = getSectionXDir(i) // This section's fixed X direction
+
+        if (i === fromIdx) {
+          // Exiting section - goes BEHIND the entering slide
+          if (goingDown) {
+            // Going DOWN: exit to EXIT position (top: Y=-40%)
+            x = eased * xDir * 100
+            y = eased * -40
+          } else {
+            // Going UP: exit BACK to ENTRY position (bottom: Y=+40%)
+            x = eased * xDir * 100
+            y = eased * 40
+          }
+          el.style.zIndex = '5' // Exiting slide BELOW so entering slide is visible
+        } else if (i === toIdx) {
+          // Entering section - comes ON TOP
+          if (goingDown) {
+            // Going DOWN: come from ENTRY position (bottom: Y=+40%)
+            x = (1 - eased) * xDir * 100
+            y = (1 - eased) * 40
+          } else {
+            // Going UP: come from EXIT position (top: Y=-40%)
+            x = (1 - eased) * xDir * 100
+            y = (1 - eased) * -40
+          }
+          el.style.zIndex = '10' // Entering slide ON TOP - visible during transition
+        } else if (i < Math.min(fromIdx, toIdx)) {
+          // Already passed sections - parked at their exit positions (top)
+          x = xDir * 100
+          y = -40
+          el.style.zIndex = String(i)
+        } else {
+          // Future sections - parked at entry positions (bottom)
+          x = xDir * 100
+          y = 40
+          el.style.zIndex = String(i)
+        }
+
+        el.style.transform = `translate(${x}%, ${y}%)`
       }
-      
-      isLastSection.current = isNearLastSection
+    }
 
-      sections.forEach((section, index) => {
-        const el = section as HTMLElement
-        const sectionTop = el.offsetTop
-        const sectionHeight = el.offsetHeight
-        
-        // Calculate how far through this section we are (0 to 1)
-        const distanceFromViewport = sectionTop - scrollTop
-        const progress = 1 - Math.max(0, Math.min(1, distanceFromViewport / viewportHeight))
-        
-        // Determine slide direction based on odd/even
-        // odd (0,2,4...): enter from top-right, exit to bottom-left
-        // even (1,3,5...): enter from top-left, exit to bottom-right
-        const isOdd = index % 2 === 0
-        
-        let translateX = 0
-        let translateY = 0
-        let opacity = 1
-        
-        // Skip animation for last section with footer
-        if (el.classList.contains('last-section') && isNearLastSection) {
+    // Snap to a specific section instantly
+    const snapToSection = (idx: number) => {
+      for (let i = 0; i < numSections; i++) {
+        const el = sections[i] as HTMLElement
+        const xDir = getSectionXDir(i)
+
+        if (i < idx) {
+          // Passed sections at exit position (top)
+          el.style.transform = `translate(${xDir * 100}%, -40%)`
+          el.style.zIndex = String(i)
+        } else if (i === idx) {
           el.style.transform = 'translate(0, 0)'
-          el.style.opacity = '1'
-          el.style.transition = 'transform 0.4s ease-out, opacity 0.3s ease-out'
+          el.style.zIndex = '10'
+        } else {
+          // Future sections at entry position (bottom)
+          el.style.transform = `translate(${xDir * 100}%, 40%)`
+          el.style.zIndex = String(i)
+        }
+      }
+      currentSection = idx
+      currentSectionRef.current = idx
+      setActiveSection(idx)
+    }
+
+    // Animate transition from current section to target
+    const animateToSection = (from: number, to: number, speed: number = 1) => {
+      if (from === to) return
+      
+      isAnimating = true
+      isAnimatingRef.current = true
+      animProgress = 0
+      targetSection = to
+      targetSectionRef.current = to
+      
+      const duration = ANIMATION_DURATION / speed
+      const startTime = performance.now()
+
+      const animate = (now: number) => {
+        const elapsed = now - startTime
+        animProgress = Math.min(1, elapsed / duration)
+        animationProgressRef.current = animProgress
+
+        applyTransform(from, to, animProgress)
+
+        // Update active section indicator at midpoint
+        if (animProgress >= 0.5) {
+          setActiveSection(to)
+        }
+
+        if (animProgress < 1) {
+          animationId = requestAnimationFrame(animate)
+        } else {
+          // Animation complete
+          isAnimating = false
+          isAnimatingRef.current = false
+          currentSection = to
+          currentSectionRef.current = to
+          snapToSection(to)
+        }
+      }
+
+      animationId = requestAnimationFrame(animate)
+    }
+
+    // Handle wheel event
+    const handleWheel = (e: WheelEvent) => {
+      // If slider is complete, don't intercept - allow normal page scroll
+      if (sliderCompleteRef.current) return
+      
+      const now = performance.now()
+      
+      // At the last animated section
+      if (currentSection === numSections - 1 && !isAnimating) {
+        if (e.deltaY > 0) {
+          // Scrolling down from last slide - mark slider complete, allow normal scroll
+          setSliderComplete(true)
+          return // Don't prevent default, allow normal page scroll
+        } else if (e.deltaY < 0) {
+          // Scrolling up - animate back to previous slide
+          e.preventDefault()
+          // Speed based on wheel delta - slow scroll = slow animation, fast scroll = fast animation
+          const speed = Math.min(2, Math.max(0.2, Math.abs(e.deltaY) / 60))
+          animateToSection(currentSection, currentSection - 1, speed)
           return
         }
-        
-        if (distanceFromViewport > 0) {
-          // Section is BELOW viewport - animate ENTERING
-          // Slides diagonally over the current section
-          const entryProgress = 1 - progress // 1 = fully off-screen, 0 = fully in view
-          
-          if (scrollingDown) {
-            // Scrolling down: next section slides in from diagonal
-            translateX = isOdd ? entryProgress * 100 : -entryProgress * 100  // from right or left
-            translateY = -entryProgress * 100  // from top
-          } else {
-            // Scrolling up: section was visible, now moving out below
-            translateX = isOdd ? entryProgress * 60 : -entryProgress * 60
-            translateY = entryProgress * 40
-          }
-          opacity = 0.3 + progress * 0.7
-          
-        } else if (distanceFromViewport < -sectionHeight * 0.1) {
-          // Section is ABOVE viewport - animate EXITING
-          const exitAmount = Math.abs(distanceFromViewport) / viewportHeight
-          const exitProgress = Math.min(1, exitAmount)
-          
-          if (scrollingDown) {
-            // Scrolling down: current section slides out diagonally underneath
-            translateX = isOdd ? -exitProgress * 40 : exitProgress * 40  // opposite direction
-            translateY = exitProgress * 60
-          } else {
-            // Scrolling up: section coming back into view from above
-            translateX = isOdd ? -exitProgress * 100 : exitProgress * 100
-            translateY = exitProgress * 100
-          }
-          opacity = Math.max(0.2, 1 - exitProgress * 0.8)
-          
-        } else {
-          // Section is IN viewport - fully visible
-          translateX = 0
-          translateY = 0
-          opacity = 1
-        }
-        
-        // Speed-based transition timing
-        const speed = 0.15 + scrollVelocity.current * 0.85
-        const duration = Math.max(0.2, 0.8 / speed)
-        
-        el.style.transition = `transform ${duration}s cubic-bezier(0.16, 1, 0.3, 1), opacity ${duration * 0.7}s ease-out`
-        el.style.transform = `translate(${translateX}px, ${translateY}px)`
-        el.style.opacity = String(opacity)
-        
-        // Update active section for nav dots
-        if (Math.abs(distanceFromViewport) < viewportHeight * 0.3) {
-          setActiveSection(index)
-        }
-      })
-      
-      lastScrollTop.current = scrollTop
-      lastTime = currentTime
-      ticking = false
-    }
-
-    const handleScroll = () => {
-      if (!ticking) {
-        rafId.current = requestAnimationFrame(updateAnimation)
-        ticking = true
       }
+
+      e.preventDefault()
+
+      // Debounce rapid wheel events
+      if (now - lastWheelTime < WHEEL_COOLDOWN) return
+      lastWheelTime = now
+
+      // If already animating, don't start new animation
+      if (isAnimating) return
+
+      const direction = e.deltaY > 0 ? 1 : -1
+      const nextSection = currentSection + direction
+
+      // Bounds check
+      if (nextSection < 0 || nextSection >= numSections) return
+
+      // Calculate speed based on wheel delta - slow scroll = slow animation, fast scroll = fast animation
+      // deltaY ~20-40 for slow scroll, ~100+ for fast scroll
+      const speed = Math.min(2, Math.max(0.2, Math.abs(e.deltaY) / 60))
+      
+      animateToSection(currentSection, nextSection, speed)
     }
 
-    container.addEventListener('scroll', handleScroll, { passive: true })
-    
-    // Initial animation
-    updateAnimation()
+    // Handle touch events for mobile
+    let touchStartY = 0
+    let touchStartTime = 0
+
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartY = e.touches[0].clientY
+      touchStartTime = performance.now()
+    }
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (sliderCompleteRef.current) return // Allow normal scroll if slider complete
+      if (isAnimating) return
+      
+      const touchEndY = e.changedTouches[0].clientY
+      const deltaY = touchStartY - touchEndY
+      const deltaTime = performance.now() - touchStartTime
+
+      // Minimum swipe distance and speed
+      if (Math.abs(deltaY) < 30) return
+
+      // At last section and swiping down - allow normal scroll
+      if (currentSection >= numSections - 1 && deltaY > 0) {
+        setSliderComplete(true)
+        return
+      }
+
+      const direction = deltaY > 0 ? 1 : -1
+      const nextSection = currentSection + direction
+
+      if (nextSection < 0 || nextSection >= numSections) return
+
+      e.preventDefault()
+      
+      // Speed based on swipe velocity - matches wheel behavior (slower)
+      const velocity = Math.abs(deltaY) / deltaTime
+      const speed = Math.min(2, Math.max(0.2, velocity * 2))
+      
+      animateToSection(currentSection, nextSection, speed)
+    }
+
+    // Initialize to current section
+    snapToSection(currentSection)
+
+    // Add event listeners
+    container.addEventListener('wheel', handleWheel, { passive: false })
+    container.addEventListener('touchstart', handleTouchStart, { passive: true })
+    container.addEventListener('touchend', handleTouchEnd, { passive: false })
 
     return () => {
-      container.removeEventListener('scroll', handleScroll)
-      if (rafId.current) cancelAnimationFrame(rafId.current)
+      container.removeEventListener('wheel', handleWheel)
+      container.removeEventListener('touchstart', handleTouchStart)
+      container.removeEventListener('touchend', handleTouchEnd)
+      if (animationId) cancelAnimationFrame(animationId)
     }
   }, [])
 
-  // Section names for navigation dots
-  const sectionNames = ['Hero', 'About', 'Purpose', 'Promise', 'Believe', 'Values', 'Statement']
+  // Handle re-entry to slider when scrolling up at the top of normal content
+  useEffect(() => {
+    if (!sliderComplete) return
+
+    const handleWindowWheel = (e: WheelEvent) => {
+      const normalContent = normalContentRef.current
+      if (!normalContent) return
+      
+      const scrollTop = window.scrollY
+      
+      // If at the very top and scrolling up, re-enter slider
+      if (scrollTop <= 5 && e.deltaY < 0) {
+        e.preventDefault()
+        setSliderComplete(false)
+        window.scrollTo(0, 0)
+      }
+    }
+
+    window.addEventListener('wheel', handleWindowWheel, { passive: false })
+    
+    return () => {
+      window.removeEventListener('wheel', handleWindowWheel)
+    }
+  }, [sliderComplete])
+
+  // Navigate to a specific slide (for nav dots)
+  const navigateToSlide = useCallback((targetIndex: number) => {
+    if (targetIndex < 0 || targetIndex > 2) return
+    
+    // If slider is complete, re-enter it first
+    if (sliderComplete) {
+      setSliderComplete(false)
+      window.scrollTo(0, 0)
+    }
+    
+    // Update refs to trigger animation to target
+    const container = document.querySelector('.scroll-snap-container') as HTMLElement
+    if (!container) return
+    
+    const sections = container.querySelectorAll('.scroll-snap-section')
+    if (sections.length === 0) return
+    
+    // Snap directly to the target section
+    for (let i = 0; i < sections.length; i++) {
+      const el = sections[i] as HTMLElement
+      el.style.zIndex = String(i + 1)
+
+      if (i < targetIndex) {
+        const dir = i % 2 === 0 ? -1 : 1
+        el.style.transform = `translate(${dir * 100}%, -40%)`
+      } else if (i === targetIndex) {
+        el.style.transform = 'translate(0, 0)'
+      } else {
+        const dir = i % 2 === 1 ? 1 : -1
+        el.style.transform = `translate(${dir * 100}%, 40%)`
+      }
+    }
+    
+    currentSectionRef.current = targetIndex
+    setActiveSection(targetIndex)
+  }, [sliderComplete])
+
+  // Section names for navigation dots (only first 3 animated sections)
+  const sectionNames = ['About', 'Purpose', 'Promise']
 
   // Navigation structure
   const navigation = [
@@ -291,13 +476,7 @@ export default function WhoWeAre() {
         {sectionNames.map((name, index) => (
           <div key={name} className="flex flex-col items-center">
             <button
-              onClick={() => {
-                const container = document.querySelector('.scroll-snap-container')
-                const sections = container?.querySelectorAll('.scroll-snap-section')
-                if (sections && sections[index]) {
-                  sections[index].scrollIntoView({ behavior: 'smooth' })
-                }
-              }}
+              onClick={() => navigateToSlide(index)}
               className={`scroll-nav-dot ${activeSection === index ? 'active' : ''}`}
               aria-label={`Go to ${name} section`}
             />
@@ -306,12 +485,20 @@ export default function WhoWeAre() {
         ))}
       </nav>
 
-      <main data-testid="page-who-we-are" className="scroll-snap-container bg-[#fffcf8]" ref={containerRef}>
+      <main data-testid="page-who-we-are" className="bg-[#f1ebe1]">
+      {/* ANIMATED SLIDER CONTAINER - Fixed, stays visible until scrolled over */}
+      <div 
+        className={`scroll-snap-container ${
+          sliderComplete ? 'pointer-events-none' : ''
+        }`} 
+        ref={containerRef}
+      >
+      
       {/* FULL SCREEN MENU OVERLAY */}
       <div 
-        className={`fixed inset-0 z-[100] bg-[#fffcf8] transition-transform duration-500 ease-in-out ${
+        className={`fixed inset-0 z-50 bg-[#fffcf8] transition-transform duration-500 ease-in-out ${
           menuOpen ? 'translate-x-0' : (isArabic ? '-translate-x-full' : 'translate-x-full')
-        }`}
+        } ${menuOpen ? '' : 'pointer-events-none'}`}
       >
         {/* Menu Header */}
         <div className="py-6 sm:py-10 px-4 sm:px-8 md:px-16">
@@ -442,23 +629,13 @@ export default function WhoWeAre() {
         </div>
       </div>
 
-      {/* HERO SECTION */}
-      <header className="scroll-snap-section section-visible relative min-h-screen flex flex-col bg-[#0b1320]">
-        <div className="absolute inset-0 z-0">
-          <Image 
-            src="/assets/hero.jpg" 
-            className="w-full h-full object-cover grayscale brightness-[0.4]"
-            alt={t('whoWeAre.heroAlt')}
-            fill
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-[#0b1320]"></div>
-        </div>
-
-        {/* Navigation */}
-        <div className="absolute top-0 left-0 right-0 z-50 py-6 sm:py-10 px-4 sm:px-8 md:px-16">
+      {/* TOP NAV (hero removed) - hidden when menu open */}
+      <header className={`fixed top-0 left-0 right-0 z-40 bg-[#191817] border-b border-[#ffffff]/10 transition-opacity duration-300 ${
+        menuOpen ? 'pointer-events-none opacity-0' : 'opacity-100'
+      }`}>
+        <div className="py-6 sm:py-10 px-4 sm:px-8 md:px-16">
           {/* Mobile header */}
-          <nav className="md:hidden flex items-center justify-between text-white">
+          <nav className="md:hidden flex items-center justify-between">
             <button 
               className="flex flex-col justify-center items-center gap-1.5 p-2"
               aria-label={t('common.menu')}
@@ -468,18 +645,18 @@ export default function WhoWeAre() {
               <span className="block w-6 h-[2px] bg-white"></span>
             </button>
 
-            <Link href={`/${locale}`} className="font-serif text-[18px] sm:text-[20px] tracking-[0.15em]">{t('common.brand')}</Link>
+            <Link href={`/${locale}`} className="font-serif text-[18px] sm:text-[20px] tracking-[0.15em] text-white">{t('common.brand')}</Link>
 
             <NavLangToggle className="text-[14px]" />
           </nav>
 
           {/* Desktop header */}
-          <nav className="hidden md:flex justify-between items-center text-white">
+          <nav className="hidden md:flex justify-between items-center">
             <div className="flex items-center">
-               <Link href={`/${locale}`} className="font-serif text-[18px] sm:text-[20px] md:text-[26px] tracking-[0.15em]">{t('common.brand')}</Link>
+               <Link href={`/${locale}`} className="font-serif text-[18px] sm:text-[20px] md:text-[26px] tracking-[0.15em] text-white">{t('common.brand')}</Link>
             </div>
             <div className="hidden md:flex flex-col items-center text-center text-[12px] md:text-[14px] tracking-[0.35em] uppercase opacity-95">
-              <span className="mt-1 text-[12px] md:text-[18px]">{t('common.brandFull')}</span>
+              <span className="mt-1 text-[12px] md:text-[18px] text-white">{t('common.brandFull')}</span>
             </div>
             <div className="flex gap-3 sm:gap-4 items-center text-[12px] md:text-[14px] tracking-[0.3em] font-medium">
               <button 
@@ -494,43 +671,10 @@ export default function WhoWeAre() {
             </div>
           </nav>
         </div>
-        
-        {/* Hero Content */}
-        <div className="relative z-10 flex-1 flex flex-col justify-center items-center py-20 sm:py-28 md:py-36 px-4 sm:px-8 md:px-16">
-          <div className="max-w-[1440px] mx-auto w-full text-center">
-            {/* Decorative line */}
-            <div className="flex items-center justify-center gap-4 mb-6 sm:mb-8">
-              <div className="w-12 sm:w-16 md:w-24 h-[1px] bg-gradient-to-r from-transparent to-[#b69c6b]/60"></div>
-              <div className="w-2 h-2 bg-[#b69c6b] rotate-45"></div>
-              <div className="w-12 sm:w-16 md:w-24 h-[1px] bg-gradient-to-l from-transparent to-[#b69c6b]/60"></div>
-            </div>
-            <p className="text-[#b69c6b] font-serif text-[11px] sm:text-[13px] tracking-[0.5em] uppercase mb-6 sm:mb-8">{t('whoWeAre.heroKicker')}</p>
-            <h1 className="text-white font-serif text-[40px] sm:text-[56px] md:text-[80px] lg:text-[100px] leading-[0.95] uppercase tracking-[0.04em] mb-8 sm:mb-10">
-              <span className="block">{t('whoWeAre.heroTitle')}</span>
-            </h1>
-            <p className="text-white/70 font-serif text-[16px] sm:text-[19px] md:text-[24px] w-full leading-[1.6] italic">
-              {t('whoWeAre.heroDescription')}
-            </p>
-            {/* Bottom decorative element */}
-            <div className="mt-10 sm:mt-14 flex justify-center">
-              <div className="w-[1px] h-16 sm:h-20 bg-gradient-to-b from-[#b69c6b]/60 to-transparent"></div>
-            </div>
-          </div>
-        </div>
-
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-10 sm:bottom-12 left-1/2 transform -translate-x-1/2 z-10">
-          <div className="flex flex-col items-center gap-3 text-white/50 animate-bounce">
-            <span className="text-[10px] sm:text-[11px] tracking-[0.3em] uppercase font-light">{t('common.explore')}</span>
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-            </svg>
-          </div>
-        </div>
       </header>
 
       {/* WHO WE ARE INTRO SECTION */}
-      <section className="scroll-snap-section flex items-center justify-center min-h-screen px-4 sm:px-8 md:px-16 bg-[#f1ebe1]">
+      <section className="scroll-snap-section flex items-center justify-center h-screen px-4 sm:px-6 md:px-12 lg:px-16 pt-20 md:pt-28 bg-[#f1ebe1]">
         <div className="max-w-[1400px] mx-auto">
           {/* Section kicker */}
           <div className="flex items-center gap-3 mb-6 sm:mb-8 justify-center">
@@ -538,19 +682,19 @@ export default function WhoWeAre() {
           </div>
 
           {/* Main heading */}
-          <h2 className="text-center text-[#191817] font-serif font-bold text-[16px] sm:text-[22px] md:text-[36px] mb-8 sm:mb-10 uppercase tracking-[0.3em]">
+          <h2 className="text-center text-[#191817] font-serif font-bold text-[15px] sm:text-[18px] md:text-[24px] lg:text-[32px] mb-6 sm:mb-8 uppercase tracking-[0.2em]">
             {t('whoWeAre.introTitle')}
           </h2>
 
           {/* Content paragraphs */}
-          <div className="space-y-6 sm:space-y-8 md:space-y-10">
-            <p className="text-center text-[#191817]/85 font-serif text-[18px] sm:text-[20px] md:text-[22px] leading-[1.9] max-w-[1100px] mx-auto">
+          <div className="space-y-4 sm:space-y-6 md:space-y-8">
+            <p className="text-center text-[#191817]/85 font-serif text-[15px] sm:text-[17px] md:text-[19px] lg:text-[22px] leading-[1.6] md:leading-[1.7] lg:leading-[1.8] max-w-[1100px] mx-auto">
               {t('whoWeAre.introP1')}
             </p>
-            <p className="text-center text-[#191817]/85 font-serif text-[18px] sm:text-[20px] md:text-[22px] leading-[1.9] max-w-[1100px] mx-auto">
+            <p className="text-center text-[#191817]/85 font-serif text-[15px] sm:text-[17px] md:text-[19px] lg:text-[22px] leading-[1.6] md:leading-[1.7] lg:leading-[1.8] max-w-[1100px] mx-auto">
               {t('whoWeAre.introP2')}
             </p>
-              <p className="text-center text-[#191817]/85 font-serif text-[18px] sm:text-[20px] md:text-[22px] leading-[1.9] max-w-[1100px] mx-auto">
+              <p className="text-center text-[#191817]/85 font-serif text-[15px] sm:text-[17px] md:text-[19px] lg:text-[22px] leading-[1.6] md:leading-[1.7] lg:leading-[1.8] max-w-[1100px] mx-auto">
                 {t('whoWeAre.introP3')}
               </p>
           </div>
@@ -558,24 +702,24 @@ export default function WhoWeAre() {
       </section>
 
       {/* PURPOSE SECTION */}
-      <section className="scroll-snap-section flex items-center justify-center min-h-screen px-4 sm:px-8 md:px-16 bg-[#efe6d8]">
-        <div className="max-w-[1400px] mx-auto">
+      <section className="scroll-snap-section flex items-center justify-center h-screen px-4 sm:px-6 md:px-12 lg:px-16 pt-20 md:pt-28 bg-[#f1ebe1]">
+        <div className="w-full max-w-[1400px] mx-auto">
           {/* Decorative icon (from assets) */}
-          <div className="flex justify-center mb-8 sm:mb-10">
-            <Image src="/assets/purpose.svg" alt={t('whoWeAre.purposeTitle')} width={56} height={56} className="object-contain" />
+          <div className="flex justify-center mb-6 sm:mb-8">
+            <Image src="/assets/purpose.svg" alt={t('whoWeAre.purposeTitle')} width={40} height={40} className="object-contain" />
           </div>
 
           {/* Title */}
-          <h2 className="text-center text-[#191817] font-serif font-bold text-[14px] sm:text-[18px] md:text-[30px] mb-8 sm:mb-10 uppercase tracking-[0.3em]">
+          <h2 className="text-center text-[#191817] font-serif font-bold text-[14px] sm:text-[17px] md:text-[23px] lg:text-[30px] mb-6 sm:mb-8 uppercase tracking-[0.2em]">
             {t('whoWeAre.purposeTitle')}
           </h2>
 
           {/* Paragraphs */}
-          <div className="space-y-6 sm:space-y-8 md:space-y-10">
-            <p className="text-center text-[#191817]/85 font-serif text-[18px] sm:text-[20px] md:text-[22px] leading-[1.9] max-w-[1100px] mx-auto">
+          <div className="space-y-4 sm:space-y-6 md:space-y-8">
+            <p className="text-center text-[#191817]/85 font-serif text-[15px] sm:text-[17px] md:text-[19px] lg:text-[22px] leading-[1.6] md:leading-[1.7] lg:leading-[1.8] max-w-[1100px] mx-auto">
               {t('whoWeAre.purposeP1')}
             </p>
-            <p className="text-center text-[#191817]/85 font-serif text-[18px] sm:text-[20px] md:text-[22px] leading-[1.9] max-w-[1100px] mx-auto">
+            <p className="text-center text-[#191817]/85 font-serif text-[15px] sm:text-[17px] md:text-[19px] lg:text-[22px] leading-[1.6] md:leading-[1.7] lg:leading-[1.8] max-w-[1100px] mx-auto">
               {t('whoWeAre.purposeP2')}
             </p>
           </div>
@@ -583,42 +727,51 @@ export default function WhoWeAre() {
       </section>
 
       {/* PROMISE SECTION */}
-      <section className="scroll-snap-section flex items-center justify-center min-h-screen px-4 sm:px-8 md:px-16 bg-[#f1ebe1]">
-        <div className="max-w-[1400px] mx-auto">
+      <section className="scroll-snap-section flex items-center justify-center h-screen px-4 sm:px-6 md:px-12 lg:px-16 pt-20 md:pt-28 bg-[#f1ebe1]">
+        <div className="w-full max-w-[1400px] mx-auto">
           {/* Top icon */}
-          <div className="flex justify-center mb-8 sm:mb-10">
-            <Image src="/assets/promise.svg" alt="Promise" width={56} height={56} className="object-contain" />
+          <div className="flex justify-center mb-6 sm:mb-8">
+            <Image src="/assets/promise.svg" alt="Promise" width={40} height={40} className="object-contain" />
           </div>
 
           {/* Kicker */}
-          <h3 className="text-center text-[#191817] font-serif font-bold text-[14px] sm:text-[18px] md:text-[30px] mb-8 sm:mb-10 uppercase tracking-[0.3em]">
+          <h3 className="text-center text-[#191817] font-serif font-bold text-[14px] sm:text-[17px] md:text-[23px] lg:text-[30px] mb-6 sm:mb-8 uppercase tracking-[0.2em]">
             {t('whoWeAre.promiseKicker')}
           </h3>
 
           {/* Vertical line divider */}
-          <div className="flex justify-center mb-8 sm:mb-10">
-            <div className="w-[1px] h-20 sm:h-24 bg-[#191817]/40"></div>
+          <div className="flex justify-center mb-6 sm:mb-8">
+            <div className="w-[1px] h-16 sm:h-20 bg-[#191817]/40"></div>
           </div>
 
           {/* Bottom icon (chess pieces) */}
-          <div className="flex justify-center mb-8 sm:mb-12">
-            <Image src="/assets/we-stand.svg" alt="We Stand" width={160} height={96} className="object-contain" />
+          <div className="flex justify-center mb-6 sm:mb-8">
+            <Image src="/assets/we-stand.svg" alt="We Stand" width={120} height={72} className="object-contain" />
           </div>
 
           {/* Main title */}
-          <h2 className="text-center text-[#191817] font-serif font-bold text-[14px] sm:text-[18px] md:text-[30px] mb-8 sm:mb-10 uppercase tracking-[0.3em]">
+          <h2 className="text-center text-[#191817] font-serif font-bold text-[14px] sm:text-[17px] md:text-[23px] lg:text-[30px] mb-6 sm:mb-8 uppercase tracking-[0.2em]">
             {t('whoWeAre.promiseTitle')}
           </h2>
 
           {/* Description */}
-          <p className="text-center text-[#191817]/85 font-serif text-[18px] sm:text-[20px] md:text-[22px] leading-[1.9] max-w-[1100px] mx-auto">
+          <p className="text-center text-[#191817]/85 font-serif text-[15px] sm:text-[17px] md:text-[19px] lg:text-[22px] leading-[1.6] md:leading-[1.7] lg:leading-[1.8] max-w-[1100px] mx-auto">
             {t('whoWeAre.promiseDescription')}
           </p>
         </div>
       </section>
+      
+      </div>{/* End of scroll-snap-container */}
 
-      {/* WE BELIEVE IN SECTION */}
-      <section className="scroll-snap-section grid grid-cols-1 lg:grid-cols-2 min-h-screen">
+      {/* Normal flow sections - scrolls over the fixed slider */}
+      <div 
+        ref={normalContentRef} 
+        className="bg-[#fffcf8] relative z-50"
+        style={{ marginTop: '100vh' }}
+      >
+
+      {/* WE BELIEVE IN SECTION - Normal flow, no animation */}
+      <section className="grid grid-cols-1 lg:grid-cols-2 min-h-screen bg-[#fffcf8]">
         {/* Left side - Text */}
         <div className="bg-[#efe6d8] flex items-center justify-center px-4 sm:px-8 md:px-16 py-20 sm:py-28 md:py-36">
           <div className="max-w-[500px]">
@@ -659,8 +812,8 @@ export default function WhoWeAre() {
         </div>
       </section>
 
-      {/* ALIGNMENT AND CONVICTION SECTION */}
-      <section className="scroll-snap-section grid grid-cols-1 lg:grid-cols-2 min-h-screen">
+      {/* ALIGNMENT AND CONVICTION SECTION - Normal flow, no animation */}
+      <section className="grid grid-cols-1 lg:grid-cols-2 min-h-screen bg-[#fffcf8]">
         {/* Left side - Alignment */}
         <div 
           className="relative overflow-hidden flex flex-col items-start justify-end px-4 sm:px-8 md:px-16 py-20 sm:py-28 md:py-36 min-h-[500px] lg:min-h-[700px]"
@@ -704,8 +857,8 @@ export default function WhoWeAre() {
 
 
 
-      {/* H.H STATEMENT SECTION */}
-      <section className="scroll-snap-section last-section grid grid-cols-1 lg:grid-cols-3 bg-[#f5f0e6]">
+      {/* H.H STATEMENT SECTION - Normal flow, no animation */}
+      <section className="grid grid-cols-1 lg:grid-cols-3 bg-[#fffcf8]">
         {/* Left side - Horse image (1 col) */}
         <div className="relative overflow-hidden min-h-[400px] lg:min-h-[700px]">
           <Image
@@ -781,6 +934,7 @@ export default function WhoWeAre() {
           </div>
         </div>
       </footer>
+      </div>{/* End normal flow wrapper */}
     </main>
     </>
   )
